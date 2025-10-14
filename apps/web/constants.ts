@@ -1,0 +1,6 @@
+export const MAX_ORG_LICENSES_TIER_1 = 10;
+export const MAX_ORG_LICENSES_TIER_2 = 20;
+
+export const MAX_ORG_LICENSES_TIER_3 = 30;
+// STRIPE PRICE IDs
+

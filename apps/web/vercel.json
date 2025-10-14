@@ -1,0 +1,44 @@
+{
+    "crons": [
+        {
+            "path": "/api/daily-cron",
+            "schedule": "30 5 * * *"
+        },
+        {
+            "path": "/api/daily-cron/onboarding",
+            "schedule": "0 12 * * *"
+        },
+        {
+            "path": "/api/daily-cron/brevo-sync",
+            "schedule": "0 12 * * *"
+        },
+        {
+            "path": "/api/daily-cron/submit",
+            "schedule": "0 0 * * *"
+        },
+        {
+            "path": "/api/daily-cron/api-usage",
+            "schedule": "0 0 * * *"
+        },
+        {
+            "path": "/api/daily-cron/reviews/seed",
+            "schedule": "30 6 * * *"
+        },
+        {
+            "path": "/api/daily-cron/metrics",
+            "schedule": "45 9 * * *"
+        }
+    ],
+    "functions": {
+        "app/api/tools/picasso/route.ts": {
+            "maxDuration": 300 
+        },
+        "app/api/v2/mobile/auth/signup/route.ts": {
+            "maxDuration": 20   
+        },
+        "app/api/v2/mobile/auth/login/route.ts": {
+            "maxDuration": 20
+        }
+    }
+
+}

@@ -1,0 +1,2210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id                    String               @id @default(uuid())
+  name                  String               @unique
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  users                 OrganizationUser[]
+  licenseKeys           LicenseKey[]
+  ownedLicenses         OwnedLicense[]
+  isPremium             Boolean              @default(false)
+  planId                String?
+  plan                  OrganizationPlan?    @relation(fields: [planId], references: [id])
+  mainLicenseKeyId      String?              @unique
+  mainLicenseKey        LicenseKey?          @relation("OrganizationMainLicenseKey", fields: [mainLicenseKeyId], references: [id])
+  additionalLicenseKeys LicenseKey[]         @relation("OrganizationAdditionalLicenseKeys")
+  invites               OrganizationInvite[]
+  tasks                 Task[]               @relation("OrganizationTasks")
+}
+
+model OrganizationPlan {
+  id                String         @id @default(uuid())
+  name              PlanName       @unique
+  maxAdditionalKeys Int
+  // Add any additional fields specific to each plan
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  organizations     Organization[]
+}
+
+model OrganizationUser {
+  id               String            @id @default(uuid())
+  userId           String
+  organizationId   String
+  role             OrganizationRole
+  assignedAt       DateTime          @default(now())
+  user             User              @relation(fields: [userId], references: [id])
+  organization     Organization      @relation(fields: [organizationId], references: [id])
+  assignedLicenses AssignedLicense[] // New relation
+
+  @@unique([userId, organizationId])
+}
+
+model LicenseKey {
+  id                 String    @id @default(uuid())
+  key                String    @unique
+  isActive           Boolean   @default(true)
+  activatedAt        DateTime?
+  expiresAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  activationCount    Int       @default(0)
+  vendor             String?
+  planId             String?
+  tier               Int?
+  lemonProductId     Int?
+  deActivatedAt      DateTime?
+  redemptionUrl      String?
+  planChangeUrl      String?
+  appsumoAccessToken String?
+  converted_to_team  Boolean?
+
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  isMainKey                Boolean       @default(true)
+  mainOrganization         Organization? @relation("OrganizationMainLicenseKey")
+  additionalOrganization   Organization? @relation("OrganizationAdditionalLicenseKeys", fields: [additionalOrganizationId], references: [id])
+  additionalOrganizationId String?
+
+  apiKeyId String?
+  apiKey   ApiKey? @relation(fields: [apiKeyId], references: [id])
+
+  customKnowledge LicenseKeyCustomKnowledge?
+
+  users           UserLicenseKey[]
+  redeemCode      RedeemCode[]
+  freeComments    FreeComment[]
+  apiUsages       ApiUsage[]
+  installations   Installation[]
+  temporaryTokens TemporaryToken[]
+  activations     Activation[]
+  usageTracking   UsageTracking[]
+  settings        LicenseKeySettings?
+  ownedLicenses   OwnedLicense[]
+
+  subLicenses SubLicense[]
+
+  subscriptions UserSubscription[]
+
+  AutoCommenterConfig AutoCommenterConfig[]
+
+  tasks    Task[]
+  metadata Json?
+
+  licenseGoals LicenseGoal[]
+}
+
+model LicenseKeyCustomKnowledge {
+  id           String     @id @default(uuid())
+  licenseKeyId String     @unique
+  licenseKey   LicenseKey @relation(fields: [licenseKeyId], references: [id])
+
+  // Core Brand Information
+  brandName           String?
+  brandPersonality    String?
+  industry            String?
+  targetAudience      String? @db.Text
+  productServices     String? @db.Text
+  uniqueSellingPoints String? @db.Text
+  brandVoice          String? @db.Text
+  contentTopics       String? @db.Text
+  brandValues         String? @db.Text
+  missionStatement    String? @db.Text
+  isPersonalBrand     Boolean @default(false)
+
+  // Personal Background
+  personalBackground String? @db.Text
+  values             String? @db.Text
+  lifestyle          String? @db.Text
+
+  // Professional Experience
+  professionalBackground String? @db.Text
+  expertise              String? @db.Text
+  industryInsights       String? @db.Text
+
+  // Additional Brand Strategy
+  uniqueApproach  String? @db.Text
+  contentStrategy String? @db.Text
+
+  knowledgeSummaries LicenseKeyKnowledgeSummary[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LicenseKeyKnowledgeSummary {
+  id                          String                    @id @default(uuid())
+  licenseKeyCustomKnowledgeId String
+  licenseKeyCustomKnowledge   LicenseKeyCustomKnowledge @relation(fields: [licenseKeyCustomKnowledgeId], references: [id])
+  summary                     String                    @db.Text
+  createdAt                   DateTime                  @default(now())
+
+  @@index([licenseKeyCustomKnowledgeId])
+}
+
+model SubLicense {
+  id                 String    @id @default(uuid())
+  key                String    @unique
+  status             String
+  activationCount    Int       @default(0)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  originalLicenseKey String?
+  deactivatedAt      DateTime?
+  converted_to_team  Boolean?
+  vendor             String?
+
+  mainLicenseKeyId String
+  mainLicenseKey   LicenseKey @relation(fields: [mainLicenseKeyId], references: [id])
+
+  assignedUserId String?
+  assignedEmail  String?
+  assignedUser   User?   @relation(fields: [assignedUserId], references: [id])
+
+  usageAnalytics  UsageTracking[]
+  subLicenseGoals SubLicenseGoal[]
+  settings        SubLicenseSettings?
+  metadata        Json?
+
+  // Add relation for auto commenter configs
+  autoCommenterConfigs AutoCommenterConfig[] @relation("SubLicenseToAutoCommenterConfig")
+
+  // Add relation for temporary tokens
+  temporaryTokens TemporaryToken[]
+}
+
+model SubLicenseGoal {
+  id            String    @id @default(uuid())
+  subLicenseId  String
+  userId        String
+  platform      String // The platform for which the goal is set
+  goal          String // The goal description
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  target        Int?
+  progress      Int?      @default(0)
+  status        String?   @default("in_progress") // "in_progress", "achieved"
+  achievedAt    DateTime?
+  daysToAchieve Int?
+
+  subLicense SubLicense @relation(fields: [subLicenseId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+}
+
+model ElfGameAttempt {
+  id              String    @id @default(uuid())
+  userId          String?
+  ipAddress       String?
+  sessionId       String
+  attempts        Int       @default(0)
+  catches         Int       @default(0)
+  lastAttemptAt   DateTime?
+  discountClaimed Boolean   @default(false)
+  claimedDiscount Int?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@unique([userId, sessionId])
+  @@unique([ipAddress, sessionId])
+  @@index([lastAttemptAt])
+}
+
+model OrganizationInvite {
+  id             String           @id @default(uuid())
+  email          String
+  organizationId String
+  role           OrganizationRole
+  token          String           @unique
+  expires        DateTime
+  createdAt      DateTime         @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([email, organizationId])
+}
+
+model OwnedLicense {
+  id             String   @id @default(uuid())
+  organizationId String
+  licenseKeyId   String
+  quantity       Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization     Organization      @relation(fields: [organizationId], references: [id])
+  licenseKey       LicenseKey        @relation(fields: [licenseKeyId], references: [id])
+  assignedLicenses AssignedLicense[]
+
+  @@unique([organizationId, licenseKeyId])
+}
+
+// New model for assigned licenses to organization users
+model AssignedLicense {
+  id                 String   @id @default(uuid())
+  organizationUserId String
+  ownedLicenseId     String
+  assignedAt         DateTime @default(now())
+
+  organizationUser OrganizationUser @relation(fields: [organizationUserId], references: [id])
+  ownedLicense     OwnedLicense     @relation(fields: [ownedLicenseId], references: [id])
+
+  @@unique([organizationUserId, ownedLicenseId])
+}
+
+model LicenseKeySettings {
+  id                    String   @id @default(uuid())
+  licenseKeyId          String   @unique
+  userName              String?
+  customButtons         Json?
+  customActions         Json?
+  llmVendor             String?
+  model                 String?
+  replyTone             String?
+  replyLength           String?
+  toneIntent            String?
+  language              String?
+  usePostNativeLanguage Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  licenseKey LicenseKey @relation(fields: [licenseKeyId], references: [id])
+}
+
+model SubLicenseSettings {
+  id                    String   @id @default(uuid())
+  subLicenseId          String   @unique
+  userName              String?
+  customButtons         Json?
+  customActions         Json?
+  llmVendor             String?
+  model                 String?
+  replyTone             String?
+  replyLength           String?
+  toneIntent            String?
+  language              String?
+  usePostNativeLanguage Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  subLicense SubLicense @relation(fields: [subLicenseId], references: [id])
+}
+
+model Activation {
+  id                  String              @id @default(uuid())
+  licenseKeyId        String
+  licenseKey          LicenseKey          @relation(fields: [licenseKeyId], references: [id])
+  userId              String
+  user                User                @relation(fields: [userId], references: [id])
+  activatedAt         DateTime            @default(now())
+  activationToken     String              @unique
+  currentlyActivated  Boolean?
+  activationTokenType ActivationTokenType
+  deviceType          String? // e.g., "Android", "iOS", "Mac", "Windows", "Linux"
+  deviceModel         String? // e.g., "iPhone 12", "Samsung Galaxy S21"
+  osName              String?
+  osVersion           String? // e.g., "iOS 14.5", "Android 11"
+  browser             String? // e.g., "Chrome", "Safari", "Firefox"
+  browserVersion      String? // e.g., "91.0.4472.124"
+  ipAddress           String?
+
+  @@index([licenseKeyId])
+  @@index([userId])
+}
+
+model ApiKey {
+  id            String                @id @default(uuid())
+  key           String                @unique
+  vendor        String?
+  isActive      Boolean               @default(true)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  users         UserApiKey[]
+  apiUsages     ApiUsage[]
+  freeComments  FreeComment[]
+  installations Installation[]
+  usageTracking ApiKeyUsageTracking[] // New relation
+
+  licenseKeys     LicenseKey[]
+  temporaryTokens TemporaryToken[]
+  customKnowledge ApiKeyCustomKnowledge?
+}
+
+model ApiKeyCustomKnowledge {
+  id       String @id @default(uuid())
+  apiKeyId String @unique
+  apiKey   ApiKey @relation(fields: [apiKeyId], references: [id])
+
+  brandName           String?
+  brandPersonality    String?
+  industry            String?
+  targetAudience      String?
+  productServices     String?
+  uniqueSellingPoints String?
+  brandVoice          String?
+  contentTopics       String?
+  brandValues         String?
+  missionStatement    String?
+
+  knowledgeSummaries KnowledgeSummary[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KnowledgeSummary {
+  id                      String                @id @default(uuid())
+  apiKeyCustomKnowledgeId String
+  apiKeyCustomKnowledge   ApiKeyCustomKnowledge @relation(fields: [apiKeyCustomKnowledgeId], references: [id])
+  summary                 String                @db.Text
+  createdAt               DateTime              @default(now())
+
+  @@index([apiKeyCustomKnowledgeId])
+}
+
+model ApiKeyUsageTracking {
+  id           String   @id @default(uuid())
+  apiKeyId     String
+  apiKey       ApiKey   @relation(fields: [apiKeyId], references: [id])
+  usage        Int      @default(0)
+  date         DateTime @default(now())
+  endpoint     String
+  responseTime Int? // in milliseconds
+  statusCode   Int?
+  errorMessage String?
+
+  prompt   String?
+  action   String?
+  content  String?
+  platform String?
+
+  @@unique([apiKeyId, date, endpoint])
+  @@index([apiKeyId])
+  @@index([date])
+}
+
+model FreeUser {
+  id             String         @id @default(uuid())
+  externalUserId String         @unique @default(uuid())
+  username       String         @unique
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  leaderboard    Leaderboard?
+  installations  Installation[]
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expires   DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id                          String   @id @default(uuid())
+  externalUserId              String?  @unique @default(uuid()) // External userId, optional
+  firstLogin                  Boolean? @default(true)
+  email                       String?  @unique
+  name                        String?
+  username                    String?  @unique
+  password                    String?
+  picture                     String?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+  deactivated                 Boolean  @default(false)
+  isSuperAdmin                Boolean  @default(false)
+  isAdmin                     Boolean  @default(false)
+  isBetaTester                Boolean  @default(false)
+  isSales                     Boolean  @default(false)
+  isPaidUser                  Boolean  @default(false)
+  onboardingComplete          Boolean  @default(false) // New field
+  thumbnailCredits            Int?     @default(1) // New field for tracking credits
+  isSupport                   Boolean  @default(false)
+  hasClaimedOnboardingCredits Boolean  @default(false) // Add this field
+
+  isEmailVerified Boolean @default(false)
+
+  diwali24SaleEmailSent Boolean? @default(false)
+
+  signInMethod SignInMethod @default(EMAIL) // New field
+
+  signupSource String?
+
+  licenseKeys             UserLicenseKey[]
+  apiKeys                 UserApiKey[]
+  leaderboard             Leaderboard?
+  sessions                Session[]
+  refreshTokens           RefreshToken[]
+  passwordResetTokens     PasswordResetToken[]
+  installations           Installation[]
+  activations             Activation[]
+  onboarding              Onboarding? // New relation
+  usageTracking           UsageTracking[]
+  purchases               Purchase[]
+  organizations           OrganizationUser[] // New relation
+  prompts                 Prompt[]
+  unlockedPrompts         UnlockedPrompt[]
+  emailVerificationTokens EmailVerificationToken[]
+  credit                  UserCredit?
+  reviews                 ProductReview[] // Add this line to existing User model
+  onboardingProgress      OnboardingProgress?
+  onboardingFeedback      OnboardingFeedback?
+
+  elfGameAttempts ElfGameAttempt[]
+
+  notifications Notification[]
+
+  subscriptions UserSubscription[]
+
+  sublicenses SubLicense[]
+
+  subLicenseGoals SubLicenseGoal[]
+  licenseGoals    LicenseGoal[]
+  emails          Emails[]
+  oauthTokens     OAuthToken[]
+
+  autoCommenterConfigs AutoCommenterConfig[]  @relation("UserToAutoCommenterConfig")
+  autoCommenterHistory AutoCommenterHistory[]
+  roadmapVotes         RoadmapItemVote[]
+  featureRequests      FeatureRequest[]
+
+  tasks         Task[] @relation("UserTasks")
+  assignedTasks Task[] @relation("AssignedTasks")
+  createdTasks  Task[] @relation("CreatedTasks")
+
+  // ShareSpace relations
+  sharedPosts  SharedPost[]
+  postLikes    SharedPostLike[]
+  postShares   SharedPostShare[]
+  postComments SharedPostComment[]
+
+  // Daily Vlog relation
+  dailyVlogs DailyVlog[]
+
+  // Trajectory Analysis relation
+  trajectoryAnalyses TrajectoryAnalysis[]
+
+  // Knowledge Base relation
+  knowledgeBaseFiles KnowledgeBaseFile[]
+
+  // Blog relation
+  blogPosts BlogPost[]
+
+  instagramCommentMonitoring InstagramCommentMonitoring[]
+  instagramDMAutomation      InstagramDMAutomation[]
+  instagramCommentHistory    InstagramCommentHistory[]
+
+  // Apollo Lead relation
+  apolloLeads ApolloLead[]
+
+  ImageGenerations ImageGeneration[]
+  userFiles        UserFile[]
+
+  // Workshop related relations
+  createdWorkshops      Workshop[]
+  workshopParticipation Participant[]
+
+  journeyMilestones UserJourneyMilestone[]
+
+  temporaryTokens TemporaryToken[]
+  userStreak      UserStreak?
+}
+
+model InstagramOAuthToken {
+  id          String @id @default(uuid())
+  userId      String @unique
+  accessToken String
+}
+
+model Emails {
+  id                       String    @id @default(uuid())
+  userId                   String    @unique
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  user                     User      @relation(fields: [userId], references: [id])
+  sentAt                   DateTime?
+  vendor                   String?
+  isAppsumoCourseEmailSent Boolean?
+}
+
+model Onboarding {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id])
+  industry             String? // Added missing industry field
+  role                 String?
+  roleOther            String?
+  primaryPlatform      String?
+  primaryPlatformOther String?
+  businessType         String?
+  engagementGoal       String?
+  contentFrequency     String?
+  commentFrequency     String?
+  companySize          String?
+  aiExperience         String?
+  painPoints           String[] @default([]) // Added array field
+  customPainPoint      String? // Added field
+  biggestChallenge     String? // Added field
+  referralSource       String? // Added field to track how users found Olly
+  completedAt          DateTime @default(now())
+  skipped              Boolean  @default(false)
+}
+
+model OnboardingProgress {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  currentStep Int      @default(0)
+  isCompleted Boolean  @default(false)
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model OnboardingFeedback {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  rating    Int // 1-5 rating
+  feedback  String? // Optional text feedback
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model TemporaryToken {
+  id           String      @id @default(uuid())
+  token        String      @unique
+  apiKeyId     String?
+  apiKey       ApiKey?     @relation(fields: [apiKeyId], references: [id])
+  licenseKeyId String? // Make this optional
+  licenseKey   LicenseKey? @relation(fields: [licenseKeyId], references: [id])
+  subLicenseId String? // Add this field
+  subLicense   SubLicense? @relation(fields: [subLicenseId], references: [id])
+  createdAt    DateTime    @default(now())
+  expiresAt    DateTime
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+model Session {
+  id         String     @id
+  userId     String
+  token      String?    @unique
+  deviceType DeviceType @default(WEB)
+  deviceInfo Json? // Store device metadata
+  lastActive DateTime   @default(now())
+  expiresAt  DateTime
+  isRevoked  Boolean    @default(false)
+
+  // New fields for OAuth tokens
+  platformTokens Json? // Store encrypted tokens for different platforms
+
+  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model OAuthToken {
+  id           String   @id @default(uuid())
+  userId       String
+  platform     String // e.g., "linkedin", "twitter"
+  accessToken  String // Encrypted access token
+  refreshToken String? // Encrypted refresh token
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isValid      Boolean  @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platform])
+  @@index([userId])
+}
+
+model RefreshToken {
+  id         String     @id @default(uuid())
+  token      String     @unique
+  userId     String
+  deviceType DeviceType
+  deviceInfo Json?
+  expiresAt  DateTime
+  isRevoked  Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum DeviceType {
+  WEB
+  MOBILE_IOS
+  MOBILE_ANDROID
+  DESKTOP
+  OTHER
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expires   DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model UserLicenseKey {
+  userId       String
+  licenseKeyId String
+  assignedAt   DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id])
+  licenseKey   LicenseKey @relation(fields: [licenseKeyId], references: [id])
+
+  @@id([userId, licenseKeyId])
+}
+
+model LicenseKeyLog {
+  id         String   @id @default(uuid())
+  date       DateTime
+  userId     String
+  licenseKey String
+  count      Int      @default(1)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([date, userId, licenseKey])
+}
+
+model UserApiKey {
+  userId     String
+  apiKeyId   String
+  assignedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  apiKey     ApiKey   @relation(fields: [apiKeyId], references: [id])
+
+  @@id([userId, apiKeyId])
+}
+
+model FreeComment {
+  id           String      @id @default(uuid())
+  content      String
+  prompt       String
+  platform     String
+  createdAt    DateTime    @default(now())
+  licenseKeyId String?
+  apiKeyId     String?
+  licenseKey   LicenseKey? @relation(fields: [licenseKeyId], references: [id])
+  apiKey       ApiKey?     @relation(fields: [apiKeyId], references: [id])
+}
+
+model ApiUsage {
+  id           String      @id @default(uuid())
+  content      String
+  prompt       String
+  platform     String
+  createdAt    DateTime    @default(now())
+  licenseKeyId String?
+  apiKeyId     String?
+  licenseKey   LicenseKey? @relation(fields: [licenseKeyId], references: [id])
+  apiKey       ApiKey?     @relation(fields: [apiKeyId], references: [id])
+}
+
+model Leaderboard {
+  id            String   @id @default(uuid())
+  userId        String?  @unique
+  freeUserId    String?  @unique
+  level         Int      @default(1)
+  totalComments Int      @default(0)
+  updatedAt     DateTime @updatedAt
+
+  user     User?     @relation(fields: [userId], references: [id])
+  freeUser FreeUser? @relation(fields: [freeUserId], references: [id])
+
+  @@index([userId])
+  @@index([freeUserId])
+}
+
+model UsageTracking {
+  id             String   @id @default(uuid())
+  licenseKeyId   String?
+  subLicenseId   String?
+  userId         String?
+  externalUserId String?
+  action         String
+  platform       String
+  createdAt      DateTime @default(now())
+  event          String?
+
+  licenseKey LicenseKey? @relation(fields: [licenseKeyId], references: [id], onDelete: SetNull)
+  subLicense SubLicense? @relation(fields: [subLicenseId], references: [id], onDelete: SetNull)
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([licenseKeyId])
+  @@index([subLicenseId])
+  @@index([userId])
+  @@index([externalUserId])
+}
+
+model Installation {
+  id                 String             @id @default(uuid())
+  status             InstallationStatus
+  reason             String?
+  specificReason     String?
+  additionalFeedback String?            @db.Text
+  installedAt        DateTime           @default(now())
+  uninstalledAt      DateTime?
+  licenseKeyId       String?
+  apiKeyId           String?
+  userId             String?
+
+  licenseKey LicenseKey? @relation(fields: [licenseKeyId], references: [id])
+  apiKey     ApiKey?     @relation(fields: [apiKeyId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
+
+  freeUserId String?
+  freeUser   FreeUser? @relation(fields: [freeUserId], references: [id])
+}
+
+model Purchase {
+  id        String   @id @default(uuid())
+  userId    String
+  packId    String
+  credits   Int
+  createdAt DateTime @default(now())
+
+  user                User               @relation(fields: [userId], references: [id])
+  pack                Pack               @relation(fields: [packId], references: [id])
+  creditTransactionId String?            @unique
+  creditTransaction   CreditTransaction? @relation(fields: [creditTransactionId], references: [id])
+}
+
+model Pack {
+  id        String   @id @default(uuid())
+  name      String
+  credits   Int
+  price     Int
+  createdAt DateTime @default(now())
+
+  purchases Purchase[]
+}
+
+enum InstallationStatus {
+  INSTALLED
+  UNINSTALLED
+}
+
+enum ActivationTokenType {
+  ACTIVE
+  INACTIVE
+}
+
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum SignInMethod {
+  EMAIL
+  GOOGLE
+  OTHER
+}
+
+enum PlanName {
+  T0
+  T1
+  T2
+  T3
+  T4
+  T5
+}
+
+model Prompt {
+  id          String           @id @default(uuid())
+  text        String           @db.Text
+  upvotes     Int              @default(0)
+  category    String
+  contributor String?
+  title       String?
+  userId      String
+  isPremium   Boolean          @default(false) // New field
+  creditCost  Int              @default(5) // New field
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userUpvotes UserUpvote[]
+  unlockedBy  UnlockedPrompt[] // New relation
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([userId])
+}
+
+model UnlockedPrompt {
+  id         String   @id @default(uuid())
+  userId     String
+  promptId   String
+  unlockedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+  @@index([userId])
+  @@index([promptId])
+}
+
+model UserUpvote {
+  id        String   @id @default(uuid())
+  userId    String
+  promptId  String
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, promptId])
+  @@index([userId])
+  @@index([promptId])
+}
+
+//credit system
+model UserCredit {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  balance   Int      @default(10) // Changed from 0 to 10
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User                @relation(fields: [userId], references: [id])
+  transactions CreditTransaction[]
+}
+
+// New model for tracking credit transactions
+model CreditTransaction {
+  id           String          @id @default(uuid())
+  userCreditId String
+  amount       Int
+  type         TransactionType
+  description  String?
+  createdAt    DateTime        @default(now())
+
+  userCredit UserCredit @relation(fields: [userCreditId], references: [id])
+  purchase   Purchase? // Add this line
+}
+
+enum TransactionType {
+  EARNED
+  SPENT
+  REFUNDED
+  GIFTED
+  PURCHASED
+  PLAN_CREDITS
+  PLAN_CREDITS_REMOVED
+  PLAN_CREDITS_ADJUSTED
+  AUTO_COMMENTING
+}
+
+//REDEEM CODES
+
+model RedeemCodeBatch {
+  id        String       @id @default(uuid())
+  name      String
+  campaign  String
+  quantity  Int
+  validity  DateTime
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  createdBy String?
+  metadata  Json?
+  codes     RedeemCode[]
+}
+
+model RedeemCode {
+  id           String           @id @default(uuid())
+  code         String           @unique
+  batchId      String? // Make it optional first
+  batch        RedeemCodeBatch? @relation(fields: [batchId], references: [id]) // Optional relation
+  status       RedeemCodeStatus @default(ACTIVE)
+  claimedAt    DateTime?
+  claimedBy    String?
+  licenseKeyId String?
+  licenseKey   LicenseKey?      @relation(fields: [licenseKeyId], references: [id])
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  metadata     Json?
+
+  @@index([code])
+  @@index([batchId])
+  @@index([status])
+}
+
+enum RedeemCodeStatus {
+  ACTIVE
+  CLAIMED
+  EXPIRED
+  DISABLED
+}
+
+//OLLY MOBILE
+model MobileChatRequest {
+  id         String   @id @default(uuid())
+  content    String // The message sent by the user
+  response   String // The AI response
+  platform   String? // Optional platform information
+  deviceInfo String? // Device information from user agent
+  authToken  String // The auth token used (hashed)
+  action     String   @default("comment") // New field for action type
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([authToken])
+  @@index([createdAt])
+}
+
+model BlogVisitorEmail {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  routePath String // Stores which blog post they were reading
+  source    String   @default("popup") // Where the email was captured from
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//GOOGLE REVIEWS FOR PRODUCT PAGES
+
+model ProductReview {
+  id          String       @id @default(uuid())
+  productSlug String // This will store the route name like "ai-agent", "ai-chrome-extension" etc.
+  rating      Int
+  reviewBody  String       @db.Text
+  authorName  String
+  authorId    String?
+  user        User?        @relation(fields: [authorId], references: [id])
+  status      ReviewStatus @default(PENDING)
+  isVerified  Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([productSlug])
+  @@index([authorId])
+}
+
+// Add the CompetitorReview model below the ProductReview model
+
+model CompetitorReview {
+  id               String       @id @default(cuid())
+  competitorSlug   String
+  authorName       String
+  authorId         String?
+  authorPicture    String?
+  authorIcon       String?
+  ollyRating       Int
+  competitorRating Int
+  reviewBody       String       @db.Text
+  status           ReviewStatus @default(PENDING)
+  isVerified       Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ReviewGenerationRecord {
+  id              String   @id @default(uuid())
+  totalReviews    Int
+  successCount    Int
+  failureCount    Int
+  startTime       DateTime
+  endTime         DateTime
+  errors          String[]
+  productsSummary Json // This will store the GenerationSummary array
+  createdAt       DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+//SHERLOCK SPECIFIC
+
+model SherlockJob {
+  id           String    @id @default(uuid())
+  taskId       String // task_id from API
+  requestId    String // request_id from API
+  username     String
+  status       JobStatus
+  outputFile   String? // output_file from API
+  errorMessage String?
+  results      Json? // For storing the found profiles
+  userId       String? // Optional, for authenticated users
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  totalFound   Int?
+  validFound   Int?
+
+  @@unique([taskId])
+  @@unique([requestId])
+  @@index([status])
+  @@index([userId])
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// For tracking daily usage limits
+model UserUsage {
+  id        String   @id @default(uuid())
+  userId    String? // null for anonymous users, tracked by IP
+  ipAddress String?
+  date      DateTime
+  count     Int      @default(0)
+
+  @@unique([userId, date])
+  @@unique([ipAddress, date])
+}
+
+//NOTIFICATION SYSTEM
+
+model Notification {
+  id        String             @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType
+  status    NotificationStatus @default(UNREAD)
+  link      String? // Optional link to redirect when clicked
+  metadata  Json? // Optional additional data
+  createdAt DateTime           @default(now())
+  readAt    DateTime?
+  expiresAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  SYSTEM
+  CREDIT_UPDATE
+  LICENSE_EXPIRY
+  TEAM_INVITE
+  USAGE_LIMIT
+  FEATURE_ANNOUNCEMENT
+  SECURITY
+}
+
+enum NotificationStatus {
+  READ
+  UNREAD
+  ARCHIVED
+}
+
+//NEW PLANS FLOW
+
+// New enums for plan related info
+enum PlanTier {
+  T1 // 1 user
+  T2 // 5 users
+  T3 // 10 users
+  T4 // 20 users
+  ENTERPRISE // Custom
+}
+
+enum PlanDuration {
+  MONTHLY
+  LIFETIME
+}
+
+enum PlanVendor {
+  STRIPE
+  LEMON
+  APPSUMO
+  OLLY // for giveaways/internal
+}
+
+// New model to define available plans
+model Plan {
+  id        String       @id @default(uuid())
+  tier      PlanTier
+  duration  PlanDuration
+  vendor    PlanVendor
+  productId String // store vendor's product ID
+  name      String // display name
+  maxUsers  Int
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  // Relation to user subscriptions
+  subscriptions UserSubscription[]
+
+  @@unique([vendor, productId])
+  @@index([tier, duration, vendor])
+}
+
+// New model to track user subscriptions
+model UserSubscription {
+  id        String             @id @default(uuid())
+  userId    String
+  planId    String
+  startDate DateTime           @default(now())
+  endDate   DateTime?
+  status    SubscriptionStatus @default(ACTIVE)
+
+  // Make vendorSubId unique
+  vendorSubId String? @unique // Add unique constraint
+  orderId     String?
+  customerId  String?
+
+  // Add Stripe-specific fields
+  stripeCustomerId     String? // Stripe customer ID
+  stripeSubscriptionId String?   @unique // Stripe subscription ID
+  stripePriceId        String? // Stripe price ID
+  trialEndsAt          DateTime? // When the trial period ends
+
+  lastBillingDate   DateTime?
+  nextBillingDate   DateTime?
+  paymentFailedDate DateTime?
+  pausedAt          DateTime?
+  resumedAt         DateTime?
+  cancelledAt       DateTime?
+
+  licenseKeyId String?
+  licenseKey   LicenseKey? @relation(fields: [licenseKeyId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([licenseKeyId])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PAUSED
+  PAYMENT_FAILED
+  PAST_DUE
+}
+
+// Updated AutoCommenterConfig model
+model AutoCommenterConfig {
+  id            String          @id @default(uuid())
+  userId        String
+  licenseKeyId  String?
+  subLicenseId  String? // New field for SubLicense relation
+  isEnabled     Boolean         @default(false)
+  timeInterval  Int             @default(5)
+  action        ActionType[]    @default([COMMENT])
+  postsPerDay   Int?            @default(5)
+  hashtags      String[]
+  useBrandVoice Boolean?        @default(false)
+  platform      CommentPlatform @default(LINKEDIN)
+  accessToken   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Other fields
+  promoteProduct         Boolean? @default(false)
+  productDetails         String?
+  feedLikes              Int?     @default(10)
+  feedComments           Int?     @default(5)
+  sampleReplies          Json?
+  keywordTargets         Json?
+  promptMode             String?  @default("automatic")
+  customPrompts          Json?
+  selectedCustomPromptId String?
+
+  // new fileds to support new platforms with a single config
+  enabledPlatforms CommentPlatform[] @default([])
+  platformSettings Json?
+
+  // Relations
+  user           User                   @relation("UserToAutoCommenterConfig", fields: [userId], references: [id])
+  licenseKey     LicenseKey?            @relation(fields: [licenseKeyId], references: [id])
+  subLicense     SubLicense?            @relation("SubLicenseToAutoCommenterConfig", fields: [subLicenseId], references: [id])
+  commentHistory AutoCommenterHistory[]
+
+  @@unique([userId, platform])
+  @@index([userId])
+  @@index([licenseKeyId])
+  @@index([subLicenseId])
+}
+
+enum ActionType {
+  COMMENT
+  LIKE
+  UPVOTE
+  DOWNVOTE
+  RETWEET
+  SHARE
+}
+
+// Track Posts and Comments across platforms
+model AutoCommenterHistory {
+  id             String          @id @default(uuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  configId       String
+  postId         String // Platform-specific post ID
+  platform       CommentPlatform @default(LINKEDIN)
+  postUrl        String // URL of the post
+  postContent    String?         @db.Text
+  authorName     String? // Post author
+  commentContent String          @db.Text // The comment that was posted
+  status         CommentStatus   @default(PENDING)
+  postedAt       DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  errorMessage   String? // In case of failure
+  action         ActionType      @default(COMMENT) // Add action field with default
+
+  // Relation to config
+  config AutoCommenterConfig @relation(fields: [configId], references: [id])
+
+  @@index([configId])
+  @@index([postId])
+  @@index([status])
+  @@index([platform])
+  @@index([userId]) // Added index for the foreign key
+}
+
+model PostCache {
+  id           String      @id @default(cuid())
+  url          String      @unique
+  snapshotData Json
+  status       CacheStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  lastAccessed DateTime    @updatedAt
+
+  // Remove the relation to UserPostUrls and just keep the url field
+  @@index([url])
+}
+
+model UserPostUrls {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  postId    String
+  hashtag   Hashtag
+  platform  Platform @default(LINKEDIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Remove the relation to PostCache
+  @@index([url])
+  @@index([postId])
+}
+
+enum CacheStatus {
+  PENDING
+  COMPLETED
+}
+
+enum Platform {
+  LINKEDIN
+  TWITTER
+  INSTAGRAM
+  REDDIT
+  TIKTOK
+  YOUTUBE
+}
+
+enum CommentPlatform {
+  LINKEDIN
+  TWITTER
+  INSTAGRAM
+  THREADS
+  FACEBOOK
+  TIKTOK
+  REDDIT
+}
+
+enum CommentStatus {
+  PENDING
+  POSTED
+  FAILED
+  SKIPPED
+}
+
+enum Hashtag {
+  SALES
+  TECHNOLOGY
+  GENAI
+  MARKETING
+  STARTUP
+  CONTENTCREATION
+  SOFTWAREENGINEERING
+  ECOMMERCE
+  TRENDING
+  FASHION
+  HIRING
+}
+
+enum RoadmapStatus {
+  PENDING
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  ALPHA
+  BETA
+}
+
+enum RoadmapPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum RoadmapAssignee {
+  YT
+  GT
+  AN
+  PB
+  PW
+  YG
+  SJ
+  BT
+}
+
+//Brightdata ka data
+model AuditProfileData {
+  id                    String                 @id @default(cuid())
+  userId                String? // ID of user who requested the audit
+  platform              Platform // Type of platform (Instagram, LinkedIn, etc.)
+  profileUrl            String // Original URL that was audited
+  profileUsername       String? // Username/handle of the profile
+  profileName           String? // Display name of the profile
+  // The raw data from Brightdata
+  rawData               Json // Store the complete raw JSON response
+  // Metadata
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  // Relation to audit results
+  auditResult           AuditResult?
+  auditStatus           AuditStatus?           @default(PROCESSING)
+  followerCheckAnalysis FollowerCheckAnalysis?
+
+  @@unique([userId, platform, profileUrl])
+}
+
+enum AuditStatus {
+  PROCESSING
+  COMPLETED
+  ERROR
+}
+
+model AuditResult {
+  id String @id @default(cuid())
+
+  // Scores (1-100)
+  overallScore             Int?
+  engagementScore          Int?
+  profileOptimizationScore Int?
+  contentQualityScore      Int?
+
+  // Audit sections
+  summary         String @db.Text // Overall summary
+  strengths       Json // Array of identified strengths
+  weaknesses      Json // Array of identified weaknesses
+  recommendations Json // Specific actionable recommendations
+
+  // Analysis sections
+  profileAnalysis    String  @db.Text // Analysis of profile setup
+  contentAnalysis    String  @db.Text // Analysis of content
+  audienceAnalysis   String? @db.Text // Analysis of audience if available
+  engagementAnalysis String  @db.Text // Analysis of engagement
+
+  // Key metrics highlights
+  keyMetrics Json // Important metrics highlighted from the data
+
+  // Relation to profile data
+  profileData   AuditProfileData @relation(fields: [profileDataId], references: [id], onDelete: Cascade)
+  profileDataId String           @unique
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FollowerCheckAnalysis {
+  id String @id @default(cuid())
+
+  // Relation to AuditProfileData
+  auditProfileData   AuditProfileData @relation(fields: [auditProfileDataId], references: [id], onDelete: Cascade)
+  auditProfileDataId String           @unique
+
+  // Follower Metrics
+  totalFollowers         Int?
+  realFollowers          Int?
+  fakeFollowers          Int?
+  followBackRatio        Float? // Percentage of followers who follow back
+  fakeFollowerScore      Int? // 0-100 score of follower authenticity
+  fakeFollowerPercentage Float?
+
+  // Detailed Analysis
+  summary          String? @db.Text
+  detailedAnalysis Json? // Stores array of analysis points
+  insights         Json? // Stores key observations
+  strengths        Json? // Positive aspects of follower base
+  weaknesses       Json? // Potential issues with followers
+  recommendations  Json? // Actionable steps
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShortLink {
+  id          String       @id @default(cuid())
+  shortCode   String       @unique
+  originalUrl String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  clicks      Int          @default(0)
+  isDeleted   Boolean      @default(false)
+  deletedAt   DateTime?
+  clickEvents ClickEvent[]
+
+  @@index([shortCode])
+}
+
+model ClickEvent {
+  id          String    @id @default(cuid())
+  shortLinkId String
+  shortLink   ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+  ipAddress   String?
+  userAgent   String?
+  referrer    String?
+  clickedAt   DateTime  @default(now())
+
+  @@index([shortLinkId])
+  @@index([clickedAt])
+}
+
+model RoadmapItem {
+  id                   String            @id @default(uuid())
+  feature              String
+  status               RoadmapStatus
+  priority             RoadmapPriority   @default(MEDIUM)
+  description          String            @db.Text
+  votes                Int               @default(0)
+  implementationDate   DateTime?
+  assignee             RoadmapAssignee? // New field
+  expectedDeliveryDate DateTime? // New field
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  userVotes            RoadmapItemVote[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([assignee]) // New index
+}
+
+model RoadmapItemVote {
+  id            String   @id @default(uuid())
+  userId        String
+  roadmapItemId String
+  type          VoteType
+  createdAt     DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  roadmapItem RoadmapItem @relation(fields: [roadmapItemId], references: [id])
+
+  @@unique([userId, roadmapItemId])
+  @@index([userId])
+  @@index([roadmapItemId])
+}
+
+model FeatureRequest {
+  id        String               @id @default(uuid())
+  userId    String
+  feature   String
+  status    FeatureRequestStatus
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+enum FeatureRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  IMPLEMENTED
+}
+
+enum TaskType {
+  REMINDER
+  POST_SCHEDULE
+  COMMENT_SCHEDULE
+  CUSTOM
+}
+
+enum TaskStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model Task {
+  id             String     @id @default(uuid())
+  taskType       TaskType
+  description    String     @db.Text
+  scheduleDate   DateTime
+  platform       String
+  status         TaskStatus
+  context        String?    @db.Text
+  aiTaskOutput   String?    @db.Text
+  metadata       Json?
+  assignedToId   String?
+  organizationId String? // Make it optional to maintain backward compatibility
+  licenseKeyId   String?
+  userId         String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  // Replace platform-specific fields with generic social post fields
+  socialPosts SocialPost[]
+
+  // Relations
+  user         User          @relation("UserTasks", fields: [userId], references: [id], map: "Task_userId_fkey_tasks")
+  organization Organization? @relation("OrganizationTasks", fields: [organizationId], references: [id]) // Make optional
+  assignedTo   User?         @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  assignedBy   User          @relation("CreatedTasks", fields: [userId], references: [id], map: "Task_userId_fkey_created")
+  licenseKey   LicenseKey?   @relation(fields: [licenseKeyId], references: [id])
+
+  @@index([organizationId])
+  @@index([assignedToId])
+  @@index([licenseKeyId])
+  @@index([userId])
+}
+
+// New model for social media posts
+model SocialPost {
+  id        String           @id @default(uuid())
+  taskId    String
+  platform  String // e.g., "LINKEDIN", "TWITTER", "INSTAGRAM"
+  content   String           @db.Text
+  status    SocialPostStatus // e.g., "PENDING", "POSTED", "FAILED"
+  postedAt  DateTime?
+  postId    String? // Platform's post ID after successful posting
+  postUrl   String? // URL of the posted content
+  metadata  Json? // Store platform-specific data
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([platform])
+  @@index([status])
+}
+
+enum SocialPostStatus {
+  PENDING
+  POSTED
+  FAILED
+  CANCELLED
+}
+
+// ShareSpace Models
+model SharedPost {
+  id                String           @id @default(uuid())
+  userId            String
+  title             String
+  url               String
+  platform          Platform
+  description       String?          @db.Text
+  status            SharedPostStatus @default(PENDING)
+  creditBudget      Int              @default(0)
+  creditsPerLike    Int              @default(0)
+  creditsPerShare   Int              @default(0)
+  creditsPerComment Int              @default(0)
+  remainingCredits  Int              @default(0)
+  deadline          DateTime? // New field: When the post expires
+  isExpired         Boolean          @default(false) // New field: Track if post is expired
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  user     User                @relation(fields: [userId], references: [id])
+  likes    SharedPostLike[]
+  shares   SharedPostShare[]
+  comments SharedPostComment[]
+
+  @@index([userId])
+  @@index([platform])
+  @@index([status])
+  @@index([deadline]) // New index for querying by deadline
+  @@index([isExpired]) // New index for querying by expiry status
+}
+
+// New model for comments
+model SharedPostComment {
+  id          String   @id @default(uuid())
+  userId      String
+  postId      String
+  content     String   @db.Text
+  creditsPaid Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  user User       @relation(fields: [userId], references: [id])
+  post SharedPost @relation(fields: [postId], references: [id])
+
+  @@index([userId])
+  @@index([postId])
+}
+
+// Update existing models to track credits
+model SharedPostLike {
+  id          String   @id @default(uuid())
+  userId      String
+  postId      String
+  creditsPaid Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  user User       @relation(fields: [userId], references: [id])
+  post SharedPost @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+model SharedPostShare {
+  id          String   @id @default(uuid())
+  userId      String
+  postId      String
+  platform    Platform
+  sharedUrl   String?
+  creditsPaid Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  user User       @relation(fields: [userId], references: [id])
+  post SharedPost @relation(fields: [postId], references: [id])
+
+  @@index([userId])
+  @@index([postId])
+}
+
+enum SharedPostStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+// Daily Vlog Models
+model DailyVlog {
+  id              String   @id @default(uuid())
+  userId          String
+  date            DateTime
+  transcription   String?  @db.Text
+  content         String   @db.Text // AI-enhanced content
+  audioUrl        String? // URL to the audio recording if available
+  isPublic        Boolean  @default(false)
+  reminderEnabled Boolean  @default(false)
+  enhanced        Boolean  @default(false) // Whether the content was enhanced with AI
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date]) // Ensure one vlog per day per user
+  @@index([userId])
+  @@index([date])
+  @@index([isPublic])
+}
+
+model KnowledgeBaseFile {
+  id          String   @id @default(uuid())
+  name        String
+  key         String   @unique // S3 object key
+  size        Int
+  category    String // 'brand', 'replies', 'resources'
+  contentType String
+  url         String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// Instagram Automation Models
+model InstagramCommentMonitoring {
+  id           String   @id @default(uuid())
+  userId       String
+  postId       String
+  isEnabled    Boolean  @default(false)
+  keywordRules Json // Array of keyword rules
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+}
+
+model InstagramDMAutomation {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  isEnabled Boolean  @default(false)
+  dmRules   Json // Array of DM rules
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user           User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentHistory InstagramCommentHistory[] // Add relation to comment history
+
+  @@unique([userId, postId])
+  @@index([userId])
+}
+
+model InstagramCommentHistory {
+  id             String    @id @default(uuid())
+  userId         String
+  postId         String
+  commentId      String
+  commentText    String?   @db.Text
+  commenterName  String?
+  commenterId    String?
+  responseType   String? // 'comment', 'dm', 'both'
+  responseText   String?   @db.Text
+  responseStatus String? // 'pending', 'sent', 'failed'
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+  respondedAt    DateTime?
+  processed      Boolean   @default(false)
+  matchedRules   Boolean   @default(false)
+
+  // Add relation to DM automation
+  dmAutomationId String?
+  dmAutomation   InstagramDMAutomation? @relation(fields: [dmAutomationId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([postId])
+  @@index([commentId])
+  @@index([dmAutomationId])
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String
+  content     String   @db.Text
+  description String   @db.Text
+  date        DateTime
+  authorId    String?
+  author      User?    @relation(fields: [authorId], references: [id])
+  language    String   @default("en")
+  categories  String[] @default([])
+  isPublished Boolean  @default(false)
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([language])
+  @@index([isPublished])
+}
+
+// Trajectory Analysis Models
+model TrajectoryAnalysis {
+  id                  String   @id @default(cuid())
+  moodData            Json
+  energyData          Json
+  productivityData    Json
+  insightsText        String   @db.Text
+  recommendationsText String   @db.Text
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// YouTube Transcript Models
+model YouTubeTranscript {
+  id           String   @id @default(cuid())
+  videoId      String   @unique
+  transcript   Json // Store the formatted transcript segments
+  title        String? // Video title if available
+  thumbnailUrl String? // Thumbnail URL
+  duration     Int? // Video duration in seconds
+  language     String?  @default("en")
+  fetchedAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation to AI content
+  aiContents       YouTubeTranscriptAIContent[]
+  // Relation to virality analysis
+  viralityAnalysis YouTubeViralityAnalysis?
+}
+
+model YouTubeTranscriptAIContent {
+  id           String            @id @default(cuid())
+  transcriptId String
+  transcript   YouTubeTranscript @relation(fields: [transcriptId], references: [id], onDelete: Cascade)
+  type         AIContentType
+  content      String            @db.Text
+  generatedAt  DateTime          @default(now())
+
+  @@unique([transcriptId, type])
+  @@index([transcriptId])
+}
+
+// New model for virality analysis
+model YouTubeViralityAnalysis {
+  id           String            @id @default(cuid())
+  transcriptId String            @unique
+  transcript   YouTubeTranscript @relation(fields: [transcriptId], references: [id], onDelete: Cascade)
+
+  // Scores (0-100)
+  overallScore    Int
+  engagementScore Int
+  qualityScore    Int
+  trendScore      Int
+
+  // Detailed metrics
+  viewToLikeRatio    Float?
+  viewsPerDay        Float?
+  commentEngagement  Int?
+  contentQuality     Int?
+  titleEffectiveness Int?
+  topicTrend         Int?
+
+  // Insights and recommendations
+  insights        Json // Array of strings
+  recommendations Json // Array of strings
+
+  generatedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([transcriptId])
+  @@index([overallScore])
+}
+
+enum AIContentType {
+  SUMMARY
+  CHAPTERS
+  KEY_POINTS
+  QUESTIONS
+}
+
+model ApolloLead {
+  id          String  @id @default(uuid())
+  linkedinUrl String?
+  firstName   String
+  lastName    String
+  email       String?
+  title       String?
+  company     String?
+  phoneNumber String?
+  apolloId    String? @unique
+
+  // Additional fields for more comprehensive data
+  seniority            String?
+  location             String?
+  organizationLocation String?
+  organizationDomain   String?
+  organizationId       String?
+  organizationSize     String?
+  emailStatus          String?
+
+  // Store the full JSON response
+  rawData String @db.Text
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([email])
+  @@index([company])
+  @@index([title])
+  @@index([seniority])
+  @@index([location])
+  @@index([organizationDomain])
+}
+
+model LicenseGoal {
+  id            String    @id @default(uuid())
+  licenseKeyId  String
+  userId        String
+  platform      String // The platform for which the goal is set
+  goal          String // The goal description
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  target        Int?
+  progress      Int?      @default(0)
+  status        String?   @default("in_progress") // "in_progress", "achieved"
+  achievedAt    DateTime?
+  daysToAchieve Int?
+
+  licenseKey LicenseKey @relation(fields: [licenseKeyId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+
+  @@index([licenseKeyId])
+  @@index([userId])
+}
+
+model UserFile {
+  id        String   @id @default(cuid())
+  userId    String
+  filename  String
+  fileSize  Int
+  fileType  String
+  fileUrl   String
+  metadata  Json?
+  tags      String[]
+  category  String   @default("uncategorized")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([createdAt])
+}
+
+model ImageGeneration {
+  id                String   @id @default(cuid())
+  userId            String
+  prompt            String   @db.Text
+  revisedPrompt     String?  @db.Text
+  imageUrl          String
+  referenceImageUrl String?
+  style             String // "ghibli", "pixar", etc.
+  route             String // "/tools/ghibli-image-generator", etc.
+  size              String // "1024x1024", "1024x1792", "1792x1024"
+  createdAt         DateTime @default(now())
+  customStyle       String?
+  quality           String   @default("low") // "low", "medium", "high"
+  creditsUsed       Int      @default(0)
+
+  // Add relation to user
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Workshop Group Organizer Models
+
+model Workshop {
+  id                String         @id @default(cuid())
+  name              String
+  description       String?
+  createdById       String
+  createdBy         User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  totalParticipants Int            @default(0)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  isActive          Boolean        @default(true)
+  joinMode          JoinMode       @default(ASSIGNED) // Whether participants are assigned or can choose groups
+  accessCode        String? // Optional code participants can use to join
+  groups            Group[]
+  tasks             WorkshopTask[]
+
+  @@index([createdById])
+}
+
+model Group {
+  id             String          @id @default(cuid())
+  name           String
+  color          String          @default("blue")
+  workshopId     String
+  workshop       Workshop        @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  maxSize        Int             @default(5)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  participants   Participant[]
+  completedTasks CompletedTask[]
+
+  @@index([workshopId])
+}
+
+model Participant {
+  id             String          @id @default(cuid())
+  name           String
+  email          String?
+  groupId        String
+  group          Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId         String? // Optional connection to actual user account
+  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  joinedAt       DateTime        @default(now())
+  isActive       Boolean         @default(true)
+  completedTasks CompletedTask[]
+
+  @@index([groupId])
+  @@index([userId])
+}
+
+model WorkshopTask {
+  id              String          @id @default(cuid())
+  title           String
+  description     String?
+  workshopId      String
+  workshop        Workshop        @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  durationMinutes Int? // Optional time limit in minutes
+  startTime       DateTime? // Optional scheduled start time
+  endTime         DateTime? // Optional deadline
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  isActive        Boolean         @default(true)
+  order           Int             @default(0) // For ordering tasks in sequence
+  completedBy     CompletedTask[]
+
+  @@index([workshopId])
+}
+
+model CompletedTask {
+  id            String       @id @default(cuid())
+  taskId        String
+  task          WorkshopTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  groupId       String
+  group         Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  participantId String?
+  participant   Participant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
+  completedAt   DateTime     @default(now())
+  notes         String? // Optional notes about completion
+
+  @@unique([taskId, groupId])
+  @@index([taskId])
+  @@index([groupId])
+  @@index([participantId])
+}
+
+enum JoinMode {
+  ASSIGNED // Instructor assigns participants to groups
+  CHOICE // Participants can choose their own group
+  RANDOM // Participants are randomly assigned to groups
+}
+
+// Add this new model to your schema
+
+model UserJourneyMilestone {
+  id         String        @id @default(uuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  milestone  MilestoneType
+  achievedAt DateTime      @default(now())
+  metadata   Json? // Optional additional data about the milestone
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@unique([userId, milestone]) // Ensure each milestone is recorded only once per user
+  @@index([userId])
+  @@index([milestone])
+  @@index([achievedAt]) // Useful for timeline queries
+}
+
+// Updated enum with additional milestone types based on your onboarding flow
+enum MilestoneType {
+  // User account milestones
+  SIGNUP
+  FIRST_LOGIN
+
+  // Onboarding milestones
+  ONBOARDING_STARTED
+  ONBOARDING_COMPLETED
+  ONBOARDING_SKIPPED // New: When a user explicitly skips onboarding
+
+  // Extension milestones
+  EXTENSION_INSTALLED
+  EXTENSION_ACTIVATED
+
+  // Engagement milestones
+  FIRST_COMMENT
+  FIFTH_COMMENT
+  TENTH_COMMENT
+  FIRST_LIKE
+
+  // Task milestones
+  FIRST_TASK_CREATED
+  FIRST_TEAM_MEMBER_ADDED
+
+  // Subscription milestones
+  LICENSE_ACTIVATED
+  PREMIUM_UPGRADED
+
+  // Auto-comment milestones
+  FIRST_AUTO_COMMENT_SETUP
+  FIRST_AUTO_COMMENT_EXECUTED
+
+  // Business profile milestones
+  BUSINESS_PROFILE_COMPLETED // New: When user adds industry, role, company size
+  PLATFORM_CONNECTED // New: When user connects a social platform
+
+  // Lead quality milestones
+  HIGH_QUALITY_LEAD_IDENTIFIED // New: When a user is classified as high-quality lead
+
+  // Advanced usage milestones
+  ADVANCED_FEATURE_USED // New: Generic for any advanced feature usage
+
+  EXTENSION_UNINSTALLED // New: When a user uninstalls the extension
+}
+
+model UserStreak {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak Int      @default(0)
+  maxStreak     Int      @default(0)
+  lastActivity  DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([lastActivity])
+}
+
+// Add this model for influencer program applications
+model PromoteApplication {
+  id          String   @id @default(uuid())
+  email       String
+  socialLinks String[]
+  category    String
+  createdAt   DateTime @default(now())
+}

@@ -1,0 +1,237 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Olly Social CustomGPT Integration API",
+      "description": "API for integrating with Olly Social through CustomGPT, enabling Sherlock analysis and user authentication",
+      "version": "v1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://www.olly.social"
+      }
+    ],
+    "paths": {
+      "/api/customgpt/actions": {
+        "post": {
+          "description": "Execute a CustomGPT action",
+          "operationId": "ExecuteCustomGPTAction",
+          "parameters": [
+            {
+              "name": "action",
+              "in": "query",
+              "description": "The action to execute",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": ["analyze", "generate", "process"]
+              }
+            },
+            {
+              "name": "input",
+              "in": "query",
+              "description": "Input data for the action",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Action executed successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "result": {
+                        "type": "string",
+                        "description": "Result of the action"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["success", "error"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized - Invalid or expired token",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2": ["openid", "profile", "email"]
+            }
+          ]
+        }
+      },
+      "/api/customgpt/sherlock": {
+        "post": {
+          "description": "Submit a Sherlock analysis request",
+          "operationId": "SubmitSherlockRequest",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["input"],
+                  "properties": {
+                    "input": {
+                      "type": "string",
+                      "description": "Input data for analysis"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Additional metadata for the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Request submitted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "requestId": {
+                        "type": "string",
+                        "description": "Unique identifier for the request"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["pending", "processing", "completed", "failed"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized - Invalid or expired token",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2": ["openid", "profile", "email"]
+            }
+          ]
+        },
+        "get": {
+          "description": "Get the status of a Sherlock analysis request",
+          "operationId": "GetSherlockRequestStatus",
+          "parameters": [
+            {
+              "name": "requestId",
+              "in": "query",
+              "description": "ID of the request to check",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Request status retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "enum": ["pending", "processing", "completed", "failed"]
+                      },
+                      "result": {
+                        "type": "object",
+                        "description": "Analysis results if completed"
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Error message if failed"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized - Invalid or expired token",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2": ["openid", "profile", "email"]
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {},
+      "securitySchemes": {
+        "OAuth2": {
+          "type": "oauth2",
+          "flows": {
+            "authorizationCode": {
+              "authorizationUrl": "https://www.olly.social/api/auth/customgpt",
+              "tokenUrl": "https://www.olly.social/api/auth/customgpt/token",
+              "refreshUrl": "https://www.olly.social/api/auth/customgpt/token",
+              "scopes": {
+                "openid": "OpenID Connect scope",
+                "profile": "Access to profile information",
+                "email": "Access to email address"
+              }
+            }
+          }
+        }
+      }
+    }
+  }

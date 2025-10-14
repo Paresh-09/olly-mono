@@ -1,0 +1,1 @@
+export type Platform = 'instagram' | 'facebook' | 'linkedin' | 'reddit' | 'tiktok' | 'twitter' | 'youtube';
