@@ -6,13 +6,13 @@ import { DateRange } from "react-day-picker"
 import { format } from "date-fns"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@repo/ui/components/ui/button"
+import { Calendar } from "@repo/ui/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@repo/ui/components/ui/popover"
 
 interface DateRangePickerProps {
   date?: DateRange

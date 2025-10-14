@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { toast } from '@/components/ui/use-toast'
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Calendar } from '@/components/ui/calendar'
+import { Card } from '@repo/ui/components/ui/card'
+import { Button } from '@repo/ui/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs'
+import { toast } from '@repo/ui/components/ui/use-toast'
+import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
+import { Calendar } from '@repo/ui/components/ui/calendar'
 import { format, addDays, differenceInWeeks, differenceInDays, isToday, isBefore, isAfter } from 'date-fns'
 import { CalendarIcon, CheckCircle2, CircleEllipsis, CalendarDays } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui/components/ui/popover'
 import AuthPopup from "../authentication"
 import { useAuthLimit } from '@/hooks/use-auth-check';
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Badge } from '@repo/ui/components/ui/badge'
+import { Progress } from '@repo/ui/components/ui/progress'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/ui/components/ui/accordion'
 
 // Constants
 const LOCAL_STORAGE_KEY = 'pregnancy_tracker_data';
