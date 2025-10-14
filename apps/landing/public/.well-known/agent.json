@@ -1,0 +1,101 @@
+{
+    "name": "Olly Social AI Agent",
+    "description": "The world's #1 AI Agent for social media engagement. Olly helps you generate authentic comments, viral posts, and meaningful interactions across multiple platforms. Increase your leads, sales, followers, and reach with smart AI-powered engagement that sounds like you.",
+    "url": "https://olly.social/api/agent",
+    "provider": {
+      "organization": "AISOLO Technologies Private Limited",
+      "url": "https://olly.social"
+    },
+    "version": "1.0.0",
+    "documentationUrl": "https://olly.social/docs",
+    "capabilities": {
+      "streaming": true,
+      "pushNotifications": true,
+      "stateTransitionHistory": false
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://olly.social/auth",
+            "scopes": {
+              "read:profile": "Read user profile",
+              "read:social": "Access social media data",
+              "write:comments": "Generate and post comments"
+            }
+          }
+        }
+      }
+    },
+    "security": [{"oauth2": ["read:profile", "read:social", "write:comments"]}],
+    "defaultInputModes": ["text/plain", "application/json"],
+    "defaultOutputModes": ["text/plain", "application/json"],
+    "skills": [
+      {
+        "id": "ai-comment-generator",
+        "name": "AI Comment Generator",
+        "description": "Generates authentic, engaging comments for social media posts based on post content and user preferences. Comments match your personal tone and style while driving meaningful engagement.",
+        "tags": ["social media", "comment generation", "engagement", "AI", "automation"],
+        "examples": [
+          "Generate a thoughtful comment for this LinkedIn post about digital marketing trends",
+          "Write an engaging Twitter reply to this thread about AI ethics",
+          "Create a supportive comment for this Instagram post"
+        ],
+        "inputModes": ["text/plain", "application/json"],
+        "outputModes": ["text/plain", "application/json"]
+      },
+      {
+        "id": "viral-score-predictor",
+        "name": "Viral Score Predictor",
+        "description": "Analyzes social media content to predict virality potential and provides suggestions to improve engagement. Learn what makes posts go viral and optimize your content strategy.",
+        "tags": ["virality", "content optimization", "prediction", "analytics", "social media"],
+        "examples": [
+          "Analyze this LinkedIn post and give it a virality score",
+          "What's the viral potential of this product announcement?",
+          "How can I improve the engagement potential of this content?"
+        ],
+        "inputModes": ["text/plain", "application/json"],
+        "outputModes": ["application/json"]
+      },
+      {
+        "id": "ai-post-generator",
+        "name": "AI Post Generator",
+        "description": "Creates original, platform-optimized social media posts that align with your brand voice and content strategy. Generate viral-worthy content in seconds.",
+        "tags": ["content creation", "post generation", "social media", "AI", "automation"],
+        "examples": [
+          "Create a LinkedIn post about our new product launch",
+          "Generate a Twitter thread about industry trends in AI",
+          "Write an engaging Facebook post for our upcoming event"
+        ],
+        "inputModes": ["text/plain", "application/json"],
+        "outputModes": ["text/plain", "application/json"]
+      },
+      {
+        "id": "auto-commenter",
+        "name": "Auto Commenting Engine",
+        "description": "Automatically identifies relevant posts and generates contextual comments based on your preferences and expertise. Scale your engagement effortlessly while maintaining your unique voice.",
+        "tags": ["automation", "social media", "engagement", "commenting", "AI agent"],
+        "examples": [
+          "Set up auto-commenting for posts about digital marketing",
+          "Configure automated engagement for my target audience",
+          "Create an auto-commenting strategy for my LinkedIn network"
+        ],
+        "inputModes": ["application/json"],
+        "outputModes": ["application/json"]
+      },
+      {
+        "id": "social-summarizer",
+        "name": "Social Content Summarizer",
+        "description": "Quickly extracts key points from long-form social media content, articles, and threads. Get the essence of any content in seconds.",
+        "tags": ["summarization", "content analysis", "social media", "productivity"],
+        "examples": [
+          "Summarize this LinkedIn article about remote work trends",
+          "Give me the key points from this Twitter thread",
+          "Extract the main ideas from this Facebook discussion"
+        ],
+        "inputModes": ["text/plain", "application/json"],
+        "outputModes": ["text/plain", "application/json"]
+      }
+    ]
+  }
