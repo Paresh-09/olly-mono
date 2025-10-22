@@ -495,7 +495,7 @@ const LicenseKeyCustomKnowledgeForm: React.FC<LicenseKeyCustomKnowledgeFormProps
                 <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20">
                   <SelectValue placeholder="Select industry" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectContent>
                   {FIELD_OPTIONS.industry.map((option) => (
                     <SelectItem key={option} value={option} className="rounded-lg">{option}</SelectItem>
                   ))}
@@ -515,7 +515,7 @@ const LicenseKeyCustomKnowledgeForm: React.FC<LicenseKeyCustomKnowledgeFormProps
                 <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20">
                   <SelectValue placeholder="Select voice" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectContent>
                   {FIELD_OPTIONS.brandVoice.map((option) => (
                     <SelectItem key={option} value={option} className="rounded-lg">{option}</SelectItem>
                   ))}
@@ -537,7 +537,7 @@ const LicenseKeyCustomKnowledgeForm: React.FC<LicenseKeyCustomKnowledgeFormProps
                 <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20">
                   <SelectValue placeholder="Select personality" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectContent>
                   {FIELD_OPTIONS.brandPersonality.map((option) => (
                     <SelectItem key={option} value={option} className="rounded-lg">{option}</SelectItem>
                   ))}
