@@ -17,12 +17,12 @@ interface NotificationBellProps {
   onMarkAsRead: (ids: string[]) => void;
 }
 
-const NotificationBell: React.FC<NotificationBellProps> = ({ 
-  notifications = [], 
-  onMarkAsRead 
+const NotificationBell: React.FC<NotificationBellProps> = ({
+  notifications = [],
+  onMarkAsRead
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  
+
   const unreadCount = notifications.filter(n => n.status === 'UNREAD').length;
 
   const getNotificationIcon = (type: NotificationType): string => {
@@ -45,7 +45,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
   const formatTimeAgo = (date: string | Date): string => {
     const now = new Date();
     const diff = (now.getTime() - new Date(date).getTime()) / 1000;
-    
+
     if (diff < 60) return 'just now';
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
@@ -64,13 +64,13 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80">
+      <DropdownMenuContent align="end" className="w-80 bg-white">
         <DropdownMenuLabel className="flex justify-between items-center">
           <span>Notifications</span>
           {unreadCount > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => onMarkAsRead(notifications.filter(n => n.status === 'UNREAD').map(n => n.id))}
               className="text-xs"
             >

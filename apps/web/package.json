@@ -8,11 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "check-types": "tsc --noEmit",
-    "migrate-mdx": "ts-node scripts/migrate-mdx-to-db.ts"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.750.0",

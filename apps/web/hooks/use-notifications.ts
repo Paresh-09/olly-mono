@@ -1,7 +1,8 @@
 // hooks/useNotifications.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Notification } from '@/types/notifications';
-import { useSession } from '@/app/web/providers/SessionProvider';
+import { useSession } from '@/providers/SessionProvider';
+
 
 interface NotificationResponse {
   notifications: Notification[];
@@ -19,11 +20,11 @@ interface UseNotificationsOptions {
 }
 
 export function useNotifications(options: UseNotificationsOptions = {}) {
-  const { 
-    enabled = true, 
+  const {
+    enabled = true,
     pollInterval = 300000, // 300 seconds default (5 minutes)
   } = options;
-  
+
   const queryClient = useQueryClient();
   const sessionData = useSession();
   const isAuthenticated = !!sessionData?.user;
@@ -35,7 +36,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       if (!isAuthenticated) {
         return [];
       }
-      
+
       const response = await fetch('/api/notifications');
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
@@ -60,7 +61,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       if (!isAuthenticated) {
         throw new Error('User not authenticated');
       }
-      
+
       const response = await fetch('/api/notifications/mark-read', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +83,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       if (!isAuthenticated) {
         throw new Error('User not authenticated');
       }
-      
+
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: 'DELETE',
       });

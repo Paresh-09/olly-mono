@@ -5,7 +5,7 @@ import { Check } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/ui/card"
 import { Tag } from '@/components/Tag';
 import { Button } from '@repo/ui/components/ui/button';
-import { usePricing } from '@/app/web/providers/pricingContext';
+import { usePricing } from '@/providers/pricingContext';
 
 type TagColor = "green" | "white" | "red";
 

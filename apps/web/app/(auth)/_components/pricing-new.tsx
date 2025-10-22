@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 import { Tag } from "@/components/Tag";
 import { cva } from "class-variance-authority";
-import { usePricing } from "@/app/web/providers/pricingContext";
+import { usePricing } from "@/providers/pricingContext";
 import axios from "axios";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
@@ -39,7 +39,7 @@ import {
     DialogTrigger,
 } from "@repo/ui/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
-import { useSession } from "@/app/web/providers/SessionProvider";
+import { useSession } from "@/providers/SessionProvider";
 import { Slider } from "@repo/ui/components/ui/slider";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Separator } from "@repo/ui/components/ui/separator";

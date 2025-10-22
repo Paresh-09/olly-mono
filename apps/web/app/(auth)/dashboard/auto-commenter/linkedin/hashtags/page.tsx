@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@repo/ui/components/ui
 import { Search } from "lucide-react";
 import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import { toast } from "@repo/ui/hooks/use-toast";
-import { useSession } from "@/app/web/providers/SessionProvider";
+import { useSession } from "@/providers/SessionProvider";
 
 interface HashtagResult {
   id: string;

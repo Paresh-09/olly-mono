@@ -38,7 +38,7 @@ import {
 import { useRouter } from "next/navigation";
 import NotificationBell from "./notification";
 import { useNotifications } from "@/hooks/use-notifications";
-import { useSession } from "@/app/web/providers/SessionProvider";
+import { useSession } from "@/providers/SessionProvider";
 import { cn } from "@/lib/utils";
 import { PostHogUser } from "@/app/lib/posthog-utils";
 
@@ -135,7 +135,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, activeOrg, onOrgChange }) => {
                     <span className="lg:hidden">Tools</span>
                     <ChevronDown className="h-4 w-4 ml-1" />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="bg-white">
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard/brand" className="w-full">
                         Brand Voice
@@ -173,7 +173,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, activeOrg, onOrgChange }) => {
                     <span className="lg:hidden">Team</span>
                     <ChevronDown className="h-4 w-4 ml-1" />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="bg-white">
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard/licenses">
                         Assign Licenses & Goals
@@ -199,7 +199,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, activeOrg, onOrgChange }) => {
                     <span className="lg:hidden">Resources</span>
                     <ChevronDown className="h-4 w-4 ml-1" />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="bg-white">
                     <DropdownMenuItem asChild>
                       <Link href="/guides" className="w-full">
                         Platform Guides
@@ -326,7 +326,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, activeOrg, onOrgChange }) => {
                         <ChevronDown className="h-4 w-4 text-gray-500" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 p-2">
+                    <DropdownMenuContent align="end" className="w-56 p-2 bg-white">
                       <DropdownMenuLabel className="font-semibold">
                         Account
                       </DropdownMenuLabel>

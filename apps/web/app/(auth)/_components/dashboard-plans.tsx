@@ -16,8 +16,13 @@ import {
 } from "lucide-react";
 import { Tag } from "@/components/Tag";
 import { cva } from "class-variance-authority";
-import { usePricing } from "@/app/web/providers/pricingContext";
-import pricingFeatures from "@/app/(marketing)/_components/pricing-features";
+import { usePricing } from "@/providers/pricingContext";
+// Pricing features inline since marketing components were removed
+const pricingFeatures = {
+  starter: ["Basic dashboard access", "Limited API calls"],
+  pro: ["Full dashboard access", "Unlimited API calls", "Priority support"],
+  enterprise: ["Everything in Pro", "Custom integrations", "Dedicated support"]
+};
 import axios from "axios";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
@@ -39,7 +44,7 @@ import {
   DialogTrigger,
 } from "@repo/ui/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
-import { useSession } from "@/app/web/providers/SessionProvider";
+import { useSession } from "@/providers/SessionProvider";
 import { Slider } from "@repo/ui/components/ui/slider";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Separator } from "@repo/ui/components/ui/separator";

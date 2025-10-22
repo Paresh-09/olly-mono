@@ -35,7 +35,8 @@ import { Alert, AlertDescription } from "@repo/ui/components/ui/alert";
 import { Button } from "@repo/ui/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
 import { Badge } from "@repo/ui/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@repo/ui/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Input } from "@repo/ui/components/ui/input";
 import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
@@ -910,7 +911,7 @@ function DashboardContentInner({
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/40 shadow-xl shadow-gray-200/50 relative">
                 {!hasPremiumLicense && (
                   <div
-                    className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center cursor-pointer group rounded-2xl"
+                    className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-[5] flex flex-col items-center justify-center cursor-pointer group rounded-2xl"
                     onClick={() => router.push("/plans")}
                   >
                     <div className="text-center p-4 transform group-hover:scale-105 transition-transform">
@@ -939,159 +940,161 @@ function DashboardContentInner({
                         View All
                       </Link>
                     )}
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <button className="px-4 py-2 bg-[#0C9488] hover:bg-[#0a7d73] text-white rounded-xl transition-all duration-200 text-sm font-medium shadow-lg shadow-teal-500/25">
-                          Add Goal
-                        </button>
+                    {/* Add Goal Button - show if user has premium license and there are existing goals */}
+                    {hasPremiumLicense && (licenseGoals.length + subLicenseGoals.length) > 0 && (
+                      <DialogPrimitive.Root>
+                        <DialogPrimitive.Trigger asChild>
+                          <button className="px-3 py-1.5 bg-[#0C9488] hover:bg-[#0a7d73] text-white rounded-lg transition-all duration-200 text-sm font-medium shadow-lg shadow-teal-500/25">
+                            Add Goal
+                          </button>
+                        </DialogPrimitive.Trigger>
+                        <DialogPrimitive.Portal>
+                          <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+                          <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg">
+                            <div className="flex flex-col space-y-1.5 text-center sm:text-left">
+                              <DialogPrimitive.Title className="text-lg font-semibold leading-none tracking-tight flex items-center space-x-2">
+                                <Target className="w-5 h-5 text-[#0C9488]" />
+                                <span>Add New Goal</span>
+                              </DialogPrimitive.Title>
+                              <DialogPrimitive.Description className="text-sm text-muted-foreground">
+                                Set a specific goal to track your progress and stay motivated.
+                              </DialogPrimitive.Description>
+                            </div>
+                            <form
+                              onSubmit={async (e) => {
+                                e.preventDefault();
 
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle className="flex items-center space-x-2">
-                            <Target className="w-5 h-5 text-[#0C9488]" />
-                            <span>Add New Goal</span>
-                          </DialogTitle>
-                          <p className="text-sm text-gray-600 mt-2">
-                            Set a specific goal to track your progress and stay motivated.
-                          </p>
-                        </DialogHeader>
-                        <form
-                          onSubmit={async (e) => {
-                            e.preventDefault();
+                                if (isCreatingGoal) return;
 
-                            if (isCreatingGoal) return; // Prevent multiple submissions
+                                setIsCreatingGoal(true);
+                                const formData = new FormData(e.currentTarget);
+                                const goal = formData.get("goal") as string;
+                                const platform = formData.get("platform") as string;
+                                const daysToAchieve = parseInt(
+                                  formData.get("daysToAchieve") as string,
+                                );
+                                const target = formData.get("target") as string;
 
-                            setIsCreatingGoal(true);
-                            const formData = new FormData(e.currentTarget);
-                            const goal = formData.get("goal") as string;
-                            const platform = formData.get("platform") as string;
-                            const daysToAchieve = parseInt(
-                              formData.get("daysToAchieve") as string,
-                            );
-                            const target = formData.get("target") as string;
-
-                            try {
-                              const response = await fetch("/api/license-goals", {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                  goal,
-                                  platform,
-                                  daysToAchieve,
-                                  target: target ? parseInt(target) : null,
-                                }),
-                              });
-
-                              if (response.ok) {
-                                toast({
-                                  title: "Goal Added",
-                                  description: "Your goal has been successfully added.",
-                                });
-                                router.refresh();
-                                // Close the dialog
-                                const closeButton = document.querySelector('[data-dialog-close]') as HTMLButtonElement;
-                                if (closeButton) closeButton.click();
-                              } else {
-                                const errorText = await response.text();
-                                if (response.status === 409) {
-                                  toast({
-                                    title: "Active Goal Exists",
-                                    description: "You already have an active goal for this platform. Please complete your current goal before creating a new one.",
-                                    variant: "default",
+                                try {
+                                  const response = await fetch("/api/license-goals", {
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                      goal,
+                                      platform,
+                                      daysToAchieve,
+                                      target: target ? parseInt(target) : null,
+                                    }),
                                   });
-                                } else {
-                                  throw new Error(errorText || 'Failed to add goal');
+
+                                  if (response.ok) {
+                                    toast({
+                                      title: "Goal Added",
+                                      description: "Your goal has been successfully added!",
+                                    });
+                                    router.refresh();
+                                  } else {
+                                    const errorText = await response.text();
+                                    if (response.status === 409) {
+                                      toast({
+                                        title: "Active Goal Exists",
+                                        description: "You already have an active goal for this platform. Please complete your current goal before creating a new one.",
+                                        variant: "default",
+                                      });
+                                    } else {
+                                      throw new Error(errorText || 'Failed to add goal');
+                                    }
+                                  }
+                                } catch (error) {
+                                  console.error("Failed to add goal:", error);
+                                  toast({
+                                    title: "Error",
+                                    description: error instanceof Error ? error.message : "Failed to add goal. Please try again.",
+                                    variant: "destructive",
+                                  });
+                                } finally {
+                                  setIsCreatingGoal(false);
                                 }
-                              }
-                            } catch (error) {
-                              console.error("Failed to add goal:", error);
-                              toast({
-                                title: "Error",
-                                description: error instanceof Error ? error.message : "Failed to add goal. Please try again.",
-                                variant: "destructive",
-                              });
-                            } finally {
-                              setIsCreatingGoal(false);
-                            }
-                          }}
-                          className="space-y-4"
-                        >
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Goal Description</label>
-                            <Input
-                              name="goal"
-                              placeholder="e.g., 50 comments in 50 days"
-                              required
-                              className="w-full"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Target Comments</label>
-                            <Input
-                              name="target"
-                              type="number"
-                              placeholder="e.g., 50 (for 50 comments)"
-                              min="1"
-                              className="w-full"
-                            />
-                            <p className="text-xs text-gray-500">Set a specific number to track progress towards your goal</p>
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Days to Achieve</label>
-                            <Input
-                              name="daysToAchieve"
-                              type="number"
-                              placeholder="e.g., 30 (for 30 days)"
-                              min="1"
-                              max="365"
-                              required
-                              className="w-full"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Platform</label>
-                            <Select name="platform" required>
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Choose your platform" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="linkedin">LinkedIn</SelectItem>
-                                <SelectItem value="twitter">Twitter</SelectItem>
-                                <SelectItem value="instagram">Instagram</SelectItem>
-                                <SelectItem value="reddit">Reddit</SelectItem>
-                                <SelectItem value="facebook">Facebook</SelectItem>
-                                <SelectItem value="youtube">YouTube</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="flex gap-2 pt-2">
-                            <DialogTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                className="flex-1"
-                                data-dialog-close
-                              >
-                                Cancel
-                              </Button>
-                            </DialogTrigger>
-                            <Button type="submit" disabled={isCreatingGoal} className="flex-1 bg-[#0C9488] hover:bg-[#0a7d73]">
-                              {isCreatingGoal ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                  Adding...
-                                </>
-                              ) : (
-                                'Add Goal'
-                              )}
-                            </Button>
-                          </div>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
+                              }}
+                              className="space-y-4"
+                            >
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Goal Description</label>
+                                <Input
+                                  name="goal"
+                                  placeholder="e.g., 50 comments in 50 days"
+                                  required
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Target Comments</label>
+                                <Input
+                                  name="target"
+                                  type="number"
+                                  placeholder="e.g., 50 (for 50 comments)"
+                                  min="1"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Platform</label>
+                                <select 
+                                  name="platform" 
+                                  required
+                                  className="flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  <option value="">Select platform</option>
+                                  <option value="LinkedIn">LinkedIn</option>
+                                  <option value="Twitter">Twitter</option>
+                                  <option value="Instagram">Instagram</option>
+                                  <option value="YouTube">YouTube</option>
+                                  <option value="Facebook">Facebook</option>
+                                  <option value="TikTok">TikTok</option>
+                                </select>
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Days to Achieve</label>
+                                <Input
+                                  name="daysToAchieve"
+                                  type="number"
+                                  placeholder="e.g., 30"
+                                  min="1"
+                                  max="365"
+                                  required
+                                />
+                              </div>
+                              <div className="flex justify-end space-x-2 pt-4">
+                                <DialogPrimitive.Close asChild>
+                                  <Button type="button" variant="outline" size="sm">
+                                    Cancel
+                                  </Button>
+                                </DialogPrimitive.Close>
+                                <Button
+                                  type="submit"
+                                  disabled={isCreatingGoal}
+                                  className="bg-[#0C9488] hover:bg-[#0a7d73] text-white"
+                                  size="sm"
+                                >
+                                  {isCreatingGoal ? (
+                                    <>
+                                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                      Creating...
+                                    </>
+                                  ) : (
+                                    "Add Goal"
+                                  )}
+                                </Button>
+                              </div>
+                            </form>
+                            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                              <X className="h-4 w-4" />
+                              <span className="sr-only">Close</span>
+                            </DialogPrimitive.Close>
+                          </DialogPrimitive.Content>
+                        </DialogPrimitive.Portal>
+                      </DialogPrimitive.Root>
+                    )}
                   </div>
                 </div>
 
@@ -1115,140 +1118,158 @@ function DashboardContentInner({
                             Set goals to track your progress and boost your social media performance
                           </p>
                           {hasPremiumLicense && (
-                            <Dialog>
-                              <DialogTrigger asChild>
+                            <DialogPrimitive.Root>
+                              <DialogPrimitive.Trigger asChild>
                                 <button className="px-4 py-2 bg-[#0C9488] hover:bg-[#0a7d73] text-white rounded-xl transition-all duration-200 text-sm font-medium shadow-lg shadow-teal-500/25">
                                   Add Your First Goal
                                 </button>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-[425px]">
-                                <DialogHeader>
-                                  <DialogTitle className="flex items-center space-x-2">
-                                    <Target className="w-5 h-5 text-[#0C9488]" />
-                                    <span>Add Your First Goal</span>
-                                  </DialogTitle>
-                                  <p className="text-sm text-gray-600 mt-2">
-                                    Set a specific goal to track your progress and stay motivated.
-                                  </p>
-                                </DialogHeader>
-                                <form
-                                  onSubmit={async (e) => {
-                                    e.preventDefault();
+                              </DialogPrimitive.Trigger>
+                              <DialogPrimitive.Portal>
+                                <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+                                <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg">
+                                  <div className="flex flex-col space-y-1.5 text-center sm:text-left">
+                                    <DialogPrimitive.Title className="text-lg font-semibold leading-none tracking-tight flex items-center space-x-2">
+                                      <Target className="w-5 h-5 text-[#0C9488]" />
+                                      <span>Add Your First Goal</span>
+                                    </DialogPrimitive.Title>
+                                    <DialogPrimitive.Description className="text-sm text-muted-foreground">
+                                      Set a specific goal to track your progress and stay motivated.
+                                    </DialogPrimitive.Description>
+                                  </div>
+                                  <form
+                                    onSubmit={async (e) => {
+                                      e.preventDefault();
 
-                                    if (isCreatingGoal) return; // Prevent multiple submissions
+                                      if (isCreatingGoal) return;
 
-                                    setIsCreatingGoal(true);
-                                    const formData = new FormData(e.currentTarget);
-                                    const goal = formData.get("goal") as string;
-                                    const platform = formData.get("platform") as string;
-                                    const daysToAchieve = parseInt(
-                                      formData.get("daysToAchieve") as string,
-                                    );
-                                    const target = formData.get("target") as string;
+                                      setIsCreatingGoal(true);
+                                      const formData = new FormData(e.currentTarget);
+                                      const goal = formData.get("goal") as string;
+                                      const platform = formData.get("platform") as string;
+                                      const daysToAchieve = parseInt(
+                                        formData.get("daysToAchieve") as string,
+                                      );
+                                      const target = formData.get("target") as string;
 
-                                    try {
-                                      const response = await fetch("/api/license-goals", {
-                                        method: "POST",
-                                        headers: {
-                                          "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify({
-                                          goal,
-                                          platform,
-                                          daysToAchieve,
-                                          target: target ? parseInt(target) : null,
-                                        }),
-                                      });
-
-                                      if (response.ok) {
-                                        toast({
-                                          title: "Goal Added",
-                                          description: "Your first goal has been successfully added!",
+                                      try {
+                                        const response = await fetch("/api/license-goals", {
+                                          method: "POST",
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                          },
+                                          body: JSON.stringify({
+                                            goal,
+                                            platform,
+                                            daysToAchieve,
+                                            target: target ? parseInt(target) : null,
+                                          }),
                                         });
-                                        router.refresh();
-                                      } else {
-                                        const errorText = await response.text();
-                                        if (response.status === 409) {
+
+                                        if (response.ok) {
                                           toast({
-                                            title: "Active Goal Exists",
-                                            description: "You already have an active goal for this platform. Please complete your current goal before creating a new one.",
-                                            variant: "default",
+                                            title: "Goal Added",
+                                            description: "Your first goal has been successfully added!",
                                           });
+                                          router.refresh();
                                         } else {
-                                          throw new Error(errorText || 'Failed to add goal');
+                                          const errorText = await response.text();
+                                          if (response.status === 409) {
+                                            toast({
+                                              title: "Active Goal Exists",
+                                              description: "You already have an active goal for this platform. Please complete your current goal before creating a new one.",
+                                              variant: "default",
+                                            });
+                                          } else {
+                                            throw new Error(errorText || 'Failed to add goal');
+                                          }
                                         }
+                                      } catch (error) {
+                                        console.error("Failed to add goal:", error);
+                                        toast({
+                                          title: "Error",
+                                          description: error instanceof Error ? error.message : "Failed to add goal. Please try again.",
+                                          variant: "destructive",
+                                        });
+                                      } finally {
+                                        setIsCreatingGoal(false);
                                       }
-                                    } catch (error) {
-                                      console.error("Failed to add goal:", error);
-                                      toast({
-                                        title: "Error",
-                                        description: error instanceof Error ? error.message : "Failed to add goal. Please try again.",
-                                        variant: "destructive",
-                                      });
-                                    } finally {
-                                      setIsCreatingGoal(false);
-                                    }
-                                  }}
-                                  className="space-y-4"
-                                >
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Goal Description</label>
-                                    <Input
-                                      name="goal"
-                                      placeholder="e.g., 50 comments in 50 days"
-                                      required
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Target Comments</label>
-                                    <Input
-                                      name="target"
-                                      type="number"
-                                      placeholder="e.g., 50 (for 50 comments)"
-                                      min="1"
-                                    />
-                                    <p className="text-xs text-gray-500">Set a specific number to track progress towards your goal</p>
-                                  </div>
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Days to Achieve</label>
-                                    <Input
-                                      name="daysToAchieve"
-                                      type="number"
-                                      placeholder="e.g., 30 (for 30 days)"
-                                      min="1"
-                                      max="365"
-                                      required
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Platform</label>
-                                    <Select name="platform" required>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Choose your platform" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="linkedin">LinkedIn</SelectItem>
-                                        <SelectItem value="twitter">Twitter</SelectItem>
-                                        <SelectItem value="instagram">Instagram</SelectItem>
-                                        <SelectItem value="reddit">Reddit</SelectItem>
-                                        <SelectItem value="facebook">Facebook</SelectItem>
-                                        <SelectItem value="youtube">YouTube</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                  <Button type="submit" disabled={isCreatingGoal} className="w-full bg-[#0C9488] hover:bg-[#0a7d73]">
-                                    {isCreatingGoal ? (
-                                      <>
-                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                        Adding...
-                                      </>
-                                    ) : (
-                                      'Add Goal'
-                                    )}
-                                  </Button>
-                                </form>
-                              </DialogContent>
-                            </Dialog>
+                                    }}
+                                    className="space-y-4"
+                                  >
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Goal Description</label>
+                                      <Input
+                                        name="goal"
+                                        placeholder="e.g., 50 comments in 50 days"
+                                        required
+                                      />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Target Comments</label>
+                                      <Input
+                                        name="target"
+                                        type="number"
+                                        placeholder="e.g., 50 (for 50 comments)"
+                                        min="1"
+                                      />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Platform</label>
+                                      <select 
+                                        name="platform" 
+                                        required
+                                        className="flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                      >
+                                        <option value="">Select platform</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                        <option value="Twitter">Twitter</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="YouTube">YouTube</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="TikTok">TikTok</option>
+                                      </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Days to Achieve</label>
+                                      <Input
+                                        name="daysToAchieve"
+                                        type="number"
+                                        placeholder="e.g., 30"
+                                        min="1"
+                                        max="365"
+                                        required
+                                      />
+                                    </div>
+                                    <div className="flex justify-end space-x-2 pt-4">
+                                      <DialogPrimitive.Close asChild>
+                                        <Button type="button" variant="outline" size="sm">
+                                          Cancel
+                                        </Button>
+                                      </DialogPrimitive.Close>
+                                      <Button
+                                        type="submit"
+                                        disabled={isCreatingGoal}
+                                        className="bg-[#0C9488] hover:bg-[#0a7d73] text-white"
+                                        size="sm"
+                                      >
+                                        {isCreatingGoal ? (
+                                          <>
+                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                            Creating...
+                                          </>
+                                        ) : (
+                                          "Add Goal"
+                                        )}
+                                      </Button>
+                                    </div>
+                                  </form>
+                                  <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                                    <X className="h-4 w-4" />
+                                    <span className="sr-only">Close</span>
+                                  </DialogPrimitive.Close>
+                                </DialogPrimitive.Content>
+                              </DialogPrimitive.Portal>
+                            </DialogPrimitive.Root>
                           )}
                         </div>
                       );
@@ -1274,8 +1295,8 @@ function DashboardContentInner({
                                 <div className="flex-1">
                                   <div className="flex items-center space-x-2 mb-2">
                                     <h4 className={`font-semibold transition-colors ${goal.status === "achieved"
-                                        ? "text-green-800 line-through"
-                                        : "text-gray-900"
+                                      ? "text-green-800 line-through"
+                                      : "text-gray-900"
                                       }`}>
                                       {goal.goal}
                                     </h4>

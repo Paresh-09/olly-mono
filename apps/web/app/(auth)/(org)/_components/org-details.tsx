@@ -22,7 +22,7 @@ import {
 } from "@/lib/actions/org-actions";
 import TransferCreditsDialog from "./transfer-credit-dialog";
 import TransferHistoryTable from "./transfer-history-table";
-import { useSession } from "@/app/web/providers/SessionProvider";
+import { useSession } from "@/providers/SessionProvider";
 import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import UserCard from "./user-card";
 

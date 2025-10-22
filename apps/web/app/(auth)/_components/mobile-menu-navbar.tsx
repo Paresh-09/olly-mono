@@ -32,22 +32,22 @@ interface MobileMenuProps {
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ user, onLogout, onAddToChrome, onClose }) => {
   // Helper function to create a link that closes the navbar when clicked
-  const NavLink = ({ 
-    href, 
-    children, 
-    icon, 
+  const NavLink = ({
+    href,
+    children,
+    icon,
     target = "_self",
     badge
-  }: { 
-    href: string; 
-    children: React.ReactNode; 
+  }: {
+    href: string;
+    children: React.ReactNode;
     icon?: React.ReactNode;
     target?: string;
     badge?: React.ReactNode;
   }) => (
-    <Link 
-      href={href} 
-      className="text-gray-600 hover:text-gray-900 flex items-center py-2.5 px-2 rounded-md font-medium transition-colors duration-200" 
+    <Link
+      href={href}
+      className="text-gray-600 hover:text-gray-900 flex items-center py-2.5 px-2 rounded-md font-medium transition-colors duration-200"
       onClick={onClose}
       target={target}
     >
@@ -94,15 +94,15 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ user, onLogout, onAddToChrome, 
               )}
             </div>
           </div>
-          
+
           <div className="flex-grow overflow-y-auto py-1">
-            <NavLink 
-              href="/dashboard" 
+            <NavLink
+              href="/dashboard"
               icon={<Sparkles className="h-4 w-4" />}
             >
               Dashboard
             </NavLink>
-            
+
             <Accordion type="single" collapsible className="w-full border-none">
               <AccordionItem value="tools" className="border-none">
                 <AccordionTrigger className="py-2.5 px-2 text-gray-600 hover:text-gray-900 font-medium">
@@ -117,7 +117,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ user, onLogout, onAddToChrome, 
                   <NavLink href="/prompts">Prompts</NavLink>
                 </AccordionContent>
               </AccordionItem>
-              
+
               <AccordionItem value="manage-team" className="border-none">
                 <AccordionTrigger className="py-2.5 px-2 text-gray-600 hover:text-gray-900 font-medium">
                   <div className="flex items-center">
@@ -151,7 +151,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ user, onLogout, onAddToChrome, 
             <NavLink href="/dashboard/profile">Profile</NavLink>
             <NavLink href="/prompts">Prompts</NavLink>
           </div>
-          
+
           <div className="mt-auto pt-4 space-y-3">
             <Button
               variant="outline"
@@ -184,7 +184,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ user, onLogout, onAddToChrome, 
             <NavLink href="/#features">Features</NavLink>
             <NavLink href="/#pricing">Pricing</NavLink>
           </div>
-          
+
           <div className="mt-auto space-y-3">
             <Link href="/login" className="w-full" onClick={onClose}>
               <Button variant="ghost" className="w-full">

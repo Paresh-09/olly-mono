@@ -329,9 +329,11 @@ export default async function Page() {
   return (
     <DashboardContent
       user={{
+        id: user.id,
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin,
+        onboardingComplete: user.onboardingComplete,
       }}
       licenses={licenses}
       subLicenses={subLicenses}
