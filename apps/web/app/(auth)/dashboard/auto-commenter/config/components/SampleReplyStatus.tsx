@@ -1,6 +1,6 @@
 import React from "react";
 import { Check, Eye, Clock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 interface SampleReplyStatusProps {
   hasReply: boolean;
@@ -8,10 +8,10 @@ interface SampleReplyStatusProps {
   className?: string;
 }
 
-export default function SampleReplyStatus({ 
-  hasReply, 
+export default function SampleReplyStatus({
+  hasReply,
   replyLength = 0,
-  className 
+  className
 }: SampleReplyStatusProps) {
   // If there's no reply, show "Not Started"
   if (!hasReply) {

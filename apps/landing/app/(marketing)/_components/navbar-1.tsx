@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MenuIcon, XIcon, ChevronDown } from "lucide-react";
 import Logo from "./logo-2";
 import { AuthButton } from "./auth-button-navbar";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 const mainNavigation = [
   { name: "Features", href: "/#features" },

@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@repo/ui/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 import type { Notification, NotificationType } from '@/types/notifications';
 
 interface NotificationBellProps {

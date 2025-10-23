@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/ui
 import { Badge } from "@repo/ui/components/ui/badge";
 import { AlertCircle, Calendar, Globe, Image, Tag, Save, X, ArrowLeft, Sparkles, Loader2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@repo/ui/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 type LanguageContent = {
   content: string;
@@ -85,7 +85,7 @@ export default function NewBlogPostPage() {
     >
   ) => {
     const { name, value } = e.target;
-    
+
     // Only handle non-language specific fields here
     if (name !== "title") {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -107,7 +107,7 @@ export default function NewBlogPostPage() {
     field: "content" | "description" | "title"
   ) => {
     const newValue = e.target.value;
-    
+
     setFormData((prev) => ({
       ...prev,
       languages: {
@@ -118,7 +118,7 @@ export default function NewBlogPostPage() {
         }
       }
     }));
-    
+
     // Auto-generate slug from title if it's the English title and slug is empty
     if (field === "title" && !formData.slug && langCode === "en") {
       const slug = newValue
@@ -242,7 +242,7 @@ export default function NewBlogPostPage() {
   const generateForLanguage = async (langCode: string): Promise<void> => {
     try {
       setGenerationProgress(prev => ({ ...prev, [langCode]: 'pending' }));
-      
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minute timeout
 
@@ -267,7 +267,7 @@ export default function NewBlogPostPage() {
       }
 
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         setFormData((prev) => ({
           ...prev,
@@ -289,7 +289,7 @@ export default function NewBlogPostPage() {
             .replace(/^-+|-+$/g, "");
           setFormData((prev) => ({ ...prev, slug }));
         }
-        
+
         setGenerationProgress(prev => ({ ...prev, [langCode]: 'success' }));
       }
     } catch (err) {
@@ -313,7 +313,7 @@ export default function NewBlogPostPage() {
       acc[lang] = 'pending';
       return acc;
     }, {} as Record<string, 'pending' | 'success' | 'error'>));
-    
+
     try {
       // Generate content for all languages concurrently
       await Promise.all(languages.map(generateForLanguage));
@@ -339,8 +339,8 @@ export default function NewBlogPostPage() {
           <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-t-lg">
             <div className="flex justify-between items-center">
               <CardTitle className="text-3xl font-bold text-slate-800">Create New Blog Post</CardTitle>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => router.push("/blog/admin/blog")}
                 className="flex items-center gap-1"
               >
@@ -375,7 +375,7 @@ export default function NewBlogPostPage() {
                           </span>
                           Post Details
                         </h3>
-                        
+
                         <div className="space-y-4">
                           <div>
                             <Label htmlFor="slug" className="text-slate-700">Slug</Label>
@@ -432,7 +432,7 @@ export default function NewBlogPostPage() {
                           </span>
                           Categories
                         </h3>
-                        
+
                         <div>
                           <div className="flex gap-2 mb-2">
                             <Input
@@ -485,8 +485,8 @@ export default function NewBlogPostPage() {
                           <Label htmlFor="isPublished" className="text-slate-700">Published</Label>
                         </div>
                         <p className="text-xs text-slate-500">
-                          {formData.isPublished 
-                            ? "This post will be visible to the public" 
+                          {formData.isPublished
+                            ? "This post will be visible to the public"
                             : "This post will be saved as a draft"}
                         </p>
                       </div>
@@ -509,33 +509,31 @@ export default function NewBlogPostPage() {
                             {enabledLanguagesCount < AVAILABLE_LANGUAGES.length - 1 ? "Select All" : "Deselect All"}
                           </Button>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-3">
                           {AVAILABLE_LANGUAGES.map((lang) => (
-                            <div 
-                              key={lang.code} 
-                              className={`flex items-center space-x-2 p-2 rounded ${
-                                formData.languages[lang.code].isEnabled 
-                                  ? 'bg-blue-50 border border-blue-100' 
+                            <div
+                              key={lang.code}
+                              className={`flex items-center space-x-2 p-2 rounded ${formData.languages[lang.code].isEnabled
+                                  ? 'bg-blue-50 border border-blue-100'
                                   : 'hover:bg-slate-100'
-                              }`}
+                                }`}
                             >
                               <Checkbox
                                 id={`lang-${lang.code}`}
                                 checked={formData.languages[lang.code].isEnabled}
-                                onCheckedChange={(checked) => 
+                                onCheckedChange={(checked) =>
                                   handleLanguageToggle(lang.code, checked === true)
                                 }
                                 disabled={lang.code === "en"} // English is always enabled
                                 className={lang.code === "en" ? "opacity-50" : ""}
                               />
-                              <Label 
+                              <Label
                                 htmlFor={`lang-${lang.code}`}
-                                className={`cursor-pointer text-sm ${
-                                  formData.languages[lang.code].isEnabled 
-                                    ? 'font-medium text-blue-700' 
+                                className={`cursor-pointer text-sm ${formData.languages[lang.code].isEnabled
+                                    ? 'font-medium text-blue-700'
                                     : 'text-slate-600'
-                                }`}
+                                  }`}
                                 onClick={() => {
                                   if (formData.languages[lang.code].isEnabled) {
                                     setActiveLanguageTab(lang.code);
@@ -554,8 +552,8 @@ export default function NewBlogPostPage() {
                     {/* Language-specific content - Columns 2-3 */}
                     <div className="md:col-span-2">
                       <div className="border border-slate-200 rounded-lg overflow-hidden">
-                        <Tabs 
-                          value={activeLanguageTab} 
+                        <Tabs
+                          value={activeLanguageTab}
                           onValueChange={(value) => {
                             if (formData.languages[value].isEnabled) {
                               setActiveLanguageTab(value);
@@ -566,11 +564,11 @@ export default function NewBlogPostPage() {
                             <div className="flex justify-between items-center px-2">
                               <div className="overflow-x-auto pb-1">
                                 <TabsList className="flex flex-nowrap bg-slate-100 p-1 min-w-max">
-                                  {AVAILABLE_LANGUAGES.filter(lang => 
+                                  {AVAILABLE_LANGUAGES.filter(lang =>
                                     formData.languages[lang.code].isEnabled
                                   ).map(lang => (
-                                    <TabsTrigger 
-                                      key={lang.code} 
+                                    <TabsTrigger
+                                      key={lang.code}
                                       value={lang.code}
                                       className="data-[state=active]:bg-white data-[state=active]:shadow-sm whitespace-nowrap"
                                     >
@@ -579,11 +577,11 @@ export default function NewBlogPostPage() {
                                   ))}
                                 </TabsList>
                               </div>
-                              
+
                               <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
                                 <DialogTrigger asChild>
-                                  <Button 
-                                    type="button" 
+                                  <Button
+                                    type="button"
                                     className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white flex items-center gap-1"
                                     disabled={aiGenerating}
                                   >
@@ -651,16 +649,16 @@ export default function NewBlogPostPage() {
                                   </div>
                                   <DialogFooter className="sticky bottom-0 bg-white pt-4 border-t">
                                     <div className="flex flex-col space-y-2 w-full sm:flex-row sm:space-y-0 sm:space-x-2">
-                                      <Button 
-                                        type="button" 
+                                      <Button
+                                        type="button"
                                         onClick={() => generateWithAI()}
                                         disabled={aiGenerating || !aiGenerationInput.title}
                                         className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
                                       >
                                         Generate for {AVAILABLE_LANGUAGES.find(lang => lang.code === activeLanguageTab)?.name}
                                       </Button>
-                                      <Button 
-                                        type="button" 
+                                      <Button
+                                        type="button"
                                         onClick={() => generateWithAIForLanguages(
                                           Object.entries(formData.languages)
                                             .filter(([_, data]) => data.isEnabled)
@@ -671,9 +669,9 @@ export default function NewBlogPostPage() {
                                       >
                                         Generate for All Languages
                                       </Button>
-                                      <Button 
-                                        type="button" 
-                                        variant="outline" 
+                                      <Button
+                                        type="button"
+                                        variant="outline"
                                         onClick={() => setAiDialogOpen(false)}
                                         className="sm:w-auto"
                                       >
@@ -760,8 +758,8 @@ Write your content in ${lang.name} using Markdown...`}
                     >
                       Cancel
                     </Button>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={loading}
                       className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 flex items-center gap-1"
                     >
@@ -778,12 +776,12 @@ Write your content in ${lang.name} using Markdown...`}
                     <Tabs defaultValue="en">
                       <div className="overflow-x-auto pb-1">
                         <TabsList className="flex flex-nowrap bg-slate-100 p-1 min-w-max">
-                          {AVAILABLE_LANGUAGES.filter(lang => 
+                          {AVAILABLE_LANGUAGES.filter(lang =>
                             formData.languages[lang.code].isEnabled
                           ).map(lang => (
-                            <TabsTrigger 
-                              key={lang.code} 
-                              value={lang.code} 
+                            <TabsTrigger
+                              key={lang.code}
+                              value={lang.code}
                               className="data-[state=active]:bg-white data-[state=active]:shadow-sm whitespace-nowrap"
                             >
                               {lang.name}
@@ -792,7 +790,7 @@ Write your content in ${lang.name} using Markdown...`}
                         </TabsList>
                       </div>
 
-                      {AVAILABLE_LANGUAGES.filter(lang => 
+                      {AVAILABLE_LANGUAGES.filter(lang =>
                         formData.languages[lang.code].isEnabled
                       ).map(lang => (
                         <TabsContent key={lang.code} value={lang.code} className="p-6 bg-white">
@@ -800,19 +798,19 @@ Write your content in ${lang.name} using Markdown...`}
                             <h1 className="text-3xl font-bold mb-4">{formData.languages[lang.code].title || "Untitled"}</h1>
                             <div className="text-slate-500 mb-4 flex items-center gap-2">
                               <Calendar size={16} />
-                              {new Date(formData.date).toLocaleDateString()} • 
+                              {new Date(formData.date).toLocaleDateString()} •
                               <Globe size={16} />
                               {lang.name}
                             </div>
-                            
+
                             {formData.image && (
-                              <img 
-                                src={formData.image} 
-                                alt={formData.languages[lang.code].title || "Untitled"} 
+                              <img
+                                src={formData.image}
+                                alt={formData.languages[lang.code].title || "Untitled"}
                                 className="w-full h-64 object-cover rounded-lg mb-6"
                               />
                             )}
-                            
+
                             <div className="flex flex-wrap gap-2 mb-6">
                               {formData.categories.map((category) => (
                                 <Badge
@@ -824,11 +822,11 @@ Write your content in ${lang.name} using Markdown...`}
                                 </Badge>
                               ))}
                             </div>
-                            
+
                             <p className="text-slate-700 mb-6 text-lg font-medium">
                               {formData.languages[lang.code].description || "No description provided"}
                             </p>
-                            
+
                             <div className="prose max-w-none">
                               <div className="whitespace-pre-wrap">
                                 {formData.languages[lang.code].content || "No content provided"}

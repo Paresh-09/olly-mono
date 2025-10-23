@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
-import { useToast } from "@repo/ui/hooks/use-toast";import { cn } from "@/lib/utils";
+import { useToast } from "@repo/ui/hooks/use-toast"; import { cn } from "@repo/ui/lib/utils";
 
 import { Button } from "@repo/ui/components/ui/button";
 import {
@@ -49,11 +49,11 @@ const defaultValues: Partial<TaskFormValues> = {
   scheduleDate: new Date(),
 };
 
-export function CreateTaskForm({ 
-  userId, 
-  licenseKey 
-}: { 
-  userId: string; 
+export function CreateTaskForm({
+  userId,
+  licenseKey
+}: {
+  userId: string;
   licenseKey: string;
 }) {
   const { toast } = useToast();
@@ -66,7 +66,7 @@ export function CreateTaskForm({
     // Prepare the date with time set to midnight
     const selectedDate = new Date(data.scheduleDate);
     selectedDate.setHours(0, 0, 0, 0);
-    
+
     const rawFormData = {
       userId,
       platform: data.platform,
@@ -75,7 +75,7 @@ export function CreateTaskForm({
       context: data.context || "",
       scheduleDate: selectedDate.toISOString(),
       status: "SCHEDULED",
-      licenseKey : licenseKey
+      licenseKey: licenseKey
     };
 
     try {
@@ -122,7 +122,7 @@ export function CreateTaskForm({
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form 
+              <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-2"
               >

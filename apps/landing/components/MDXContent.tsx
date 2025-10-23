@@ -2,7 +2,7 @@
 
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { Prose } from "@/components/Prose";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 interface MDXContentProps {
   source: MDXRemoteSerializeResult;

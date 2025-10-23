@@ -39,7 +39,7 @@ import { useRouter } from "next/navigation";
 import NotificationBell from "./notification";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useSession } from "@/providers/SessionProvider";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 import { PostHogUser } from "@/app/lib/posthog-utils";
 
 interface Organization {

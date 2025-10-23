@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 export function Prose<T extends React.ElementType = "div">({
   as,
