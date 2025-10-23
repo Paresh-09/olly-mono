@@ -504,40 +504,39 @@ export async function POST(request: Request) {
     const audience = formData.get('audience') as string;
     const requirements = formData.get('requirements') as string;
 
-    // Extract tool-specific parameters from parsedContent
-    const {
-        // Rizz Generator params
-        category,
-        situationType,
-        contextDetails,
-        targetName,
-        smoothnessLevel,
+    // Extract tool-specific parameters from parsedContent safely
+    const pc: any = typeof parsedContent === 'object' && parsedContent !== null ? parsedContent : {};
 
-        contextCategory,
-        witLevel,
-        cleanLevel,
+    const category = pc.category;
+    const situationType = pc.situationType;
+    const contextDetails = pc.contextDetails;
+    const targetName = pc.targetName;
+    const smoothnessLevel = pc.smoothnessLevel;
 
-        topicCategory,
-        topicDetails,
-        complexity,
+    const contextCategory = pc.contextCategory;
+    const witLevel = pc.witLevel;
+    const cleanLevel = pc.cleanLevel;
 
-        intensity,
+    const topicCategory = pc.topicCategory;
+    const topicDetails = pc.topicDetails;
+    const complexity = pc.complexity;
 
-        recipientName,
-        recipientAge,
-        occasion,
-        relationship,
-        minBudget,
-        maxBudget,
-        interests,
-        dislikes,
-        
-        themeCategory,
-        themeDetails,
-        keywords,
-        flowLevel,
-        verseLength,
-    } = typeof parsedContent === 'object' ? parsedContent : {};
+    const intensity = pc.intensity;
+
+    const recipientName = pc.recipientName;
+    const recipientAge = pc.recipientAge;
+    const occasion = pc.occasion;
+    const relationship = pc.relationship;
+    const minBudget = pc.minBudget;
+    const maxBudget = pc.maxBudget;
+    const interests = pc.interests;
+    const dislikes = pc.dislikes;
+    
+    const themeCategory = pc.themeCategory;
+    const themeDetails = pc.themeDetails;
+    const keywords = pc.keywords;
+    const flowLevel = pc.flowLevel;
+    const verseLength = pc.verseLength;
 
     try {
         // Validate tool type

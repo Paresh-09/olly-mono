@@ -144,7 +144,7 @@ export default function BrandVoiceToggle({
   // Show toggle if brand voice exists
   return (
     <FormField
-      control={control}
+      control={control as any}
       name="useBrandVoice"
       render={({ field }) => (
         <FormItem className="flex flex-row items-center justify-between rounded-md border p-4">

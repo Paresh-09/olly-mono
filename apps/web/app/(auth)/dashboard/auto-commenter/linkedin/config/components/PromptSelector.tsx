@@ -63,7 +63,7 @@ const PromptSelector: React.FC<PromptSelectorProps> = ({
   return (
     <div className="space-y-4">
       <FormField
-        control={control}
+        control={control as any}
         name="promptMode"
         render={({ field }) => (
           <FormItem className="space-y-3">

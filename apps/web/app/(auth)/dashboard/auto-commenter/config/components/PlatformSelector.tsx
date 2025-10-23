@@ -32,7 +32,7 @@ export default function PlatformSelector({
 
   return (
     <FormField
-      control={control}
+      control={control as any}
       name="enabledPlatforms"
       render={({ field }) => (
         <FormItem>
@@ -51,7 +51,7 @@ export default function PlatformSelector({
                     if (isDisabled) return;
                     const current = field.value || [];
                     const updated = isSelected
-                      ? current.filter((p) => p !== key)
+                      ? current.filter((p: any) => p !== key)
                       : [...current, key];
                     field.onChange(updated);
                   }}
@@ -61,7 +61,7 @@ export default function PlatformSelector({
                       if (isDisabled) return;
                       const current = field.value || [];
                       const updated = isSelected
-                        ? current.filter((p) => p !== key)
+                        ? current.filter((p: any) => p !== key)
                         : [...current, key];
                       field.onChange(updated);
                     }

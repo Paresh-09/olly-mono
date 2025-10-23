@@ -37,7 +37,7 @@ export default function PlatformSelector({
 
   return (
     <FormField
-      control={control}
+      control={control as any}
       name="enabledPlatforms"
       render={({ field }) => (
         <FormItem>
@@ -50,11 +50,10 @@ export default function PlatformSelector({
               return (
                 <div
                   key={key}
-                  className={`relative flex items-center space-x-3 rounded-lg border p-3 transition-all ${
-                    isSelected
+                  className={`relative flex items-center space-x-3 rounded-lg border p-3 transition-all ${isSelected
                       ? "border-blue-200 bg-blue-50 shadow-sm"
                       : "border-gray-200 bg-white hover:bg-gray-50"
-                  } ${!hasAvailableLicenses ? "opacity-50" : ""}`}
+                    } ${!hasAvailableLicenses ? "opacity-50" : ""}`}
                 >
                   <FormControl>
                     <Checkbox
@@ -70,7 +69,7 @@ export default function PlatformSelector({
                         } else {
                           // Remove platform if unchecked
                           field.onChange(
-                            currentPlatforms.filter((p) => p !== key),
+                            currentPlatforms.filter((p: string) => p !== key),
                           );
                         }
                       }}

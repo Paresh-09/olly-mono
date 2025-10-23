@@ -31,9 +31,9 @@ interface BrandVoiceToggleProps {
   brandVoiceError: string | null;
 }
 
-export default function BrandVoiceToggle({ 
-  control, 
-  availableLicenses, 
+export default function BrandVoiceToggle({
+  control,
+  availableLicenses,
   isLoadingLicenses,
   brandVoiceData,
   isBrandVoiceLoading,
@@ -41,33 +41,33 @@ export default function BrandVoiceToggle({
 }: BrandVoiceToggleProps) {
   const router = useRouter();
   const [hasBrandVoice, setHasBrandVoice] = useState<boolean>(false);
-  
+
   // Function to get license by ID - still needed for navigation
   const getLicenseById = useCallback((id: string): License | undefined => {
     return availableLicenses.find(license => license.id === id);
   }, [availableLicenses]);
-  
+
   // Update hasBrandVoice when brandVoiceData changes
   useEffect(() => {
     if (brandVoiceData) {
-      const hasDefinedBrandVoice = brandVoiceData && 
+      const hasDefinedBrandVoice = brandVoiceData &&
         (brandVoiceData.brandVoice || brandVoiceData.brandPersonality);
-      
+
       setHasBrandVoice(!!hasDefinedBrandVoice);
     }
   }, [brandVoiceData]);
-  
+
   const navigateToBrandVoicePage = useCallback(() => {
     // Only navigate if we have licenses available
     if (availableLicenses && availableLicenses.length > 0) {
       // Get the license using first license's ID
       const license = getLicenseById(availableLicenses[0].id);
-      
+
       if (!license) {
         console.error("License not found");
         return;
       }
-      
+
       // Use the license key for the URL
       router.push(`/dashboard/brand/train/${license.key}`);
     } else {
@@ -91,7 +91,7 @@ export default function BrandVoiceToggle({
       </FormItem>
     );
   }
-  
+
   // Show error state if an error occurred
   if (brandVoiceError) {
     return (
@@ -105,7 +105,7 @@ export default function BrandVoiceToggle({
       </FormItem>
     );
   }
-  
+
   // Show error state if no licenses are available
   if (!availableLicenses || availableLicenses.length === 0) {
     return (
@@ -130,8 +130,8 @@ export default function BrandVoiceToggle({
             You haven't set up your brand voice yet. Creating a brand voice profile will help the AI generate content that matches your brand's personality and style.
           </FormDescription>
         </div>
-        <Button 
-          type="button" 
+        <Button
+          type="button"
           onClick={navigateToBrandVoicePage}
           className="w-full sm:w-auto self-start mt-2"
         >
@@ -144,7 +144,7 @@ export default function BrandVoiceToggle({
   // Show toggle if brand voice exists
   return (
     <FormField
-      control={control}
+      control={control as any}
       name="useBrandVoice"
       render={({ field }) => (
         <FormItem className="flex flex-row items-center justify-between rounded-md border p-4">
@@ -153,11 +153,11 @@ export default function BrandVoiceToggle({
               Use Brand Voice
             </FormLabel>
             <FormDescription>
-              Automate comments using your brand's voice and style. 
-              <Button 
-                type="button" 
-                onClick={navigateToBrandVoicePage} 
-                variant="link" 
+              Automate comments using your brand's voice and style.
+              <Button
+                type="button"
+                onClick={navigateToBrandVoicePage}
+                variant="link"
                 className="h-auto p-0 text-xs ml-1"
               >
                 Edit Brand Voice

@@ -177,8 +177,8 @@ export default function AnalyticsDashboard() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
         <DateRangePicker
-          dateRange={dateRange}
-          onDateRangeChange={handleDateRangeChange}
+          date={{ from: dateRange.from, to: dateRange.to }}
+          onDateChange={(range) => handleDateRangeChange(range)}
         />
       </div>
 

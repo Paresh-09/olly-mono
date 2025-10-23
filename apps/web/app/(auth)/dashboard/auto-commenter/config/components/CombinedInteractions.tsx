@@ -34,7 +34,7 @@ import {
   TooltipTrigger,
 } from "@repo/ui/components/ui/tooltip";
 // import { toast } from "sonner";
-import { useToast } from "@repo/ui/hooks/use-toast";import { Toaster } from "@repo/ui/components/ui/toaster";
+import { useToast } from "@repo/ui/hooks/use-toast"; import { Toaster } from "@repo/ui/components/ui/toaster";
 import KeywordModal from "./KeywordModal";
 import InteractionLimitBar from "./InteractionLimitBar";
 
@@ -317,7 +317,7 @@ export default function CombinedInteractions({
         <h3 className="text-sm font-medium mb-3">Feed Interactions</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
-            control={control}
+            control={control as any}
             name="feedInteractions.numLikes"
             render={({ field }) => (
               <FormItem>
@@ -352,7 +352,7 @@ export default function CombinedInteractions({
           />
 
           <FormField
-            control={control}
+            control={control as any}
             name="feedInteractions.numComments"
             render={({ field }) => (
               <FormItem>

@@ -40,7 +40,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@repo/ui/components/ui/tooltip";
-import { useToast } from "@repo/ui/hooks/use-toast";import KeywordModal from "./KeywordModal";
+import { useToast } from "@repo/ui/hooks/use-toast"; import KeywordModal from "./KeywordModal";
 import InteractionLimitBar from "./InteractionLimitBar";
 import PromptSelector from "./PromptSelector";
 import { Label } from "@repo/ui/components/ui/label";
@@ -803,7 +803,7 @@ export default function PlatformConfiguration({
                     Response Configuration
                   </h3>
                   <PromptSelector
-                    control={control}
+                    control={control as any}
                     setValue={setValue}
                     getValues={getValues}
                     register={register}

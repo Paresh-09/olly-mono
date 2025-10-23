@@ -50,8 +50,9 @@ export async function POST(request: NextRequest) {
     
     // Collect all files from form data
     for (const [key, value] of Array.from(formData.entries())) {
-      if (value instanceof File && key.startsWith('file')) {
-        files.push(value);
+      // In some runtimes File may not be recognized by instanceof; use duck-typing
+      if (key.startsWith('file') && value && typeof (value as any).arrayBuffer === 'function') {
+        files.push(value as unknown as File);
       }
     }
 

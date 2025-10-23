@@ -166,7 +166,7 @@ export default function FeedInteractions({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
-              control={control}
+              control={control as any}
               name="feedInteractions.numLikes"
               render={({ field }) => (
                 <FormItem>
@@ -210,7 +210,7 @@ export default function FeedInteractions({
             />
 
             <FormField
-              control={control}
+              control={control as any}
               name="feedInteractions.numComments"
               render={({ field }) => (
                 <FormItem>

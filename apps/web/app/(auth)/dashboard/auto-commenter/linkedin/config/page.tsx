@@ -519,7 +519,7 @@ const LinkedInAutomationConfig = () => {
 
         <Card className="border border-gray-200 shadow-sm">
           <CardContent className="pt-4 sm:pt-6">
-            <Form {...form}>
+            <Form {...(form as any)}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6 sm:space-y-8"

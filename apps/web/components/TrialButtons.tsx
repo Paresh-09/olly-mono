@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@repo/ui/components/ui/dialog";
-import { usePricing } from "@/app/web/providers/pricingContext";
+import { usePricing } from "@/providers/pricingContext";
 import { usePostHog } from "posthog-js/react";
 import { Check, Sparkles, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";

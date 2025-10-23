@@ -121,14 +121,14 @@ export function CreateTaskForm({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
+            <Form {...(form as any)}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-2"
               >
                 <div className="grid gap-6 md:grid-cols-2">
                   <FormField
-                    control={form.control}
+                    control={form.control as any}
                     name="platform"
                     render={({ field }) => (
                       <FormItem>
@@ -156,7 +156,7 @@ export function CreateTaskForm({
                   />
 
                   <FormField
-                    control={form.control}
+                    control={form.control as any}
                     name="taskType"
                     render={({ field }) => (
                       <FormItem>
@@ -184,7 +184,7 @@ export function CreateTaskForm({
                 </div>
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
@@ -205,7 +205,7 @@ export function CreateTaskForm({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name="context"
                   render={({ field }) => (
                     <FormItem>
@@ -226,7 +226,7 @@ export function CreateTaskForm({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name="scheduleDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">

@@ -32,7 +32,7 @@ import { Button } from "@repo/ui/components/ui/button";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
-import { useToast } from "@repo/ui/hooks/use-toast";import KeywordModal from "./KeywordModal";
+import { useToast } from "@repo/ui/hooks/use-toast"; import KeywordModal from "./KeywordModal";
 import InteractionLimitBar from "./InteractionLimitBar";
 import PromptSelector from "./PromptSelector";
 
@@ -465,7 +465,7 @@ export default function PlatformConfiguration({
                       </div>
                       {platform === "LINKEDIN" ? (
                         <FormField
-                          control={control}
+                          control={control as any}
                           name="feedInteractions.numLikes"
                           render={({ field }) => (
                             <FormControl>
@@ -524,7 +524,7 @@ export default function PlatformConfiguration({
                       </div>
                       {platform === "LINKEDIN" ? (
                         <FormField
-                          control={control}
+                          control={control as any}
                           name="feedInteractions.numComments"
                           render={({ field }) => (
                             <FormControl>
@@ -603,7 +603,7 @@ export default function PlatformConfiguration({
                   </div>
 
                   {currentSettings.keywordTargets &&
-                  currentSettings.keywordTargets.length > 0 ? (
+                    currentSettings.keywordTargets.length > 0 ? (
                     <div className="space-y-2">
                       {currentSettings.keywordTargets.map(
                         (target: any, index: number) => (
@@ -702,7 +702,7 @@ export default function PlatformConfiguration({
                     Response Configuration
                   </h3>
                   <PromptSelector
-                    control={control}
+                    control={control as any}
                     setValue={setValue}
                     getValues={getValues}
                     register={register}
@@ -725,8 +725,8 @@ export default function PlatformConfiguration({
         initialKeyword={
           editingIndex !== null
             ? getCurrentPlatformSettings(selectedPlatform).keywordTargets?.[
-                editingIndex
-              ]
+            editingIndex
+            ]
             : null
         }
         isEditing={isEditing}

@@ -40,19 +40,19 @@ export default function LicenseSelector({
   availableLicenses,
 }: LicenseSelectorProps) {
   const [copied, setCopied] = useState(false);
-  
+
   // Find the license by id
   const getLicenseById = (id: string): License | undefined => {
     return availableLicenses.find(license => license.id === id);
   };
-  
+
   // Copy the license key to clipboard
   const copyLicenseKey = (licenseId: string | undefined) => {
     if (!licenseId) return;
-    
+
     const license = getLicenseById(licenseId);
     if (!license) return;
-    
+
     navigator.clipboard.writeText(license.key)
       .then(() => {
         setCopied(true);
@@ -67,17 +67,17 @@ export default function LicenseSelector({
 
   return (
     <FormField
-      control={control}
+      control={control as any}
       name="licenseKey"
       render={({ field }) => {
-        
+
         useEffect(() => {
           if (!isLoadingLicenses && availableLicenses.length > 0 && !field.value) {
-         
+
             field.onChange(availableLicenses[0].id);
           }
         }, [isLoadingLicenses, availableLicenses, field]);
-        
+
         return (
           <FormItem>
             <FormLabel>License Key</FormLabel>

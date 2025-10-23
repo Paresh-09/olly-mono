@@ -133,8 +133,8 @@ export async function POST(request: NextRequest) {
     // Get all image files from form data
     const imageFiles: File[] = [];
     for (const [key, value] of Array.from(formData.entries())) {
-      if (value instanceof File && key.startsWith('image')) {
-        imageFiles.push(value);
+      if (key.startsWith('image') && value && typeof (value as any).arrayBuffer === 'function') {
+        imageFiles.push(value as unknown as File);
       }
     }
 

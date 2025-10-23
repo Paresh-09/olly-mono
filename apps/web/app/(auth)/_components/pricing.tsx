@@ -4,7 +4,7 @@ import React from 'react';
 import { Check } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/ui/card"
 import { Tag } from '@/components/Tag';
-import { Button } from '@repo/ui/components/ui/button';
+import { Button } from '../../../components/Button';
 import { usePricing } from '@/providers/pricingContext';
 
 type TagColor = "green" | "white" | "red";
@@ -131,7 +131,7 @@ export default function PricingPlans() {
             </CardContent>
             <CardFooter className="pt-8">
               <Button
-                variant={plan.highlight ? "premium" : "outline"}
+                color={plan.highlight ? "premium" : "transparent"}
                 size="lg"
                 className="w-full text-lg py-6"
                 onClick={() => window.open(plan.url, '_blank')}

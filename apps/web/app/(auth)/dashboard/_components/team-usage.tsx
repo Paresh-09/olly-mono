@@ -200,9 +200,8 @@ export default function AnalyticsDashboard({
       <Card>
         <CardContent className="pt-6">
           <DateRangePicker
-            mode="range"
-            selected={{ from: startDate, to: endDate }}
-            onSelect={(dateRange: { from?: Date; to?: Date }) => {
+            date={{ from: startDate, to: endDate }}
+            onDateChange={(dateRange?: { from?: Date; to?: Date }) => {
               if (dateRange) {
                 const { from, to } = dateRange;
                 if (from) setStartDate(from);
@@ -554,33 +553,23 @@ export default function AnalyticsDashboard({
           <CardDescription>Usage breakdown by platform</CardDescription>
         </CardHeader>
         <CardContent className="h-80">
-        {loading ? (
-          <LoadingChart />
-        ) : !chartData?.platforms.length ? (
-          <NoDataDisplay />
-        ) : (
-          <ChartContainer config={chartConfig}>
-            <PieChart>
-              <Pie
-                data={chartData?.platforms}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                fill="#8884d8"
-                paddingAngle={5}
-                dataKey="value"
-                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-              >
-                {chartData?.platforms.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-            </PieChart>
-          </ChartContainer>
-        )}
+          {loading ? (
+            <LoadingChart />
+          ) : !chartData?.platforms.length ? (
+            <NoDataDisplay />
+          ) : (
+            <ChartContainer config={chartConfig}>
+              <PieChart data={chartData?.platforms}>
+                <Pie data={chartData?.platforms} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} fill="#8884d8" label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}>
+                  {chartData?.platforms.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+              </PieChart>
+            </ChartContainer>
+          )}
         </CardContent>
       </Card>
 
@@ -717,9 +706,8 @@ export default function AnalyticsDashboard({
           <h2 className="text-lg font-medium">Team Analytics</h2>
           <div className="flex items-center gap-2">
             <DateRangePicker
-              mode="range"
-              selected={{ from: startDate, to: endDate }}
-              onSelect={(dateRange: { from?: Date; to?: Date }) => {
+              date={{ from: startDate, to: endDate }}
+              onDateChange={(dateRange?: { from?: Date; to?: Date }) => {
                 if (dateRange) {
                   const { from, to } = dateRange;
                   if (from) setStartDate(from);

@@ -24,7 +24,7 @@ export default function ProductPromotion({
   return (
     <div className="space-y-4">
       <FormField
-        control={control}
+        control={control as any}
         name="promoteProduct"
         render={({ field }) => (
           <FormItem className="flex flex-row items-center justify-between rounded-md border p-4">
@@ -49,7 +49,7 @@ export default function ProductPromotion({
       {/* Product Details (conditional) */}
       {watchPromoteProduct && (
         <FormField
-          control={control}
+          control={control as any}
           name="productDetails"
           render={({ field }) => (
             <FormItem>

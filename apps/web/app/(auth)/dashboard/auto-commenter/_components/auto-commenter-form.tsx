@@ -56,7 +56,7 @@ export function AutoCommenterForm({ platform, availableCredits }: AutoCommenterF
       hashtags: [],
       platform: platform,
     },
-  });
+  }) as any;
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -130,7 +130,7 @@ export function AutoCommenterForm({ platform, availableCredits }: AutoCommenterF
   return (
     <Card className="w-full max-w-3xl mx-auto py-10">
       <CardContent>
-        <Form {...form}>
+  <Form {...(form as any)}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-8"
@@ -195,14 +195,14 @@ export function AutoCommenterForm({ platform, availableCredits }: AutoCommenterF
                     <FormLabel>Actions</FormLabel>
                     <FormControl>
                       <div className="space-y-2 border rounded-lg p-4">
-                        {actionOptions.map((action) => (
+                        {actionOptions.map((action: ActionType) => (
                           <div key={action} className="flex items-center space-x-2">
                             <Checkbox
                               checked={field.value.includes(action)}
                               onCheckedChange={(checked) => {
                                 const newValue = checked
                                   ? [...field.value, action]
-                                  : field.value.filter((a) => a !== action);
+                                  : field.value.filter((a: ActionType) => a !== action);
                                 if (newValue.length > 0) {
                                   field.onChange(newValue);
                                 }
@@ -253,7 +253,7 @@ export function AutoCommenterForm({ platform, availableCredits }: AutoCommenterF
                         </Select>
 
                         <div className="flex flex-wrap gap-2">
-                          {field.value.map((tag, index) => (
+                          {field.value.map((tag: Hashtag, index: number) => (
                             <Badge
                               key={index}
                               variant="secondary"
@@ -267,7 +267,7 @@ export function AutoCommenterForm({ platform, availableCredits }: AutoCommenterF
                                 className="h-4 w-4 p-0 hover:bg-transparent"
                                 onClick={() => {
                                   const newTags = field.value.filter(
-                                    (_, i) => i !== index
+                                    (_: Hashtag, i: number) => i !== index
                                   );
                                   form.setValue("hashtags", newTags);
                                 }}
