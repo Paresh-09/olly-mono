@@ -333,7 +333,6 @@ export default async function Page() {
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin,
-        onboardingComplete: user.onboardingComplete,
       }}
       licenses={licenses}
       subLicenses={subLicenses}
