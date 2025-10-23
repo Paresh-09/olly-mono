@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@repo/ui/components/ui/button";
 import { PageBackground } from "../../_components/auth-background";
 import { Card, CardContent } from "@repo/ui/components/ui/card";
-import { LicenseCard } from "@/app/web/components/LicenseCard";
+import { LicenseCard } from "@/components/LicenseCard";
 
 type License = {
   id: string;
