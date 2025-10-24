@@ -20,8 +20,8 @@ const InstagramCommentGuide = () => {
             <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="relative">
                 <div className="w-full h-64 relative overflow-hidden">
-                  <Image 
-                    src="/tools/how-to/insta-comment-gen/1.png" 
+                  <Image
+                    src="/tools/how-to/insta-comment-gen/1.png"
                     fill
                     alt="Enter Details"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -50,8 +50,8 @@ const InstagramCommentGuide = () => {
             <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="relative">
                 <div className="w-full h-64 relative overflow-hidden">
-                  <Image 
-                    src="/tools/how-to/insta-comment-gen/2.png" 
+                  <Image
+                    src="/tools/how-to/insta-comment-gen/2.png"
                     fill
                     alt="Upload & Preview"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -80,8 +80,8 @@ const InstagramCommentGuide = () => {
             <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="relative">
                 <div className="w-full h-64 relative overflow-hidden">
-                  <Image 
-                    src="/tools/how-to/insta-comment-gen/3.png" 
+                  <Image
+                    src="/tools/how-to/insta-comment-gen/3.png"
                     fill
                     alt="Download"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

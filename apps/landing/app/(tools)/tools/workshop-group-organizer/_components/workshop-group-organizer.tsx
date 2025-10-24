@@ -125,7 +125,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
     }
 
     const numberOfGroups = Math.ceil(totalParticipants / groupSize)
-    
+
     // Generate groups with unique IDs and colors
     const groups: Group[] = []
     for (let i = 0; i < numberOfGroups; i++) {
@@ -195,9 +195,9 @@ const WorkshopGroupOrganizer: React.FC = () => {
     if (!currentWorkshop || !currentGroupId || !participantInput.trim()) return
 
     const participant = participantInput.trim()
-    
+
     // Check if participant already exists in any group
-    const alreadyExists = currentWorkshop.groups.some(group => 
+    const alreadyExists = currentWorkshop.groups.some(group =>
       group.members.includes(participant)
     )
 
@@ -229,9 +229,9 @@ const WorkshopGroupOrganizer: React.FC = () => {
 
     const updatedGroups = currentWorkshop.groups.map(group => {
       if (group.id === groupId) {
-        return { 
-          ...group, 
-          members: group.members.filter(member => member !== participant) 
+        return {
+          ...group,
+          members: group.members.filter(member => member !== participant)
         }
       }
       return group
@@ -246,18 +246,18 @@ const WorkshopGroupOrganizer: React.FC = () => {
     if (!currentWorkshop || !taskInput.trim()) return
 
     const task = taskInput.trim()
-    
+
     // Check if task already exists
     if (currentWorkshop.tasks.includes(task)) {
       toast.error('This task already exists')
       return
     }
 
-    const updatedWorkshop = { 
-      ...currentWorkshop, 
-      tasks: [...currentWorkshop.tasks, task] 
+    const updatedWorkshop = {
+      ...currentWorkshop,
+      tasks: [...currentWorkshop.tasks, task]
     }
-    
+
     updateWorkshop(updatedWorkshop)
     setTaskInput('')
     toast.success('Task added successfully')
@@ -279,12 +279,12 @@ const WorkshopGroupOrganizer: React.FC = () => {
       }
     })
 
-    const updatedWorkshop = { 
-      ...currentWorkshop, 
+    const updatedWorkshop = {
+      ...currentWorkshop,
       tasks: updatedTasks,
       groups: updatedGroups
     }
-    
+
     updateWorkshop(updatedWorkshop)
     toast.success('Task removed')
   }
@@ -296,7 +296,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
       if (group.id === groupId) {
         // Check if task is already completed
         const isCompleted = group.completedTasks.includes(task)
-        
+
         if (isCompleted) {
           // Remove task from completed tasks
           return {
@@ -331,12 +331,12 @@ const WorkshopGroupOrganizer: React.FC = () => {
     setWorkshops(prevWorkshops =>
       prevWorkshops.filter(workshop => workshop.id !== workshopId)
     )
-    
+
     if (currentWorkshop?.id === workshopId) {
       setCurrentWorkshop(null)
       setActiveTab('create')
     }
-    
+
     toast.success('Workshop deleted')
   }
 
@@ -394,7 +394,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                   onChange={e => setWorkshopName(e.target.value)}
                 />
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="total-participants">Total Participants</Label>
@@ -406,7 +406,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                     onChange={e => setTotalParticipants(parseInt(e.target.value) || 0)}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="group-size">Group Size</Label>
                   <Input
@@ -418,7 +418,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="pt-2">
                 <p className="text-sm text-muted-foreground">
                   This will create{' '}
@@ -430,7 +430,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                   per group.
                 </p>
               </div>
-              
+
               <Button onClick={createWorkshop} className="w-full">
                 Create Workshop
               </Button>
@@ -603,7 +603,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                                       </DialogFooter>
                                     </DialogContent>
                                   </Dialog>
-                                  
+
                                   <Button variant="ghost" size="icon"
                                     onClick={() => {
                                       const link = generateParticipantLink(currentWorkshop.id, group.id);
@@ -635,7 +635,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                                     Add
                                   </Button>
                                 </div>
-                                
+
                                 {group.members.length > 0 ? (
                                   <ul className="space-y-1">
                                     {group.members.map(member => (
@@ -691,7 +691,7 @@ const WorkshopGroupOrganizer: React.FC = () => {
                           Add
                         </Button>
                       </div>
-                      
+
                       <ScrollArea className="h-[350px]">
                         <div className="space-y-2">
                           {currentWorkshop.tasks.length > 0 ? (

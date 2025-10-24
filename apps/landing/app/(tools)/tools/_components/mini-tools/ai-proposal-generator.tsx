@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input';
 import { Textarea } from '@repo/ui/components/ui/textarea';
 import { Label } from '@repo/ui/components/ui/label';
 import { Card } from '@repo/ui/components/ui/card';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -60,25 +60,25 @@ export function AIProposalGenerator() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const proposalRef = useRef<HTMLDivElement>(null);
-  
+
   // Company information
   const [companyName, setCompanyName] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
-  
+
   // Company registration information
   const [country, setCountry] = useState('india');
   const [registrationFields, setRegistrationFields] = useState<Record<string, string>>({});
-  
+
   // Design options
   const [template, setTemplate] = useState('modern');
   const [paperSize, setPaperSize] = useState('letter');
   const [primaryColor, setPrimaryColor] = useState('#3b82f6');
   const [secondaryColor, setSecondaryColor] = useState('#1e3a8a');
   const [logo, setLogo] = useState<string | null>(null);
-  
+
   // Proposal information
   const [proposalType, setProposalType] = useState('business');
   const [clientName, setClientName] = useState('');
@@ -87,7 +87,7 @@ export function AIProposalGenerator() {
   const [timeline, setTimeline] = useState('');
   const [budget, setBudget] = useState('');
   const [additionalDetails, setAdditionalDetails] = useState('');
-  
+
   // AI Generation
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedProposal, setGeneratedProposal] = useState('');
@@ -107,11 +107,11 @@ export function AIProposalGenerator() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
-      
+
       reader.onloadend = () => {
         setLogo(reader.result as string);
       };
-      
+
       reader.readAsDataURL(file);
     }
   };
@@ -122,7 +122,7 @@ export function AIProposalGenerator() {
       fileInputRef.current.click();
     }
   };
-  
+
   // Update registration field value
   const updateRegistrationField = (fieldId: string, value: string) => {
     setRegistrationFields(prev => ({
@@ -135,12 +135,12 @@ export function AIProposalGenerator() {
   const generateProposal = async () => {
     setIsGenerating(true);
     setGenerationError(null);
-    
+
     try {
       // In a real implementation, this would call an AI API
       // For now, we'll simulate a delay and use a template
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       const proposal = `Dear ${clientName},
 
 I am writing to present our proposal for ${projectTitle}.
@@ -160,7 +160,7 @@ We are confident that our expertise and experience make us the ideal partner for
 
 Best regards,
 ${companyName}`;
-      
+
       setGeneratedProposal(proposal);
     } catch (error) {
       setGenerationError('Failed to generate proposal. Please try again.');
@@ -192,7 +192,7 @@ ${companyName}`;
   // Print proposal
   const printProposal = () => {
     if (!proposalRef.current) return;
-    
+
     try {
       // Get styles from the current document
       const styles = Array.from(document.styleSheets)
@@ -207,10 +207,10 @@ ${companyName}`;
         })
         .filter(Boolean)
         .join('\n');
-      
+
       // Create the proposal content
       const proposalContent = proposalRef.current.outerHTML;
-      
+
       // Create an iframe for printing
       const iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
@@ -219,14 +219,14 @@ ${companyName}`;
       iframe.style.width = '0';
       iframe.style.height = '0';
       iframe.style.border = '0';
-      
+
       document.body.appendChild(iframe);
-      
+
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!iframeDoc) {
         throw new Error("Could not access iframe document");
       }
-      
+
       // Write the content to the iframe
       iframeDoc.open();
       iframeDoc.write(`
@@ -246,18 +246,18 @@ ${companyName}`;
         </html>
       `);
       iframeDoc.close();
-      
+
       // Wait for styles to apply
       setTimeout(() => {
         if (iframe.contentWindow) {
           iframe.contentWindow.print();
         }
-        
+
         setTimeout(() => {
           document.body.removeChild(iframe);
         }, 1000);
       }, 500);
-      
+
     } catch (error) {
       console.error('Print error:', error);
       toast({
@@ -278,17 +278,17 @@ ${companyName}`;
       });
       return;
     }
-    
+
     toast({
       title: "Generating PDF",
       description: "Please wait while we prepare your proposal PDF..."
     });
-    
+
     try {
       // In a real implementation, we would use a PDF generation library
       // For now, we'll just show a success message
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       toast({
         title: "PDF Downloaded",
         description: "Your proposal has been downloaded as a PDF."
@@ -328,12 +328,12 @@ ${companyName}`;
           <TabsTrigger value="proposal">Proposal Details</TabsTrigger>
           <TabsTrigger value="preview">Preview & Export</TabsTrigger>
         </TabsList>
-        
+
         {/* Company Information Tab */}
         <TabsContent value="company" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Company Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="logo">Company Logo</Label>
@@ -345,8 +345,8 @@ ${companyName}`;
                     accept="image/png,image/jpeg,image/svg+xml"
                     onChange={handleLogoUpload}
                   />
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={triggerFileInput}
                     className="flex items-center"
                   >
@@ -355,16 +355,16 @@ ${companyName}`;
                   </Button>
                   {logo && (
                     <div className="ml-4 w-16 h-16">
-                      <img 
-                        src={logo} 
-                        alt="Company Logo" 
+                      <img
+                        src={logo}
+                        alt="Company Logo"
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
                   )}
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="companyName">Company Name</Label>
                 <Input
@@ -375,7 +375,7 @@ ${companyName}`;
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="address">Address</Label>
                 <Textarea
@@ -386,7 +386,7 @@ ${companyName}`;
                   className="mt-1"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="phone">Phone</Label>
@@ -398,7 +398,7 @@ ${companyName}`;
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -409,7 +409,7 @@ ${companyName}`;
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="website">Website</Label>
                   <Input
@@ -421,11 +421,11 @@ ${companyName}`;
                   />
                 </div>
               </div>
-              
+
               {/* Company Registration Information */}
               <div className="mt-6">
                 <h3 className="text-lg font-medium mb-3">Company Registration Details</h3>
-                
+
                 <div className="mb-3">
                   <Label htmlFor="country">Country</Label>
                   <Select
@@ -443,7 +443,7 @@ ${companyName}`;
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {REGISTRATION_FIELDS[country as keyof typeof REGISTRATION_FIELDS].map(field => (
                     <div key={field.id}>
@@ -462,12 +462,12 @@ ${companyName}`;
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Design Tab */}
         <TabsContent value="design" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Proposal Design</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="template">Template Style</Label>
@@ -487,7 +487,7 @@ ${companyName}`;
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="paperSize">Paper Size</Label>
                 <Select
@@ -506,12 +506,12 @@ ${companyName}`;
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="primaryColor">Primary Color</Label>
                   <div className="flex items-center mt-1">
-                    <div 
+                    <div
                       className="h-8 w-8 rounded-md mr-2"
                       style={{ backgroundColor: primaryColor }}
                     />
@@ -524,11 +524,11 @@ ${companyName}`;
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <Label htmlFor="secondaryColor">Secondary Color</Label>
                   <div className="flex items-center mt-1">
-                    <div 
+                    <div
                       className="h-8 w-8 rounded-md mr-2"
                       style={{ backgroundColor: secondaryColor }}
                     />
@@ -545,12 +545,12 @@ ${companyName}`;
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Proposal Details Tab */}
         <TabsContent value="proposal" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Proposal Details</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="proposalType">Proposal Type</Label>
@@ -570,7 +570,7 @@ ${companyName}`;
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="clientName">Client Name</Label>
                 <Input
@@ -581,7 +581,7 @@ ${companyName}`;
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="projectTitle">Project Title</Label>
                 <Input
@@ -592,7 +592,7 @@ ${companyName}`;
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="projectScope">Project Scope</Label>
                 <Textarea
@@ -603,7 +603,7 @@ ${companyName}`;
                   className="mt-1 min-h-[100px]"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="timeline">Timeline</Label>
@@ -615,7 +615,7 @@ ${companyName}`;
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="budget">Budget</Label>
                   <Input
@@ -627,7 +627,7 @@ ${companyName}`;
                   />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="additionalDetails">Additional Details</Label>
                 <Textarea
@@ -638,8 +638,8 @@ ${companyName}`;
                   className="mt-1 min-h-[100px]"
                 />
               </div>
-              
-              <Button 
+
+              <Button
                 onClick={generateProposal}
                 disabled={isGenerating}
                 className="w-full"
@@ -656,7 +656,7 @@ ${companyName}`;
                   </>
                 )}
               </Button>
-              
+
               {generationError && (
                 <div className="text-red-500 text-sm mt-2">
                   {generationError}
@@ -665,7 +665,7 @@ ${companyName}`;
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Preview & Export Tab */}
         <TabsContent value="preview" className="space-y-4">
           <div className="flex justify-end space-x-2 mb-4">
@@ -682,7 +682,7 @@ ${companyName}`;
               Download PDF
             </Button>
           </div>
-          
+
           {/* Proposal Preview */}
           <div className="bg-gray-100 p-4 rounded-lg">
             <div
@@ -701,9 +701,9 @@ ${companyName}`;
                 <div className="flex items-center">
                   {logo && (
                     <div className="mr-4 w-16 h-16">
-                      <img 
-                        src={logo} 
-                        alt="Company Logo" 
+                      <img
+                        src={logo}
+                        alt="Company Logo"
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
@@ -719,7 +719,7 @@ ${companyName}`;
                   <p>{website && `Web: ${website}`}</p>
                 </div>
               </div>
-              
+
               {/* Registration Details */}
               {Object.keys(registrationFields).some(key => registrationFields[key]) && (
                 <div className="text-xs text-gray-500 mb-8 border-t pt-2" style={{ borderColor: secondaryColor }}>
@@ -734,21 +734,21 @@ ${companyName}`;
                   })}
                 </div>
               )}
-              
+
               {/* Proposal Content */}
               <div className="whitespace-pre-line">
                 {generatedProposal || 'Your proposal will appear here...'}
               </div>
             </div>
           </div>
-          
+
           {generatedProposal && (
             <div className="mt-6 flex justify-between">
               <Button variant="outline" onClick={generateProposal}>
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Regenerate
               </Button>
-              
+
               <Button onClick={() => {
                 const inputTab = document.querySelector('[data-value="proposal"]') as HTMLElement;
                 if (inputTab) inputTab.click();

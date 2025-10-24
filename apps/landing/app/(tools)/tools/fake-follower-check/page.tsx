@@ -17,15 +17,15 @@ export default function PlatformRedirect() {
             </h1>
             <Card className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button 
-                        variant="default" 
+                    <Button
+                        variant="default"
                         size="lg"
                         className="w-full bg-blue-500"
                         onClick={() => handleRedirect("linkedin")}
                     >
                         LinkedIn
                     </Button>
-                    <Button 
+                    <Button
                         variant="default"
                         size="lg"
                         className="w-full bg-red-400"
@@ -33,7 +33,7 @@ export default function PlatformRedirect() {
                     >
                         Instagram
                     </Button>
-                    <Button 
+                    <Button
                         variant="default"
                         size="lg"
                         className="w-full"

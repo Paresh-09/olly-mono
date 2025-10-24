@@ -29,7 +29,7 @@ export const FloatingLeaderboard = () => {
   // Cache reference
   const cache = useRef<CachedData | null>(null);
   // Interval reference
-  const intervalRef = useRef<NodeJS.Timeout>(undefined);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   // Track component visibility
   const isVisibleRef = useRef(isVisible);
 

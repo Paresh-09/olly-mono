@@ -9,14 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/ui/select'
 import { Slider } from '@repo/ui/components/ui/slider'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/ui/table'
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -24,20 +24,20 @@ import {
 } from 'recharts'
 
 // Game Theory Strategy Types
-type StrategyType = 
-  | 'alwaysCooperate' 
-  | 'alwaysDefect' 
-  | 'titForTat' 
-  | 'grudger' 
-  | 'random' 
+type StrategyType =
+  | 'alwaysCooperate'
+  | 'alwaysDefect'
+  | 'titForTat'
+  | 'grudger'
+  | 'random'
   | 'pavlov'
   | 'custom';
 
 // Preset Game Scenarios
-type GameScenario = 
-  | 'prisonersDilemma' 
-  | 'chickenGame' 
-  | 'staghunt' 
+type GameScenario =
+  | 'prisonersDilemma'
+  | 'chickenGame'
+  | 'staghunt'
   | 'battleOfSexes'
   | 'custom';
 
@@ -91,10 +91,10 @@ interface AgentCardProps {
   isActive: boolean;
 }
 
-const AgentCard: FC<AgentCardProps> = ({ 
-  agent, 
-  onUpdateAgent, 
-  onRemoveAgent, 
+const AgentCard: FC<AgentCardProps> = ({
+  agent,
+  onUpdateAgent,
+  onRemoveAgent,
   strategyDescriptions,
   isActive
 }) => {
@@ -114,27 +114,27 @@ const AgentCard: FC<AgentCardProps> = ({
       <CardContent className="p-4 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div 
-              className="w-4 h-4 rounded-full" 
+            <div
+              className="w-4 h-4 rounded-full"
               style={{ backgroundColor: agent.color }}
             ></div>
             <Label htmlFor={`agent-name-${agent.id}`}>Name</Label>
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-8 w-8 p-0" 
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0"
             onClick={onRemoveAgent}
           >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
               strokeLinejoin="round"
             >
               <path d="M18 6L6 18"></path>
@@ -154,8 +154,8 @@ const AgentCard: FC<AgentCardProps> = ({
               />
             </div>
             <div>
-              <Select 
-                value={agent.color} 
+              <Select
+                value={agent.color}
                 onValueChange={(value) => onUpdateAgent({ ...agent, color: value })}
               >
                 <SelectTrigger>
@@ -165,19 +165,19 @@ const AgentCard: FC<AgentCardProps> = ({
                   {colorOptions.map((color) => (
                     <SelectItem key={color} value={color}>
                       <div className="flex items-center">
-                        <div 
-                          className="w-4 h-4 rounded-full mr-2" 
+                        <div
+                          className="w-4 h-4 rounded-full mr-2"
                           style={{ backgroundColor: color }}
                         ></div>
                         <span>
                           {color === "rgb(239, 68, 68)" ? "Red" :
-                           color === "rgb(59, 130, 246)" ? "Blue" :
-                           color === "rgb(34, 197, 94)" ? "Green" :
-                           color === "rgb(168, 85, 247)" ? "Purple" :
-                           color === "rgb(249, 115, 22)" ? "Orange" :
-                           color === "rgb(236, 72, 153)" ? "Pink" :
-                           color === "rgb(20, 184, 166)" ? "Teal" :
-                           color === "rgb(234, 179, 8)" ? "Yellow" : "Color"}
+                            color === "rgb(59, 130, 246)" ? "Blue" :
+                              color === "rgb(34, 197, 94)" ? "Green" :
+                                color === "rgb(168, 85, 247)" ? "Purple" :
+                                  color === "rgb(249, 115, 22)" ? "Orange" :
+                                    color === "rgb(236, 72, 153)" ? "Pink" :
+                                      color === "rgb(20, 184, 166)" ? "Teal" :
+                                        color === "rgb(234, 179, 8)" ? "Yellow" : "Color"}
                         </span>
                       </div>
                     </SelectItem>
@@ -189,8 +189,8 @@ const AgentCard: FC<AgentCardProps> = ({
 
           <div>
             <Label htmlFor={`agent-strategy-${agent.id}`}>Strategy</Label>
-            <Select 
-              value={agent.strategy} 
+            <Select
+              value={agent.strategy}
               onValueChange={(value: StrategyType) => onUpdateAgent({ ...agent, strategy: value })}
             >
               <SelectTrigger id={`agent-strategy-${agent.id}`}>
@@ -224,8 +224,8 @@ interface PayoffMatrixEditorProps {
   onUpdateScenario: (scenario: GameScenario) => void;
 }
 
-const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({ 
-  payoffMatrix, 
+const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
+  payoffMatrix,
   onUpdatePayoff,
   scenarioType,
   onUpdateScenario
@@ -267,8 +267,8 @@ const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
   };
 
   const updatePayoffValue = (
-    scenario: keyof PayoffMatrix, 
-    playerIndex: 0 | 1, 
+    scenario: keyof PayoffMatrix,
+    playerIndex: 0 | 1,
     value: string
   ) => {
     const numValue = parseInt(value) || 0;
@@ -277,7 +277,7 @@ const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
     currentValues[playerIndex] = numValue;
     newPayoff[scenario] = currentValues as [number, number];
     onUpdatePayoff(newPayoff);
-    
+
     // If modifying values, switch to custom scenario
     if (scenarioType !== 'custom') {
       onUpdateScenario('custom');
@@ -319,14 +319,14 @@ const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
                   <TableCell className="font-medium">Cooperate</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Input 
-                        value={payoffMatrix.cooperateCooperate[0]} 
+                      <Input
+                        value={payoffMatrix.cooperateCooperate[0]}
                         onChange={(e) => updatePayoffValue('cooperateCooperate', 0, e.target.value)}
                         type="number"
                         className="w-16"
                       />
-                      <Input 
-                        value={payoffMatrix.cooperateCooperate[1]} 
+                      <Input
+                        value={payoffMatrix.cooperateCooperate[1]}
                         onChange={(e) => updatePayoffValue('cooperateCooperate', 1, e.target.value)}
                         type="number"
                         className="w-16"
@@ -335,14 +335,14 @@ const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Input 
-                        value={payoffMatrix.cooperateDefect[0]} 
+                      <Input
+                        value={payoffMatrix.cooperateDefect[0]}
                         onChange={(e) => updatePayoffValue('cooperateDefect', 0, e.target.value)}
                         type="number"
                         className="w-16"
                       />
-                      <Input 
-                        value={payoffMatrix.cooperateDefect[1]} 
+                      <Input
+                        value={payoffMatrix.cooperateDefect[1]}
                         onChange={(e) => updatePayoffValue('cooperateDefect', 1, e.target.value)}
                         type="number"
                         className="w-16"
@@ -354,14 +354,14 @@ const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
                   <TableCell className="font-medium">Defect</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Input 
-                        value={payoffMatrix.defectCooperate[0]} 
+                      <Input
+                        value={payoffMatrix.defectCooperate[0]}
                         onChange={(e) => updatePayoffValue('defectCooperate', 0, e.target.value)}
                         type="number"
                         className="w-16"
                       />
-                      <Input 
-                        value={payoffMatrix.defectCooperate[1]} 
+                      <Input
+                        value={payoffMatrix.defectCooperate[1]}
                         onChange={(e) => updatePayoffValue('defectCooperate', 1, e.target.value)}
                         type="number"
                         className="w-16"
@@ -370,14 +370,14 @@ const PayoffMatrixEditor: FC<PayoffMatrixEditorProps> = ({
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Input 
-                        value={payoffMatrix.defectDefect[0]} 
+                      <Input
+                        value={payoffMatrix.defectDefect[0]}
                         onChange={(e) => updatePayoffValue('defectDefect', 0, e.target.value)}
                         type="number"
                         className="w-16"
                       />
-                      <Input 
-                        value={payoffMatrix.defectDefect[1]} 
+                      <Input
+                        value={payoffMatrix.defectDefect[1]}
                         onChange={(e) => updatePayoffValue('defectDefect', 1, e.target.value)}
                         type="number"
                         className="w-16"
@@ -406,9 +406,9 @@ interface SimulationResultsProps {
   onRoundChange: (round: number) => void;
 }
 
-const SimulationResults: FC<SimulationResultsProps> = ({ 
-  agents, 
-  results, 
+const SimulationResults: FC<SimulationResultsProps> = ({
+  agents,
+  results,
   activeRound,
   onRoundChange
 }) => {
@@ -422,13 +422,13 @@ const SimulationResults: FC<SimulationResultsProps> = ({
       const data: any = {
         round: result.round
       };
-      
+
       agents.forEach(agent => {
         if (result.agents[agent.id]) {
           data[agent.name] = result.agents[agent.id].totalScore;
         }
       });
-      
+
       return data;
     });
   };
@@ -436,36 +436,36 @@ const SimulationResults: FC<SimulationResultsProps> = ({
   // Prepare data for the cooperation chart (percentage of cooperation per round)
   const prepareCooperationChartData = () => {
     const data = [];
-    
+
     // Group results by rounds of 5
     const groupSize = 5;
     const groupCount = Math.ceil(results.length / groupSize);
-    
+
     for (let i = 0; i < groupCount; i++) {
       const startRound = i * groupSize + 1;
       const endRound = Math.min((i + 1) * groupSize, results.length);
       const groupResults = results.slice(startRound - 1, endRound);
-      
+
       const groupData: any = {
         rounds: `${startRound}-${endRound}`
       };
-      
+
       agents.forEach(agent => {
         let cooperationCount = 0;
-        
+
         groupResults.forEach(result => {
           if (result.agents[agent.id] && result.agents[agent.id].move) {
             cooperationCount++;
           }
         });
-        
+
         const cooperationRate = (cooperationCount / groupResults.length) * 100;
         groupData[agent.name] = cooperationRate;
       });
-      
+
       data.push(groupData);
     }
-    
+
     return data;
   };
 
@@ -479,7 +479,7 @@ const SimulationResults: FC<SimulationResultsProps> = ({
         color: agent.color
       };
     }).sort((a, b) => b.score - a.score);
-    
+
     return data;
   };
 
@@ -519,8 +519,8 @@ const SimulationResults: FC<SimulationResultsProps> = ({
                   <TableRow key={agent.id}>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <div 
-                          className="w-3 h-3 rounded-full" 
+                        <div
+                          className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: agent.color }}
                         ></div>
                         <span>{agent.name}</span>
@@ -616,9 +616,9 @@ const SimulationResults: FC<SimulationResultsProps> = ({
                 <YAxis type="category" dataKey="name" />
                 <Tooltip />
                 <Legend />
-                <Bar 
-                  dataKey="score" 
-                  name="Total Score" 
+                <Bar
+                  dataKey="score"
+                  name="Total Score"
                   fill="#8884d8"
                 >
                   {
@@ -695,7 +695,7 @@ export const GameTheorySimulator: FC = () => {
       "rgb(20, 184, 166)", // Teal
       "rgb(234, 179, 8)"   // Yellow
     ];
-    
+
     const agentId = `agent-${Date.now()}`;
     const newAgent: Agent = {
       id: agentId,
@@ -705,14 +705,14 @@ export const GameTheorySimulator: FC = () => {
       moveHistory: [] as Array<boolean>,
       color: colorOptions[agents.length % colorOptions.length]
     };
-    
+
     setAgents([...agents, newAgent]);
     setActiveAgent(agentId);
   };
 
   // Update agent properties
   const updateAgent = (updatedAgent: Agent) => {
-    setAgents(agents.map(agent => 
+    setAgents(agents.map(agent =>
       agent.id === updatedAgent.id ? updatedAgent : agent
     ));
   };
@@ -727,44 +727,44 @@ export const GameTheorySimulator: FC = () => {
 
   // Get next move based on strategy
   const getNextMove = (
-    agent: Agent, 
-    opponentHistory: boolean[], 
+    agent: Agent,
+    opponentHistory: boolean[],
     ownHistory: boolean[],
     currentRound: number
   ): boolean => {
     switch (agent.strategy) {
       case 'alwaysCooperate':
         return true;
-      
+
       case 'alwaysDefect':
         return false;
-      
+
       case 'titForTat':
         if (currentRound === 0) return true;
         return opponentHistory[currentRound - 1];
-      
+
       case 'grudger':
         return !opponentHistory.includes(false);
-      
+
       case 'random':
         return Math.random() > 0.5;
-      
+
       case 'pavlov':
         if (currentRound === 0) return true;
-        
+
         const previousOwnMove = ownHistory[currentRound - 1];
         const previousOpponentMove = opponentHistory[currentRound - 1];
-        
+
         // If rewarded (CC or DC), repeat last move
-        if ((previousOwnMove && previousOpponentMove) || 
-            (!previousOwnMove && previousOpponentMove)) {
+        if ((previousOwnMove && previousOpponentMove) ||
+          (!previousOwnMove && previousOpponentMove)) {
           return previousOwnMove;
         }
         // If punished (CD or DD), change move
         else {
           return !previousOwnMove;
         }
-      
+
       default:
         return true;
     }
@@ -772,8 +772,8 @@ export const GameTheorySimulator: FC = () => {
 
   // Calculate score for a round
   const calculateScore = (
-    agent1Move: boolean, 
-    agent2Move: boolean, 
+    agent1Move: boolean,
+    agent2Move: boolean,
     payoffs: PayoffMatrix
   ): [number, number] => {
     if (agent1Move && agent2Move) {
@@ -801,41 +801,41 @@ export const GameTheorySimulator: FC = () => {
       moveHistory: [] as Array<boolean>
     }));
     setAgents(resetAgents);
-    
+
     const results: SimulationResult[] = [];
-    
+
     // For each iteration (round)
     for (let round = 0; round < iterations; round++) {
       const roundResult: SimulationResult = {
         round: round + 1,
         agents: {}
       };
-      
+
       // For each pair of agents
       for (let i = 0; i < resetAgents.length; i++) {
         for (let j = i + 1; j < resetAgents.length; j++) {
           const agent1 = resetAgents[i];
           const agent2 = resetAgents[j];
-          
+
           // Get move history for both agents
           const agent1History = agent1.moveHistory.slice();
           const agent2History = agent2.moveHistory.slice();
-          
+
           // Determine next moves
           const agent1Move = getNextMove(agent1, agent2History, agent1History, round);
           const agent2Move = getNextMove(agent2, agent1History, agent2History, round);
-          
+
           // Calculate scores
           const [score1, score2] = calculateScore(agent1Move, agent2Move, payoffMatrix);
-          
+
           // Update agent histories
           agent1.moveHistory.push(agent1Move);
           agent2.moveHistory.push(agent2Move);
-          
+
           // Update agent total scores
           agent1.totalScore += score1;
           agent2.totalScore += score2;
-          
+
           // Record round results
           if (!roundResult.agents[agent1.id]) {
             roundResult.agents[agent1.id] = {
@@ -847,7 +847,7 @@ export const GameTheorySimulator: FC = () => {
             roundResult.agents[agent1.id].roundScore += score1;
             roundResult.agents[agent1.id].totalScore = agent1.totalScore;
           }
-          
+
           if (!roundResult.agents[agent2.id]) {
             roundResult.agents[agent2.id] = {
               move: agent2Move,
@@ -970,7 +970,7 @@ export const GameTheorySimulator: FC = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-4">
               <TabsTrigger value="setup">Setup</TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="results"
                 disabled={simulationResults.length === 0}
               >
@@ -985,7 +985,7 @@ export const GameTheorySimulator: FC = () => {
                   <h3 className="text-lg font-medium">Agents</h3>
                   <Button onClick={addAgent}>Add Agent</Button>
                 </div>
-                
+
                 {agents.length === 0 ? (
                   <Card>
                     <CardContent className="p-6 text-center text-gray-500">
@@ -1010,14 +1010,14 @@ export const GameTheorySimulator: FC = () => {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Game Parameters</h3>
-                
-                <PayoffMatrixEditor 
+
+                <PayoffMatrixEditor
                   payoffMatrix={payoffMatrix}
                   onUpdatePayoff={setPayoffMatrix}
                   scenarioType={scenarioType}
                   onUpdateScenario={setScenarioType}
                 />
-                
+
                 <Card>
                   <CardContent className="p-4 space-y-4">
                     <div>
@@ -1035,7 +1035,7 @@ export const GameTheorySimulator: FC = () => {
                         <span className="font-medium">{iterations}</span>
                       </div>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="simulation-name">Simulation Name (for saving)</Label>
                       <div className="flex space-x-2 mt-1">
@@ -1050,10 +1050,10 @@ export const GameTheorySimulator: FC = () => {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <div className="flex justify-center pt-4">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     onClick={runSimulation}
                     disabled={agents.length < 2}
                   >
@@ -1077,7 +1077,7 @@ export const GameTheorySimulator: FC = () => {
                       </Button>
                     </div>
                   </div>
-                  
+
                   <SimulationResults
                     agents={agents}
                     results={simulationResults}
@@ -1097,7 +1097,7 @@ export const GameTheorySimulator: FC = () => {
             <TabsContent value="saved">
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Saved Simulations</h3>
-                
+
                 {savedSimulations.length === 0 ? (
                   <Card>
                     <CardContent className="p-6 text-center text-gray-500">
@@ -1144,10 +1144,10 @@ export const GameTheorySimulator: FC = () => {
                             <div className="text-sm font-medium mt-2">Agents:</div>
                             <div className="flex flex-wrap gap-2 mt-1">
                               {sim.agents.map(agent => (
-                                <div 
+                                <div
                                   key={agent.id}
                                   className="inline-flex items-center px-2 py-1 rounded-full text-xs"
-                                  style={{ 
+                                  style={{
                                     backgroundColor: `${agent.color}22`,
                                     color: agent.color
                                   }}

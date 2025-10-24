@@ -69,23 +69,23 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
     try {
       // Reset error state
       setError(null);
-      
+
       // Handle empty URL
       if (!url.trim()) {
         setError('Please enter a YouTube channel URL');
         return;
       }
-      
+
       let extractedChannelId = '';
       let isUsername = false;
-      
+
       // Handle URLs with channel ID format
       if (url.includes('youtube.com/channel/')) {
         const match = url.match(/youtube\.com\/channel\/([^?\/]+)/);
         if (match && match[1]) {
           extractedChannelId = match[1];
         }
-      } 
+      }
       // Handle URLs with username format
       else if (url.includes('youtube.com/@')) {
         const match = url.match(/youtube\.com\/@([^?\/]+)/);
@@ -114,17 +114,17 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
         setError('Invalid YouTube channel URL format. Please use a valid channel URL.');
         return;
       }
-      
+
       if (!extractedChannelId) {
         setError('Could not extract channel ID from the URL');
         return;
       }
-      
+
       setChannelId(extractedChannelId);
-      
+
       // Generate the subscription URL
       let subscriptionUrl = '';
-      
+
       if (isUsername) {
         // For @username format
         subscriptionUrl = `https://www.youtube.com/${extractedChannelId}?sub_confirmation=1`;
@@ -132,7 +132,7 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
         // For channel ID format
         subscriptionUrl = `https://www.youtube.com/channel/${extractedChannelId}?sub_confirmation=1`;
       }
-      
+
       setPreviewUrl(subscriptionUrl);
 
       // Try to fetch channel data
@@ -144,15 +144,15 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
           logo: `https://yt3.ggpht.com/ytc/AAUvwniG-oe9jIj-TP4N1ez8QRHlvLgCxjLPg8tNcw=s88-c-k-c0x00ffffff-no-rj`, // Placeholder logo
           title: "YouTube Channel"
         };
-        
+
         setChannelData(channelDataObj);
       } catch (error) {
         console.error('Error fetching channel data:', error);
         // Still proceed with the channel ID we have
       }
-      
+
       generateCode(subscriptionUrl, extractedChannelId);
-      
+
     } catch (error) {
       console.error('Error extracting channel ID:', error);
       setError('Failed to process the YouTube channel URL');
@@ -164,10 +164,10 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
     const cleanChannelId = channelId.startsWith('@') ? channelId.substring(1) : channelId;
     const countType = showCount ? 'default' : 'hidden';
     const layoutType = buttonLayout === 'full' ? 'full' : 'default';
-    
+
     // Generate HTML code
     let html = '';
-    
+
     if (buttonStyle === 'default') {
       // Default YouTube button with g-ytsubscribe
       if (showLogo) {
@@ -196,12 +196,12 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
   ${buttonText}
 </a>`;
     }
-    
+
     setHtmlCode(html);
-    
+
     // Generate React code
     let react = '';
-    
+
     if (buttonStyle === 'default') {
       // Default YouTube button with g-ytsubscribe
       if (showLogo) {
@@ -267,7 +267,7 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
   {buttonText}
 </a>`;
     }
-    
+
     setReactCode(react);
   };
 
@@ -300,7 +300,7 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
   return (
     <div className="space-y-6">
       <Script src="https://apis.google.com/js/platform.js" strategy="lazyOnload" />
-      
+
       <Card>
         <CardHeader>
           <CardTitle className="text-xl">Create YouTube Subscription Button</CardTitle>
@@ -458,15 +458,15 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
                         {buttonStyle === 'default' ? (
                           <div className="youtube-subscribe">
                             {showLogo && (
-                              <img 
-                                src="https://yt3.ggpht.com/ytc/AAUvwniG-oe9jIj-TP4N1ez8QRHlvLgCxjLPg8tNcw=s88-c-k-c0x00ffffff-no-rj" 
-                                alt="Channel Logo" 
-                                className="channel-logo" 
+                              <img
+                                src="https://yt3.ggpht.com/ytc/AAUvwniG-oe9jIj-TP4N1ez8QRHlvLgCxjLPg8tNcw=s88-c-k-c0x00ffffff-no-rj"
+                                alt="Channel Logo"
+                                className="channel-logo"
                                 style={{ width: '48px', height: '48px', borderRadius: '50%', marginRight: '10px' }}
                               />
                             )}
-                            <div 
-                              className="g-ytsubscribe" 
+                            <div
+                              className="g-ytsubscribe"
                               data-channelid={channelId.startsWith('@') ? channelId.substring(1) : channelId}
                               data-layout={buttonLayout}
                               data-count={showCount ? 'default' : 'hidden'}
@@ -485,15 +485,15 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
                               fontSize: buttonSize === 'small' ? '12px' : buttonSize === 'large' ? '18px' : '14px'
                             }}>
                               <svg width={buttonSize === 'small' ? '16' : buttonSize === 'large' ? '24' : '20'} height={buttonSize === 'small' ? '16' : buttonSize === 'large' ? '24' : '20'} viewBox="0 0 24 24" fill="white" style={{ marginRight: '8px' }}>
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                               </svg>
                               {buttonText}
                             </div>
                           </a>
                         ) : (
-                          <a 
-                            href={previewUrl} 
-                            target="_blank" 
+                          <a
+                            href={previewUrl}
+                            target="_blank"
                             rel="noopener noreferrer"
                             style={{
                               color: buttonColor,
@@ -507,9 +507,9 @@ const YoutubeSubscriptionButtonCreator: React.FC = () => {
                         )}
                       </div>
                       <div className="mt-2 text-center">
-                        <a 
-                          href={previewUrl} 
-                          target="_blank" 
+                        <a
+                          href={previewUrl}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-sm text-blue-600 hover:underline flex items-center justify-center gap-1"
                         >

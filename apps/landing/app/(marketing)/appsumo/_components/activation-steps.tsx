@@ -54,7 +54,7 @@ const ActivationSteps: React.FC<ActivationStepsProps> = ({ activationKey }) => {
         <h3 className="font-medium text-lg ml-2">5 Steps and you&apos;re all set!</h3>
         {/* <Image src="/icon-2.png" alt="Olly Logo" width={20} height={20} /> */}
       </div>
-      
+
       <div className="space-y-2">
         {steps.map((step, index) => (
           <div key={index} className={`flex items-center p-2 rounded-md ${currentStep >= index ? 'bg-blue-50' : 'bg-gray-50'}`}>

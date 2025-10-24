@@ -133,13 +133,13 @@ const InstagramComment: React.FC = () => {
         console.warn("Chrome storage access failed, falling back to localStorage");
       }
     }
-    
+
     try {
       renderCommentDemo();
     } catch (error) {
       console.warn("Canvas rendering failed:", error);
     }
-    
+
     // Add resize handler for responsive canvas
     const handleResize = () => {
       try {
@@ -148,7 +148,7 @@ const InstagramComment: React.FC = () => {
         console.warn("Canvas resize failed:", error);
       }
     };
-    
+
     window.addEventListener("resize", handleResize);
     updateCanvasSize();
     return () => {
@@ -546,8 +546,8 @@ const InstagramComment: React.FC = () => {
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
                 <div className="relative">
-                  <select 
-                    value={color} 
+                  <select
+                    value={color}
                     onChange={(e) => setColor(e.target.value)}
                     className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none pr-8"
                   >

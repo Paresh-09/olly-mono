@@ -84,7 +84,7 @@ export function TextToBarkConverter() {
 
   const downloadAudio = () => {
     if (!audioUrl) return;
-    
+
     const a = document.createElement('a');
     a.href = audioUrl;
     a.download = 'bark-sound.mp3';
@@ -104,7 +104,7 @@ export function TextToBarkConverter() {
             className="min-h-[100px]"
             disabled={isProcessing}
           />
-          
+
           <Button
             onClick={generateBark}
             disabled={!text.trim() || isProcessing}

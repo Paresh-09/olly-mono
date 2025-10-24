@@ -17,19 +17,19 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
         {/* Header */}
         <section className="mb-12">
           <h1 className="text-3xl md:text-3xl font-bold mb-4">{toolDetail.name}</h1>
-          
+
           {/* Tagline */}
           <h2 className="text-2xl md:text-2xl font-semibold mb-6">
             {toolDetail.tagline}
           </h2>
-          
+
           {/* Long Description */}
           <div className="text-gray-700 text-lg space-y-4 mb-8">
             {toolDetail.longDescription.split('\n\n').map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-          
+
           {/* Testimonial */}
           {toolDetail.testimonial && (
             <blockquote className="border-l-4 border-blue-500 pl-4 italic my-8">
@@ -38,7 +38,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
             </blockquote>
           )}
         </section>
-        
+
         {/* Features Section */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">{toolDetail.features.title}</h2>
@@ -48,7 +48,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
               const colonIndex = feature.indexOf(':');
               const featureTitle = colonIndex > 0 ? feature.substring(0, colonIndex) : '';
               const featureDesc = colonIndex > 0 ? feature.substring(colonIndex + 1) : feature;
-              
+
               return (
                 <li key={index} className="flex items-start gap-3">
                   <span className="text-blue-500 mt-1 flex-shrink-0">
@@ -71,11 +71,11 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
             })}
           </ul>
         </section>
-        
+
         {/* How to Use Section - Visual Guide */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">{toolDetail.howToUse.title}</h2>
-          
+
           {/* Text-based numbered steps (as a fallback or additional info) */}
           <ol className="space-y-6 mt-8">
             {toolDetail.howToUse.steps.map((step, index) => {
@@ -83,7 +83,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
               const colonIndex = step.indexOf(':');
               const stepTitle = colonIndex > 0 ? step.substring(0, colonIndex) : '';
               const stepDesc = colonIndex > 0 ? step.substring(colonIndex + 1) : step;
-              
+
               return (
                 <li key={index} className="flex items-start gap-4">
                   <span className="flex items-center justify-center bg-blue-500 text-white rounded-full h-7 w-7 mt-1 flex-shrink-0 font-bold">
@@ -92,7 +92,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
                   <div>
                     {colonIndex > 0 ? (
                       <>
-                        <span className="font-medium">{stepTitle}:</span> 
+                        <span className="font-medium">{stepTitle}:</span>
                         <span>{stepDesc}</span>
                       </>
                     ) : (
@@ -104,21 +104,21 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
             })}
           </ol>
         </section>
-        
+
         {/* Use Cases Section */}
         <section className="mb-12">
           {/* Main image at top of benefits section (only if there's an image) */}
           {toolDetail.image && (
             <div className="relative w-full h-80 md:h-[600px] md:p-5 border-2 border-gray-300 mb-8 rounded-lg overflow-hidden">
-              <Image 
-                src={toolDetail.image} 
+              <Image
+                src={toolDetail.image}
                 alt={toolDetail.name || "Benefits"}
-                fill 
+                fill
                 className="object-fit p-5"
               />
             </div>
           )}
-          
+
           {/* Benefits as cards without images */}
           <h2 className="text-2xl font-bold mb-6">{toolDetail.useCases.title}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -126,7 +126,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
               // Define icons based on index (can be customized further based on useCase type)
               const icons = ["🔍", "📝", "📚", "📈", "⚡", "💡", "🔄", "📱"];
               const icon = icons[index % icons.length];
-              
+
               return (
                 <Card key={index} className="border border-gray-200">
                   <CardHeader className="pb-2">
@@ -143,7 +143,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
             })}
           </div>
         </section>
-        
+
         {/* Best Practices Section */}
         {toolDetail.bestPractices && (
           <section className="bg-blue-50 p-8 rounded-xl mb-12">
@@ -162,7 +162,7 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
             </ul>
           </section>
         )}
-        
+
         {/* FAQ Section */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">{toolDetail.faqs.title}</h2>
@@ -179,13 +179,13 @@ export const ToolContentSections: FC<ToolContentSectionsProps> = ({ toolDetail }
             ))}
           </Accordion>
         </section>
-        
+
         {/* Call to Action */}
         {toolDetail.callToAction && (
           <Card className="shadow-lg">
             <CardContent className="p-8 text-center">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">{toolDetail.callToAction.text}</h2>
-              <Button 
+              <Button
                 onClick={() => {
                   window.scrollTo({
                     top: 0,

@@ -15,9 +15,9 @@ import { Separator } from '@repo/ui/components/ui/separator'
 import { useToast } from '@repo/ui/hooks/use-toast'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import AuthPopup from "../authentication"
-import { 
-  Loader2, Copy, Download, Save, RefreshCw, 
-  Sparkles, Settings, FileText, MessageSquareText, 
+import {
+  Loader2, Copy, Download, Save, RefreshCw,
+  Sparkles, Settings, FileText, MessageSquareText,
   List, ArrowUpRight, CloudLightning, BookOpen
 } from 'lucide-react'
 
@@ -72,9 +72,9 @@ export function IntroductionWriter() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [showAuthPopup, setShowAuthPopup] = useState<boolean>(false)
   const [dailyUsage, setDailyUsage] = useState<UsageTracking>({ count: 0, date: '' })
-  
+
   const DAILY_FREE_LIMIT = 3
-  
+
   // Define available tone options
   const toneOptions: ToneOption[] = [
     { value: 'professional', label: 'Professional' },
@@ -84,7 +84,7 @@ export function IntroductionWriter() {
     { value: 'enthusiastic', label: 'Enthusiastic' },
     { value: 'academic', label: 'Academic' }
   ]
-  
+
   // Define available length options
   const lengthOptions: LengthOption[] = [
     { value: 'short', label: 'Short', wordCount: 75 },
@@ -98,11 +98,11 @@ export function IntroductionWriter() {
     if (savedItems) {
       setSavedIntroductions(JSON.parse(savedItems))
     }
-    
+
     checkAuthStatus()
     loadDailyUsage()
   }, [])
-  
+
   // Check user authentication status
   const checkAuthStatus = async () => {
     try {
@@ -113,12 +113,12 @@ export function IntroductionWriter() {
       console.error('Error checking auth status:', error)
     }
   }
-  
+
   // Load daily usage from localStorage
   const loadDailyUsage = () => {
     const today = new Date().toDateString()
     const savedUsage = localStorage.getItem('introWriter_dailyUsage')
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage)
       if (usage.date === today) {
@@ -135,7 +135,7 @@ export function IntroductionWriter() {
       localStorage.setItem('introWriter_dailyUsage', JSON.stringify(newUsage))
     }
   }
-  
+
   // Increment daily usage counter
   const incrementDailyUsage = () => {
     const today = new Date().toDateString()
@@ -146,7 +146,7 @@ export function IntroductionWriter() {
     setDailyUsage(newUsage)
     localStorage.setItem('introWriter_dailyUsage', JSON.stringify(newUsage))
   }
-  
+
   // Check if user can generate (auth check or increment usage)
   const checkUsageLimit = (): boolean => {
     if (isAuthenticated) {
@@ -166,7 +166,7 @@ export function IntroductionWriter() {
 
     return true
   }
-  
+
   // Handle successful authentication
   const handleSuccessfulAuth = () => {
     setIsAuthenticated(true)
@@ -202,7 +202,7 @@ export function IntroductionWriter() {
       })
       return
     }
-    
+
     // Check usage limits for free users
     if (!checkUsageLimit()) {
       return
@@ -210,7 +210,7 @@ export function IntroductionWriter() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call API endpoint
       const response = await fetch('/api/tools/introduction-writer', {
@@ -227,21 +227,21 @@ export function IntroductionWriter() {
           customInstructions
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate introduction');
       }
-      
+
       setIntroduction(data.introduction);
       setActiveTab('preview');
-      
+
       // Increment usage for free users
       if (!isAuthenticated) {
         incrementDailyUsage();
       }
-      
+
       toast({
         title: "Introduction generated",
         description: "Your introduction has been created successfully.",
@@ -271,7 +271,7 @@ export function IntroductionWriter() {
   // Download as text file
   const downloadIntroduction = (): void => {
     const element = document.createElement('a')
-    const file = new Blob([introduction], {type: 'text/plain'})
+    const file = new Blob([introduction], { type: 'text/plain' })
     element.href = URL.createObjectURL(file)
     element.download = `${topic.replace(/\s+/g, '-').toLowerCase()}-introduction.txt`
     document.body.appendChild(element)
@@ -282,7 +282,7 @@ export function IntroductionWriter() {
   // Save introduction to local storage
   const saveIntroduction = (): void => {
     if (!introduction || !topic) return;
-    
+
     if (!isAuthenticated) {
       toast({
         title: "Authentication Required",
@@ -292,7 +292,7 @@ export function IntroductionWriter() {
       setShowAuthPopup(true);
       return;
     }
-    
+
     const newId = Date.now().toString()
     const newSaved: SavedIntroduction = {
       id: newId,
@@ -301,11 +301,11 @@ export function IntroductionWriter() {
       topic: topic,
       date: new Date().toLocaleDateString()
     }
-    
+
     const updatedSaved = [...savedIntroductions, newSaved]
     setSavedIntroductions(updatedSaved)
     localStorage.setItem('savedIntroductions', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Introduction saved",
       description: "Your introduction has been saved for future reference."
@@ -326,16 +326,16 @@ export function IntroductionWriter() {
   // Delete a saved introduction
   const deleteSavedIntroduction = (id: string, e: React.MouseEvent): void => {
     e.stopPropagation() // Prevent triggering the parent click handler
-    
+
     const updatedSaved = savedIntroductions.filter(item => item.id !== id)
     setSavedIntroductions(updatedSaved)
     localStorage.setItem('savedIntroductions', JSON.stringify(updatedSaved))
-    
+
     // If the deleted introduction was selected, clear the selection
     if (selectedSavedIntro === id) {
       setSelectedSavedIntro(null)
     }
-    
+
     toast({
       title: "Introduction deleted",
       description: "The saved introduction has been removed."
@@ -365,7 +365,7 @@ export function IntroductionWriter() {
           </AlertDescription>
         </Alert>
       )}
-    
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="bg-muted rounded-lg p-1 mb-6">
           <TabsList className="grid w-full grid-cols-3 bg-transparent">
@@ -386,7 +386,7 @@ export function IntroductionWriter() {
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         {/* Write Introduction Tab */}
         <TabsContent value="write" className="mt-0">
           <div className="grid gap-8 md:grid-cols-3">
@@ -401,7 +401,7 @@ export function IntroductionWriter() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="topic" className="text-base">Topic/Title <span className="text-destructive">*</span></Label>
-                    <Input 
+                    <Input
                       id="topic"
                       placeholder="e.g., Benefits of Remote Work, Introduction to Machine Learning"
                       value={topic}
@@ -409,10 +409,10 @@ export function IntroductionWriter() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="keywords" className="text-base">Keywords (separated by commas)</Label>
-                    <Input 
+                    <Input
                       id="keywords"
                       placeholder="e.g., productivity, work-life balance, flexibility"
                       value={keywords}
@@ -421,7 +421,7 @@ export function IntroductionWriter() {
                     />
                     <p className="text-xs text-muted-foreground mt-1">Include keywords you want to target in your introduction</p>
                   </div>
-                  
+
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
                       <Label htmlFor="tone" className="text-base">Tone</Label>
@@ -438,7 +438,7 @@ export function IntroductionWriter() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="length" className="text-base">Length</Label>
                       <Select value={length} onValueChange={setLength}>
@@ -455,22 +455,22 @@ export function IntroductionWriter() {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
-                    <Switch 
-                      id="seo-focus" 
-                      checked={seoFocus} 
-                      onCheckedChange={setSeoFocus} 
+                    <Switch
+                      id="seo-focus"
+                      checked={seoFocus}
+                      onCheckedChange={setSeoFocus}
                     />
                     <Label htmlFor="seo-focus" className="text-base">
                       Optimize for SEO
                     </Label>
                     <Badge variant="outline" className="ml-2">Recommended</Badge>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="customInstructions" className="text-base">Additional Instructions (Optional)</Label>
-                    <Textarea 
+                    <Textarea
                       id="customInstructions"
                       placeholder="Any specific points you want to include, style preferences, or target audience details"
                       value={customInstructions}
@@ -486,9 +486,9 @@ export function IntroductionWriter() {
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Reset Form
                 </Button>
-                <Button 
-                  onClick={generateIntroduction} 
-                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)} 
+                <Button
+                  onClick={generateIntroduction}
+                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                   className="px-6"
                 >
                   {loading ? (
@@ -505,7 +505,7 @@ export function IntroductionWriter() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-3 md:col-span-1 h-fit">
               <CardHeader>
                 <CardTitle className="text-lg">Settings Summary</CardTitle>
@@ -541,7 +541,7 @@ export function IntroductionWriter() {
             </Card>
           </div>
         </TabsContent>
-        
+
         {/* Preview Tab */}
         <TabsContent value="preview" className="mt-0">
           <Card>
@@ -550,7 +550,7 @@ export function IntroductionWriter() {
                 <FileText className="mr-2 h-5 w-5 text-primary" />
                 Generated Introduction
               </CardTitle>
-              
+
               {introduction && (
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm" onClick={copyToClipboard}>
@@ -559,9 +559,9 @@ export function IntroductionWriter() {
                   <Button variant="outline" size="sm" onClick={downloadIntroduction}>
                     <Download className="h-4 w-4 mr-1" /> Download
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={saveIntroduction}
                     disabled={!isAuthenticated}
                   >
@@ -570,7 +570,7 @@ export function IntroductionWriter() {
                 </div>
               )}
             </CardHeader>
-            
+
             <CardContent>
               <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
                 {loading ? (
@@ -583,9 +583,9 @@ export function IntroductionWriter() {
                   <div className="text-destructive text-center h-[300px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating introduction</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={() => setActiveTab('write')}
                     >
@@ -606,7 +606,7 @@ export function IntroductionWriter() {
                   </div>
                 )}
               </div>
-              
+
               {introduction && (
                 <div className="mt-6 border-t pt-4">
                   <div className="flex flex-wrap items-center gap-2 justify-between">
@@ -620,8 +620,8 @@ export function IntroductionWriter() {
                       <Button variant="outline" size="sm" onClick={() => setActiveTab('write')}>
                         <RefreshCw className="h-4 w-4 mr-1" /> Edit & Regenerate
                       </Button>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         onClick={saveIntroduction}
                         disabled={!isAuthenticated}
                       >
@@ -634,7 +634,7 @@ export function IntroductionWriter() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* Saved Introductions Tab */}
         <TabsContent value="saved" className="mt-0">
           <Card>
@@ -644,7 +644,7 @@ export function IntroductionWriter() {
                 Saved Introductions
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               {!isAuthenticated ? (
                 <div className="text-center p-8">
@@ -653,7 +653,7 @@ export function IntroductionWriter() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Please sign in to save and access your introductions.
                   </p>
-                  <Button 
+                  <Button
                     className="mt-4"
                     onClick={() => setShowAuthPopup(true)}
                   >
@@ -667,8 +667,8 @@ export function IntroductionWriter() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     After generating an introduction, click the "Save" button to store it for future reference.
                   </p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={() => setActiveTab('write')}
                   >
@@ -678,8 +678,8 @@ export function IntroductionWriter() {
               ) : (
                 <div className="space-y-4">
                   {savedIntroductions.map((item) => (
-                    <div 
-                      key={item.id} 
+                    <div
+                      key={item.id}
                       className={`border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors ${selectedSavedIntro === item.id ? 'border-primary' : ''}`}
                       onClick={() => loadSavedIntroduction(item.id)}
                     >
@@ -689,15 +689,15 @@ export function IntroductionWriter() {
                           <p className="text-sm text-muted-foreground mt-1">Saved on {item.date}</p>
                         </div>
                         <div className="flex space-x-2">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => deleteSavedIntroduction(item.id, e)}
                           >
                             Delete
                           </Button>
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             onClick={() => loadSavedIntroduction(item.id)}
                           >

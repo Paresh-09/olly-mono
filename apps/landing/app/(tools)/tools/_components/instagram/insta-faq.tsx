@@ -5,7 +5,7 @@ import Link from "next/link";
 const InstagramFAQ = () => {
   return (
     <div className="container mx-auto p-4">
-   
+
       <Card>
 
         <CardHeader>
@@ -32,12 +32,12 @@ const InstagramFAQ = () => {
             </p>
           </div>
           <div className="mb-6">
-   
+
             <h3 className="text-lg font-bold mb-2">
               How do I use the Instagram Comment Generator?
             </h3>
             <ol className="list-decimal pl-6">
-          
+
               <li className="mb-2">
                 Enter a username in the &apos;Username&apos; input field.
               </li>
@@ -58,12 +58,12 @@ const InstagramFAQ = () => {
             </ol>
           </div>
           <div className="mb-6">
-          
+
             <h3 className="text-lg font-bold mb-2">
               Can I use the generated comments in my Instagram posts?
             </h3>
             <p>
-          
+
               Absolutely! The <Link href='/tools/instagram-comment-generator' className="text-blue-900">Instagram Comment Generator</Link> is designed to create
               visually appealing comments that can seamlessly integrate into
               your Instagram posts. You can use the downloaded PNG image files
@@ -77,7 +77,7 @@ const InstagramFAQ = () => {
               Are there any limitations on the comment text or username length?
             </h3>
             <p>
-              
+
               Yes, there are some limitations to ensure the generated comments
               maintain a clean and readable appearance. The username is
               truncated if it exceeds 30 characters, and the comment text is
@@ -85,12 +85,12 @@ const InstagramFAQ = () => {
             </p>
           </div>
           <div className="mb-6">
-            
+
             <h3 className="text-lg font-bold mb-2">
               Can I use the generated comments for commercial purposes?
             </h3>
             <p>
-           
+
               The Instagram Comment Generator is designed for personal and
               non-commercial use. If you plan to use the generated comments for
               commercial purposes, such as marketing campaigns or sponsored
@@ -99,13 +99,13 @@ const InstagramFAQ = () => {
             </p>
           </div>
           <div className="mb-6">
-       
+
             <h3 className="text-lg font-bold mb-2">
               Are there any future updates or improvements planned for the
               Instagram Comment Generator?
             </h3>
             <p>
-              
+
               Yes, we are continuously working on improving and expanding the
               capabilities of the Instagram Comment Generator. Some planned
               updates include animated comments, comment threads, custom font

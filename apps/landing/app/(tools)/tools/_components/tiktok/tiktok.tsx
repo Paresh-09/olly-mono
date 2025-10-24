@@ -38,7 +38,7 @@ const TiktokComment = () => {
     try {
       const response = await fetch('/api/user/auth');
       const data: AuthCheckResponse = await response.json();
-      
+
       if (!data.authenticated) {
         setShowAuthPopup(true);
         return;
@@ -96,22 +96,22 @@ const TiktokComment = () => {
       if (ctx) {
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
         // Set the comment box position
         const boxWidth = 300;
         const boxHeight = 70;
         const x = 50;
         const y = canvas.height / 2 - boxHeight / 2;
-  
+
         // Draw the comment box background
         ctx.fillStyle = "white";
         ctx.fillRect(x, y, boxWidth, boxHeight);
-  
+
         // Draw the comment box border
         ctx.strokeStyle = "#111827";
         ctx.lineWidth = 1;
         ctx.strokeRect(x, y, boxWidth, boxHeight);
-  
+
         // Draw the profile image inside the comment box
         if (profileImage) {
           const img = document.createElement("img");
@@ -128,25 +128,25 @@ const TiktokComment = () => {
           };
           img.src = profileImage;
         }
-  
+
         // Set the font and color for the username
         ctx.font = "10px Arial";
         ctx.fillStyle = "#374151";
-  
+
         // Truncate the username if it exceeds the character limit
         const maxUsernameLength = 30;
         const truncatedUsername =
           username.length > maxUsernameLength
             ? username.slice(0, maxUsernameLength) + "..."
             : username;
-  
+
         // Draw the username next to the profile image
         ctx.fillText(truncatedUsername, x + 50, y + 20);
-  
+
         // Set the font and color for the note text
         ctx.font = "15px Arial";
         ctx.fillStyle = "#111827";
-  
+
         // Wrap the note text if it exceeds the box width
         const words = note.split(" ");
         let line = "";
@@ -222,8 +222,8 @@ const TiktokComment = () => {
               </div>
 
               {/* Download Button */}
-              <Button 
-                onClick={handleDownload} 
+              <Button
+                onClick={handleDownload}
                 className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
               >
                 Download Comment

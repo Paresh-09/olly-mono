@@ -66,7 +66,7 @@ export function AIOutlineGenerator() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call our API endpoint
       const response = await fetch('/api/tools/ai-course-outline', {
@@ -82,20 +82,20 @@ export function AIOutlineGenerator() {
           additionalInfo
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate course outline');
       }
-      
+
       setOutline(data.outline);
       setActiveTab('preview');
-      
+
       toast({
         title: "Outline generated",
         description: "Your course outline has been created successfully.",
-    
+
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
@@ -120,7 +120,7 @@ export function AIOutlineGenerator() {
 
   const downloadOutline = (): void => {
     const element = document.createElement('a')
-    const file = new Blob([outline], {type: 'text/markdown'})
+    const file = new Blob([outline], { type: 'text/markdown' })
     element.href = URL.createObjectURL(file)
     element.download = `${topic.replace(/\s+/g, '-').toLowerCase()}-course-outline.md`
     document.body.appendChild(element)
@@ -162,7 +162,7 @@ export function AIOutlineGenerator() {
             <Copy className="h-4 w-4 mr-2" /> Generated Outline
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="edit" className="mt-0">
           <div className="grid gap-8 md:grid-cols-3">
             <Card className="col-span-3 md:col-span-2">
@@ -176,7 +176,7 @@ export function AIOutlineGenerator() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="topic" className="text-base">Course Topic <span className="text-destructive">*</span></Label>
-                    <Input 
+                    <Input
                       id="topic"
                       placeholder="e.g., Machine Learning, Data Analysis, AI Ethics"
                       value={topic}
@@ -184,7 +184,7 @@ export function AIOutlineGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
                       <div className="flex items-center mb-1.5">
@@ -204,7 +204,7 @@ export function AIOutlineGenerator() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <div className="flex items-center mb-1.5">
                         <Calendar className="h-4 w-4 mr-1.5 text-muted-foreground" />
@@ -224,7 +224,7 @@ export function AIOutlineGenerator() {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center">
@@ -248,13 +248,13 @@ export function AIOutlineGenerator() {
                       <span>12 weeks</span>
                     </div>
                   </div>
-                  
+
                   <div>
                     <div className="flex items-center mb-1.5">
                       <Info className="h-4 w-4 mr-1.5 text-muted-foreground" />
                       <Label htmlFor="additionalInfo" className="text-base">Additional Requirements</Label>
                     </div>
-                    <Textarea 
+                    <Textarea
                       id="additionalInfo"
                       placeholder="Specific topics to cover, preferred teaching approach, assessment methods, etc."
                       value={additionalInfo}
@@ -280,7 +280,7 @@ export function AIOutlineGenerator() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-3 md:col-span-1 h-fit">
               <CardHeader>
                 <CardTitle className="text-lg">Summary</CardTitle>
@@ -311,7 +311,7 @@ export function AIOutlineGenerator() {
             </Card>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="preview" className="mt-0">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
@@ -319,7 +319,7 @@ export function AIOutlineGenerator() {
                 <BookOpen className="mr-2 h-5 w-5 text-primary" />
                 Generated Course Outline
               </CardTitle>
-              
+
               {outline && (
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm" onClick={copyToClipboard}>
@@ -334,7 +334,7 @@ export function AIOutlineGenerator() {
                 </div>
               )}
             </CardHeader>
-            
+
             <CardContent>
               <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
                 {loading ? (
@@ -347,9 +347,9 @@ export function AIOutlineGenerator() {
                   <div className="text-destructive text-center h-[500px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating outline</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={() => setActiveTab('edit')}
                     >
@@ -370,7 +370,7 @@ export function AIOutlineGenerator() {
                   </div>
                 )}
               </div>
-              
+
               {outline && (
                 <div className="mt-6 border-t pt-4">
                   <div className="flex flex-wrap items-center gap-2 justify-between">

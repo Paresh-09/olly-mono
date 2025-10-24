@@ -84,10 +84,10 @@ const VideoModal = ({ isOpen, onClose }: VideoModalProps) => {
 
 export default function DownloadsPage() {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-  
+
   const openVideoModal = () => setVideoModalOpen(true);
   const closeVideoModal = () => setVideoModalOpen(false);
-  
+
   return (
     <div className="container mx-auto px-4">
       {/* Enhanced Heading */}
@@ -143,16 +143,16 @@ export default function DownloadsPage() {
       <div className="w-full mx-auto mb-16 animate-fade-in-up delay-400">
         <div className="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-xl">
           <div className="aspect-video bg-gray-100 dark:bg-gray-800">
-            <button 
+            <button
               onClick={openVideoModal}
               className="relative w-full h-full focus:outline-none"
               aria-label="Play video demo"
             >
-              <Image 
-                src="/ac/ac-thumb.jpg" 
-                alt="Olly Desktop App Demo" 
-                width={1920} 
-                height={1080} 
+              <Image
+                src="/ac/ac-thumb.jpg"
+                alt="Olly Desktop App Demo"
+                width={1920}
+                height={1080}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 flex items-center justify-center transition-colors group">
@@ -167,7 +167,7 @@ export default function DownloadsPage() {
             </button>
           </div>
         </div>
-        
+
         {/* Video Modal */}
         <VideoModal isOpen={videoModalOpen} onClose={closeVideoModal} />
       </div>
@@ -176,37 +176,37 @@ export default function DownloadsPage() {
       <div className="max-w-3xl mx-auto mb-16 animate-fade-in-up delay-500">
         <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
           <h2 className="text-xl font-semibold mb-4">Why You Need the Desktop App</h2>
-          
+
           <div className="mb-6">
             <div className="flex items-start space-x-4 mb-4">
               <AlertCircle className="h-6 w-6 text-amber-500 flex-shrink-0 mt-1" />
               <div>
                 <h3 className="font-medium text-gray-900 dark:text-white">The Chrome Focus Problem</h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  When a Chrome window is out of focus or in the background, Chrome significantly reduces 
-                  its activity to save energy. This means auto-commenting and engagement tools stop working 
+                  When a Chrome window is out of focus or in the background, Chrome significantly reduces
+                  its activity to save energy. This means auto-commenting and engagement tools stop working
                   when you switch to another application or tab.
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-4">
               <CheckCircle className="h-6 w-6 text-teal-500 flex-shrink-0 mt-1" />
               <div>
                 <h3 className="font-medium text-gray-900 dark:text-white">The Olly Desktop App Solution</h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Our desktop app creates a special Chrome environment that continues running in the 
-                  background. This allows the auto-commenter to work even when you're using other applications, 
+                  Our desktop app creates a special Chrome environment that continues running in the
+                  background. This allows the auto-commenter to work even when you're using other applications,
                   providing continuous engagement without requiring your constant attention.
                 </p>
               </div>
             </div>
           </div>
-          
+
           <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              <span className="font-medium">Note:</span> If you're using the auto-commenter in a window that 
-              stays active and in focus, you don't need the desktop app. The desktop app is specifically for 
+              <span className="font-medium">Note:</span> If you're using the auto-commenter in a window that
+              stays active and in focus, you don't need the desktop app. The desktop app is specifically for
               users who want to run engagement in the background while working on other tasks.
             </p>
           </div>
@@ -367,7 +367,7 @@ export default function DownloadsPage() {
           <h3 className="text-xl font-semibold mb-4">
             How to Use the Desktop App for Auto-Commenting
           </h3>
-          
+
           <ol className="space-y-6 mb-6">
             <li className="flex">
               <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 font-semibold mr-3">1</div>
@@ -378,7 +378,7 @@ export default function DownloadsPage() {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex">
               <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 font-semibold mr-3">2</div>
               <div>
@@ -391,7 +391,7 @@ export default function DownloadsPage() {
                 </Link>
               </div>
             </li>
-            
+
             <li className="flex">
               <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 font-semibold mr-3">3</div>
               <div>
@@ -401,7 +401,7 @@ export default function DownloadsPage() {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex">
               <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 font-semibold mr-3">4</div>
               <div>
@@ -412,7 +412,7 @@ export default function DownloadsPage() {
               </div>
             </li>
           </ol>
-          
+
           <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800 mt-4">
             <p className="text-sm text-gray-700 dark:text-gray-300">
               <span className="font-medium">Pro Tip:</span> For maximum effectiveness, you can move the Olly window to a separate screen or virtual desktop if available. This keeps it completely out of your way while it continues to work.
@@ -424,7 +424,7 @@ export default function DownloadsPage() {
       {/* FAQ Section */}
       <div className="max-w-3xl mx-auto mb-16 animate-fade-in-up delay-900">
         <h3 className="text-xl font-semibold mb-4">Frequently Asked Questions</h3>
-        
+
         <div className="space-y-4">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <h4 className="font-medium text-gray-900 dark:text-white mb-2">Will this affect my regular Chrome installation?</h4>
@@ -432,14 +432,14 @@ export default function DownloadsPage() {
               No, the Olly desktop app creates a separate Chrome environment specifically for auto-commenting. Your regular Chrome installation and all your profiles, extensions, and settings remain untouched.
             </p>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <h4 className="font-medium text-gray-900 dark:text-white mb-2">Do I need credits to use the auto-commenter?</h4>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Yes, auto-commenting features use credits from your Olly account. Each action (comment, like) consumes one credit. Make sure you have sufficient credits in your account before starting.
             </p>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <h4 className="font-medium text-gray-900 dark:text-white mb-2">Why does the app need to close my existing Chrome windows?</h4>
             <p className="text-sm text-gray-600 dark:text-gray-300">

@@ -507,36 +507,36 @@ export async function POST(request: Request) {
     // Extract tool-specific parameters from parsedContent
     const {
         // Rizz Generator params
-        category,
-        situationType,
-        contextDetails,
-        targetName,
-        smoothnessLevel,
+        category = '',
+        situationType = '',
+        contextDetails = '',
+        targetName = '',
+        smoothnessLevel = '',
 
-        contextCategory,
-        witLevel,
-        cleanLevel,
+        contextCategory = '',
+        witLevel = '',
+        cleanLevel = '',
 
-        topicCategory,
-        topicDetails,
-        complexity,
+        topicCategory = '',
+        topicDetails = '',
+        complexity = '',
 
-        intensity,
+        intensity = '',
 
-        recipientName,
-        recipientAge,
-        occasion,
-        relationship,
-        minBudget,
-        maxBudget,
-        interests,
-        dislikes,
+        recipientName = '',
+        recipientAge = '',
+        occasion = '',
+        relationship = '',
+        minBudget = '',
+        maxBudget = '',
+        interests = '',
+        dislikes = '',
         
-        themeCategory,
-        themeDetails,
-        keywords,
-        flowLevel,
-        verseLength,
+        themeCategory = '',
+        themeDetails = '',
+        keywords = '',
+        flowLevel = '',
+        verseLength = '',
     } = typeof parsedContent === 'object' ? parsedContent : {};
 
     try {

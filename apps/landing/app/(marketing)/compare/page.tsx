@@ -104,8 +104,8 @@ export default function CompareHome() {
                         {category.features.slice(0, 3).map((feature, fidx) => (
                           <div key={fidx} className="flex items-center gap-2 text-sm">
                             {typeof feature.competitor === 'boolean' ? (
-                              feature.competitor ? 
-                                <CheckCircle2 className="h-4 w-4 text-green-500" /> : 
+                              feature.competitor ?
+                                <CheckCircle2 className="h-4 w-4 text-green-500" /> :
                                 <XCircle className="h-4 w-4 text-red-500" />
                             ) : null}
                             <span>{feature.name}</span>

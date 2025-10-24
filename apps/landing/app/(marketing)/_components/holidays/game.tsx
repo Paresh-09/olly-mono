@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Progress } from "@repo/ui/components/ui/progress";
 import { Button } from "@repo/ui/components/ui/button";
-import { useToast } from "@repo/ui/hooks/use-toast";import { Gift, Sparkles, RefreshCcw, Timer } from 'lucide-react';
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { Gift, Sparkles, RefreshCcw, Timer } from 'lucide-react';
 import CatchTheElf from './catch-elf';
 
 const GAME_DURATION = 60;
@@ -24,7 +25,7 @@ const HolidayGame = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -40,7 +41,7 @@ const HolidayGame = () => {
   // Timer countdown effect
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    
+
     if (isPlaying && timeLeft > 0) {
       timer = setInterval(() => {
         setTimeLeft(prev => {
@@ -74,7 +75,7 @@ const HolidayGame = () => {
     const storedSessionId = localStorage.getItem('elfGameSession');
     const newSessionId = storedSessionId || crypto.randomUUID();
     setSessionId(newSessionId);
-    
+
     if (!storedSessionId) {
       localStorage.setItem('elfGameSession', newSessionId);
     }
@@ -85,7 +86,7 @@ const HolidayGame = () => {
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           catches: gameState.catches,
           sessionId,
           checkoutData: {
@@ -96,12 +97,12 @@ const HolidayGame = () => {
           }
         }),
       });
-      
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Failed to claim discount');
       }
-      
+
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       }
@@ -162,8 +163,8 @@ const HolidayGame = () => {
             <div className="flex justify-between items-center text-xs">
               <span className="text-gray-600">{gameState.catches}/5</span>
               {gameState.catches > 0 && (
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size={isMobile ? "sm" : "default"}
                   onClick={handleClaimDiscount}
                   className="text-xs py-1 px-2 h-auto"
@@ -174,7 +175,7 @@ const HolidayGame = () => {
             </div>
           </div>
         </div>
-        <CatchTheElf 
+        <CatchTheElf
           gameState={gameState}
           setGameState={setGameState}
           sessionId={sessionId}
@@ -192,13 +193,13 @@ const HolidayGame = () => {
             <Gift className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
             <h3 className="font-semibold text-sm md:text-base">Holiday Special!</h3>
           </div>
-          
+
           {hasPlayed ? (
             <div className="space-y-2">
               {gameState.catches > 0 ? (
                 <>
                   <p className="text-xs md:text-sm text-gray-600">
-                    {timeLeft <= 0 
+                    {timeLeft <= 0
                       ? `Time's up! ${gameState.catches} ${gameState.catches === 1 ? 'elf' : 'elves'} = ${getDiscountPercentage(gameState.catches)}% OFF!`
                       : `${gameState.catches} ${gameState.catches === 1 ? 'elf' : 'elves'} = ${getDiscountPercentage(gameState.catches)}% OFF!`
                     }
@@ -241,7 +242,7 @@ const HolidayGame = () => {
                 Catch 5 elves in 60s for 100% OFF! Start small, aim big!
               </p>
               <div className="flex justify-end">
-                <Button 
+                <Button
                   onClick={() => setIsPlaying(true)}
                   className="bg-green-600 hover:bg-green-700 text-xs md:text-sm py-1 h-auto"
                 >

@@ -81,8 +81,8 @@ const MobileFAQ = () => {
 
         <Accordion type="single" collapsible className="w-full space-y-4">
           {faqs.map((faq, index) => (
-            <AccordionItem 
-              key={index} 
+            <AccordionItem
+              key={index}
               value={`item-${index}`}
               className="border border-gray-200 rounded-lg bg-gray-50 px-4"
             >

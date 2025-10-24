@@ -11,7 +11,7 @@ interface CopyButtonProps {
   className?: string;
 }
 
-export const CopyButton: FC<CopyButtonProps> = ({ 
+export const CopyButton: FC<CopyButtonProps> = ({
   text,
   size = 'sm',
   variant = 'ghost',

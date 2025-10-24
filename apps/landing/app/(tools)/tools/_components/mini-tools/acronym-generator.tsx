@@ -14,16 +14,16 @@ import { Separator } from '@repo/ui/components/ui/separator'
 import { Switch } from '@repo/ui/components/ui/switch'
 import { useToast } from '@repo/ui/hooks/use-toast'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@repo/ui/components/ui/accordion"
 import AuthPopup from "../authentication"
-import { 
+import {
   Loader2, Copy, Save, RefreshCw, Bookmark,
-  Sparkles, FileText, Text, Wand2, 
+  Sparkles, FileText, Text, Wand2,
   Trash2, Flag, PlusCircle, Star,
   FolderOpen, ArrowRight, Lightbulb
 } from 'lucide-react'
@@ -85,9 +85,9 @@ export function AcronymGenerator() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [showAuthPopup, setShowAuthPopup] = useState<boolean>(false)
   const [dailyUsage, setDailyUsage] = useState<UsageTracking>({ count: 0, date: '' })
-  
+
   const DAILY_FREE_LIMIT = 3
-  
+
   // Define available acronym types
   const acronymTypes: AcronymType[] = [
     { value: 'creative', label: 'Creative & Memorable' },
@@ -96,7 +96,7 @@ export function AcronymGenerator() {
     { value: 'technical', label: 'Technical & Industry-specific' },
     { value: 'fun', label: 'Fun & Playful' }
   ]
-  
+
   // Define available style options
   const acronymStyles: AcronymStyle[] = [
     { value: 'normal', label: 'Normal (Mixed Case)' },
@@ -111,11 +111,11 @@ export function AcronymGenerator() {
     if (savedItems) {
       setSavedAcronyms(JSON.parse(savedItems))
     }
-    
+
     checkAuthStatus()
     loadDailyUsage()
   }, [])
-  
+
   // Check user authentication status
   const checkAuthStatus = async () => {
     try {
@@ -126,12 +126,12 @@ export function AcronymGenerator() {
       console.error('Error checking auth status:', error)
     }
   }
-  
+
   // Load daily usage from localStorage
   const loadDailyUsage = () => {
     const today = new Date().toDateString()
     const savedUsage = localStorage.getItem('acronymGenerator_dailyUsage')
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage)
       if (usage.date === today) {
@@ -148,7 +148,7 @@ export function AcronymGenerator() {
       localStorage.setItem('acronymGenerator_dailyUsage', JSON.stringify(newUsage))
     }
   }
-  
+
   // Increment daily usage counter
   const incrementDailyUsage = () => {
     const today = new Date().toDateString()
@@ -159,7 +159,7 @@ export function AcronymGenerator() {
     setDailyUsage(newUsage)
     localStorage.setItem('acronymGenerator_dailyUsage', JSON.stringify(newUsage))
   }
-  
+
   // Check if user can generate (auth check or increment usage)
   const checkUsageLimit = (): boolean => {
     if (isAuthenticated) {
@@ -179,7 +179,7 @@ export function AcronymGenerator() {
 
     return true
   }
-  
+
   // Handle successful authentication
   const handleSuccessfulAuth = () => {
     setIsAuthenticated(true)
@@ -226,7 +226,7 @@ export function AcronymGenerator() {
       })
       return
     }
-    
+
     // Check usage limits for free users
     if (!checkUsageLimit()) {
       return
@@ -234,7 +234,7 @@ export function AcronymGenerator() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call API endpoint
       const response = await fetch('/api/tools/acronym-generator', {
@@ -252,26 +252,26 @@ export function AcronymGenerator() {
           additionalContext
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate acronyms');
       }
-      
+
       // Format acronyms based on selected style
       const formattedAcronyms = data.acronyms.map((item: AcronymSuggestion) => ({
         ...item,
         acronym: formatAcronym(item.acronym)
       }));
-      
+
       setGeneratedAcronyms(formattedAcronyms);
-      
+
       // Increment usage for free users
       if (!isAuthenticated) {
         incrementDailyUsage();
       }
-      
+
       toast({
         title: "Acronyms generated",
         description: `Successfully generated ${data.acronyms.length} acronym suggestions.`,
@@ -292,15 +292,15 @@ export function AcronymGenerator() {
   // Copy acronym to clipboard
   const copyAcronym = (acronym: string, meaning?: string, tagline?: string): void => {
     let textToCopy = acronym;
-    
+
     if (meaning) {
       textToCopy += `: ${meaning}`;
     }
-    
+
     if (tagline) {
       textToCopy += `\n${tagline}`;
     }
-    
+
     navigator.clipboard.writeText(textToCopy)
     toast({
       title: "Copied to clipboard",
@@ -319,7 +319,7 @@ export function AcronymGenerator() {
       setShowAuthPopup(true);
       return;
     }
-    
+
     const newId = Date.now().toString()
     const newSaved: SavedAcronym = {
       id: newId,
@@ -329,11 +329,11 @@ export function AcronymGenerator() {
       tagline: acronym.tagline,
       date: new Date().toLocaleDateString()
     }
-    
+
     const updatedSaved = [...savedAcronyms, newSaved]
     setSavedAcronyms(updatedSaved)
     localStorage.setItem('savedAcronyms', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Acronym saved",
       description: "Your acronym has been saved to your collection.",
@@ -343,11 +343,11 @@ export function AcronymGenerator() {
   // Delete a saved acronym
   const deleteAcronym = (id: string, e: React.MouseEvent): void => {
     e.stopPropagation() // Prevent triggering the parent click handler
-    
+
     const updatedSaved = savedAcronyms.filter(item => item.id !== id)
     setSavedAcronyms(updatedSaved)
     localStorage.setItem('savedAcronyms', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Acronym deleted",
       description: "The saved acronym has been removed."
@@ -371,7 +371,7 @@ export function AcronymGenerator() {
   const loadSavedAcronym = (acronym: SavedAcronym): void => {
     setPhrase(acronym.phrase)
     copyAcronym(acronym.acronym, acronym.meaning, acronym.tagline)
-    
+
     toast({
       title: "Acronym loaded & copied",
       description: "The selected acronym has been loaded and copied to clipboard."
@@ -387,7 +387,7 @@ export function AcronymGenerator() {
           </AlertDescription>
         </Alert>
       )}
-    
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="bg-muted rounded-lg p-1 mb-6">
           <TabsList className="grid w-full grid-cols-2 bg-transparent">
@@ -403,7 +403,7 @@ export function AcronymGenerator() {
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         {/* Generator Tab */}
         <TabsContent value="generator" className="mt-0">
           <div className="grid gap-8 md:grid-cols-12">
@@ -418,7 +418,7 @@ export function AcronymGenerator() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="phrase" className="text-base">Phrase or Title <span className="text-destructive">*</span></Label>
-                    <Input 
+                    <Input
                       id="phrase"
                       placeholder="e.g., Growth Marketing Accelerator"
                       value={phrase}
@@ -427,7 +427,7 @@ export function AcronymGenerator() {
                     />
                     <p className="text-xs text-muted-foreground mt-1">Enter the full phrase you want to create an acronym for</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="acronymType" className="text-base">Acronym Type</Label>
@@ -444,7 +444,7 @@ export function AcronymGenerator() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="acronymStyle" className="text-base">Text Style</Label>
                       <Select value={acronymStyle} onValueChange={setAcronymStyle}>
@@ -461,23 +461,23 @@ export function AcronymGenerator() {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
-                    <Switch 
-                      id="includeTagline" 
-                      checked={includeTagline} 
-                      onCheckedChange={setIncludeTagline} 
+                    <Switch
+                      id="includeTagline"
+                      checked={includeTagline}
+                      onCheckedChange={setIncludeTagline}
                     />
                     <Label htmlFor="includeTagline" className="text-base">
                       Include catchy tagline
                     </Label>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="preferredLetters" className="text-base">
                       Preferred Letters (Optional)
                     </Label>
-                    <Input 
+                    <Input
                       id="preferredLetters"
                       placeholder="e.g., A,C,E"
                       value={preferredLetters}
@@ -486,12 +486,12 @@ export function AcronymGenerator() {
                     />
                     <p className="text-xs text-muted-foreground mt-1">Comma-separated letters to prioritize (if possible)</p>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="targetAudience" className="text-base">
                       Target Audience (Optional)
                     </Label>
-                    <Input 
+                    <Input
                       id="targetAudience"
                       placeholder="e.g., Marketing Professionals, Tech Startups"
                       value={targetAudience}
@@ -499,12 +499,12 @@ export function AcronymGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="additionalContext" className="text-base">
                       Additional Context (Optional)
                     </Label>
-                    <Textarea 
+                    <Textarea
                       id="additionalContext"
                       placeholder="Any other information that might help generate better acronyms"
                       value={additionalContext}
@@ -520,9 +520,9 @@ export function AcronymGenerator() {
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>
-                <Button 
-                  onClick={generateAcronyms} 
-                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)} 
+                <Button
+                  onClick={generateAcronyms}
+                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                   className="px-6"
                 >
                   {loading ? (
@@ -539,7 +539,7 @@ export function AcronymGenerator() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-12 md:col-span-7">
               <CardHeader>
                 <CardTitle className="text-xl flex items-center">
@@ -558,9 +558,9 @@ export function AcronymGenerator() {
                   <div className="text-destructive text-center h-[400px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating acronyms</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={resetForm}
                     >
@@ -570,8 +570,8 @@ export function AcronymGenerator() {
                 ) : generatedAcronyms.length > 0 ? (
                   <div className="space-y-4">
                     {generatedAcronyms.map((acronym, index) => (
-                      <div 
-                        key={index} 
+                      <div
+                        key={index}
                         className="border rounded-lg p-4 hover:border-primary/50 transition-colors"
                       >
                         <div className="flex justify-between items-start">
@@ -594,18 +594,18 @@ export function AcronymGenerator() {
                             )}
                           </div>
                           <div className="flex flex-col gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="h-8 w-8 p-0"
                               onClick={() => copyAcronym(acronym.acronym, acronym.meaning, acronym.tagline)}
                             >
                               <Copy className="h-4 w-4" />
                               <span className="sr-only">Copy</span>
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="h-8 w-8 p-0"
                               onClick={() => saveAcronym(acronym)}
                               disabled={!isAuthenticated}
@@ -617,10 +617,10 @@ export function AcronymGenerator() {
                         </div>
                       </div>
                     ))}
-                    
+
                     <div className="flex justify-center mt-6">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={generateAcronyms}
                         disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                       >
@@ -642,7 +642,7 @@ export function AcronymGenerator() {
             </Card>
           </div>
         </TabsContent>
-        
+
         {/* Saved Acronyms Tab */}
         <TabsContent value="saved" className="mt-0">
           <Card>
@@ -652,7 +652,7 @@ export function AcronymGenerator() {
                 Saved Acronyms
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               {!isAuthenticated ? (
                 <div className="text-center p-8">
@@ -661,7 +661,7 @@ export function AcronymGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Please sign in to save and access your acronyms.
                   </p>
-                  <Button 
+                  <Button
                     className="mt-4"
                     onClick={() => setShowAuthPopup(true)}
                   >
@@ -675,8 +675,8 @@ export function AcronymGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Save your favorite acronyms to access them later for your projects.
                   </p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={() => setActiveTab('generator')}
                   >
@@ -686,8 +686,8 @@ export function AcronymGenerator() {
               ) : (
                 <div className="space-y-4">
                   {savedAcronyms.map((acronym) => (
-                    <div 
-                      key={acronym.id} 
+                    <div
+                      key={acronym.id}
                       className="border rounded-lg p-4 hover:border-primary/50 transition-colors cursor-pointer"
                       onClick={() => loadSavedAcronym(acronym)}
                     >
@@ -709,8 +709,8 @@ export function AcronymGenerator() {
                           )}
                         </div>
                         <div className="flex gap-2">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
                             onClick={(e) => {
@@ -721,8 +721,8 @@ export function AcronymGenerator() {
                             <Copy className="h-4 w-4" />
                             <span className="sr-only">Copy</span>
                           </Button>
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
                             onClick={(e) => deleteAcronym(acronym.id, e)}
@@ -743,7 +743,7 @@ export function AcronymGenerator() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       <AuthPopup
         isOpen={showAuthPopup}
         onClose={() => setShowAuthPopup(false)}

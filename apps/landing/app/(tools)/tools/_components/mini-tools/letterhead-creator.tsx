@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input';
 import { Textarea } from '@repo/ui/components/ui/textarea';
 import { Label } from '@repo/ui/components/ui/label';
 import { Card } from '@repo/ui/components/ui/card';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -59,25 +59,25 @@ export function LetterheadCreator() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const letterheadRef = useRef<HTMLDivElement>(null);
-  
+
   // Company information
   const [companyName, setCompanyName] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
-  
+
   // Company registration information
   const [country, setCountry] = useState('india');
   const [registrationFields, setRegistrationFields] = useState<Record<string, string>>({});
-  
+
   // Design options
   const [template, setTemplate] = useState('modern');
   const [paperSize, setPaperSize] = useState('letter');
   const [primaryColor, setPrimaryColor] = useState('#3b82f6');
   const [secondaryColor, setSecondaryColor] = useState('#1e3a8a');
   const [logo, setLogo] = useState<string | null>(null);
-  
+
   // Letter content
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [recipient, setRecipient] = useState('');
@@ -100,11 +100,11 @@ export function LetterheadCreator() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
-      
+
       reader.onloadend = () => {
         setLogo(reader.result as string);
       };
-      
+
       reader.readAsDataURL(file);
     }
   };
@@ -115,7 +115,7 @@ export function LetterheadCreator() {
       fileInputRef.current.click();
     }
   };
-  
+
   // Update registration field value
   const updateRegistrationField = (fieldId: string, value: string) => {
     setRegistrationFields(prev => ({
@@ -127,7 +127,7 @@ export function LetterheadCreator() {
   // Print letterhead
   const printLetterhead = () => {
     if (!letterheadRef.current) return;
-    
+
     try {
       // Get styles from the current document
       const styles = Array.from(document.styleSheets)
@@ -143,10 +143,10 @@ export function LetterheadCreator() {
         })
         .filter(Boolean)
         .join('\n');
-      
+
       // Create the letterhead content
       const letterheadContent = letterheadRef.current.outerHTML;
-      
+
       // Create an iframe (this has better print behavior than a new window)
       const iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
@@ -155,15 +155,15 @@ export function LetterheadCreator() {
       iframe.style.width = '0';
       iframe.style.height = '0';
       iframe.style.border = '0';
-      
+
       // Add the iframe to the document and access its document
       document.body.appendChild(iframe);
-      
+
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!iframeDoc) {
         throw new Error("Could not access iframe document");
       }
-      
+
       // Write the content to the iframe
       iframeDoc.open();
       iframeDoc.write(`
@@ -272,20 +272,20 @@ export function LetterheadCreator() {
         </html>
       `);
       iframeDoc.close();
-      
+
       // Wait a bit for styles to apply
       setTimeout(() => {
         // Print and then remove the iframe
         if (iframe.contentWindow) {
           iframe.contentWindow.print();
         }
-        
+
         // Remove the iframe after printing
         setTimeout(() => {
           document.body.removeChild(iframe);
         }, 1000);
       }, 500);
-      
+
     } catch (error) {
       console.error('Print error:', error);
       toast({
@@ -306,12 +306,12 @@ export function LetterheadCreator() {
       });
       return;
     }
-    
+
     toast({
       title: "Generating PDF",
       description: "Please wait while we prepare your letterhead PDF..."
     });
-    
+
     try {
       // In a real implementation, we would load these libraries properly
       // with proper imports, but for this demo we'll load them dynamically
@@ -324,25 +324,25 @@ export function LetterheadCreator() {
           document.head.appendChild(script);
         });
       };
-      
+
       // Load html2canvas and jsPDF from CDN
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-      
+
       // Generate the PDF once libraries are loaded
       const fileName = `${companyName || 'Company'}_Letterhead.pdf`;
-      
+
       // Use the loaded libraries (now available on window)
       const html2canvas = (window as any).html2canvas;
       const jspdf = (window as any).jspdf;
-      
+
       if (!html2canvas || !jspdf) {
         throw new Error("Required libraries could not be loaded");
       }
-      
+
       // Create a clone of the letterhead element to avoid modifying the original
       const element = letterheadRef.current.cloneNode(true) as HTMLElement;
-      
+
       // Add letterhead to a container with fixed dimensions for pdf generation
       const container = document.createElement('div');
       container.style.position = 'fixed';
@@ -351,7 +351,7 @@ export function LetterheadCreator() {
       container.style.width = paperSize === 'a4' ? '210mm' : '8.5in';
       document.body.appendChild(container);
       container.appendChild(element);
-      
+
       // Generate canvas from the element
       const canvas = await html2canvas(element, {
         scale: 2,
@@ -359,14 +359,14 @@ export function LetterheadCreator() {
         logging: false,
         backgroundColor: '#ffffff'
       });
-      
+
       // Create PDF with proper dimensions
       const pdf = new jspdf.jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: paperSize === 'a4' ? 'a4' : 'letter'
       });
-      
+
       // Add the canvas as an image
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -374,15 +374,15 @@ export function LetterheadCreator() {
       const ratio = canvas.width / canvas.height;
       const imgWidth = pdfWidth;
       const imgHeight = imgWidth / ratio;
-      
+
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      
+
       // Save the PDF
       pdf.save(fileName);
-      
+
       // Clean up
       document.body.removeChild(container);
-      
+
       toast({
         title: "PDF Downloaded",
         description: "Your letterhead has been downloaded as a PDF."
@@ -394,18 +394,18 @@ export function LetterheadCreator() {
         description: "Failed to generate PDF. Please try again. If the problem persists, try the text download instead.",
         variant: "destructive"
       });
-      
+
       // Fallback to text download if PDF generation fails
       try {
         const fileName = `${companyName || 'Company'}_Letterhead.txt`;
-        
+
         // Create letterhead content in text format
         let textContent = `${companyName || 'Company Name'}\n`;
         textContent += `${address || 'Company Address'}\n`;
         if (phone) textContent += `Phone: ${phone}\n`;
         if (email) textContent += `Email: ${email}\n`;
         if (website) textContent += `Web: ${website}\n\n`;
-        
+
         // Add registration details
         const regDetails = Object.entries(registrationFields)
           .filter(([_, value]) => value)
@@ -413,11 +413,11 @@ export function LetterheadCreator() {
             const field = REGISTRATION_FIELDS[country as keyof typeof REGISTRATION_FIELDS].find(f => f.id === key);
             return `${field?.name}: ${value}`;
           });
-          
+
         if (regDetails.length > 0) {
           textContent += regDetails.join('\n') + '\n\n';
         }
-        
+
         // Add letter content
         textContent += `Date: ${date}\n\n`;
         textContent += `${recipient || 'Recipient'}\n\n`;
@@ -426,24 +426,24 @@ export function LetterheadCreator() {
         textContent += `Sincerely,\n`;
         textContent += `${signatory || 'Your Name'}\n`;
         textContent += `${signatureTitle || 'Your Title'}\n`;
-        
+
         // Create a blob with the text content
         const blob = new Blob([textContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
-        
+
         // Create a link element and trigger download
         const link = document.createElement('a');
         link.href = url;
         link.download = fileName;
         document.body.appendChild(link);
         link.click();
-        
+
         // Clean up
         setTimeout(() => {
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
         }, 100);
-        
+
         toast({
           title: "Text File Downloaded",
           description: "PDF generation failed, but we've downloaded your letterhead as a text file instead."
@@ -479,12 +479,12 @@ export function LetterheadCreator() {
           <TabsTrigger value="content">Letter Content</TabsTrigger>
           <TabsTrigger value="preview">Preview & Export</TabsTrigger>
         </TabsList>
-        
+
         {/* Company Information Tab */}
         <TabsContent value="company" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Company Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="logo">Company Logo</Label>
@@ -496,8 +496,8 @@ export function LetterheadCreator() {
                     accept="image/png,image/jpeg,image/svg+xml"
                     onChange={handleLogoUpload}
                   />
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={triggerFileInput}
                     className="flex items-center"
                   >
@@ -506,16 +506,16 @@ export function LetterheadCreator() {
                   </Button>
                   {logo && (
                     <div className="ml-4 w-16 h-16">
-                      <img 
-                        src={logo} 
-                        alt="Company Logo" 
+                      <img
+                        src={logo}
+                        alt="Company Logo"
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
                   )}
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="companyName">Company Name</Label>
                 <Input
@@ -526,7 +526,7 @@ export function LetterheadCreator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="address">Address</Label>
                 <Textarea
@@ -537,7 +537,7 @@ export function LetterheadCreator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="phone">Phone</Label>
@@ -549,7 +549,7 @@ export function LetterheadCreator() {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -560,7 +560,7 @@ export function LetterheadCreator() {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="website">Website</Label>
                   <Input
@@ -572,11 +572,11 @@ export function LetterheadCreator() {
                   />
                 </div>
               </div>
-              
+
               {/* Company Registration Information */}
               <div className="mt-6">
                 <h3 className="text-lg font-medium mb-3">Company Registration Details</h3>
-                
+
                 <div className="mb-3">
                   <Label htmlFor="country">Country</Label>
                   <Select
@@ -594,7 +594,7 @@ export function LetterheadCreator() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {REGISTRATION_FIELDS[country as keyof typeof REGISTRATION_FIELDS].map(field => (
                     <div key={field.id}>
@@ -613,12 +613,12 @@ export function LetterheadCreator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Design Tab */}
         <TabsContent value="design" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Letterhead Design</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="template">Template Style</Label>
@@ -638,7 +638,7 @@ export function LetterheadCreator() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="paperSize">Paper Size</Label>
                 <Select
@@ -657,12 +657,12 @@ export function LetterheadCreator() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="primaryColor">Primary Color</Label>
                   <div className="flex items-center mt-1">
-                    <div 
+                    <div
                       className="h-8 w-8 rounded-md mr-2"
                       style={{ backgroundColor: primaryColor }}
                     />
@@ -675,11 +675,11 @@ export function LetterheadCreator() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <Label htmlFor="secondaryColor">Secondary Color</Label>
                   <div className="flex items-center mt-1">
-                    <div 
+                    <div
                       className="h-8 w-8 rounded-md mr-2"
                       style={{ backgroundColor: secondaryColor }}
                     />
@@ -696,12 +696,12 @@ export function LetterheadCreator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Letter Content Tab */}
         <TabsContent value="content" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Letter Content</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="date">Date</Label>
@@ -713,7 +713,7 @@ export function LetterheadCreator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="recipient">Recipient</Label>
                 <Textarea
@@ -724,7 +724,7 @@ export function LetterheadCreator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="subject">Subject</Label>
                 <Input
@@ -735,7 +735,7 @@ export function LetterheadCreator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="content">Letter Content</Label>
                 <Textarea
@@ -746,7 +746,7 @@ export function LetterheadCreator() {
                   className="mt-1 min-h-[200px]"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="signatory">Signatory Name</Label>
@@ -758,7 +758,7 @@ export function LetterheadCreator() {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="signatureTitle">Title/Position</Label>
                   <Input
@@ -773,7 +773,7 @@ export function LetterheadCreator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Preview & Export Tab */}
         <TabsContent value="preview" className="space-y-4">
           <div className="flex justify-end space-x-2 mb-4">
@@ -786,7 +786,7 @@ export function LetterheadCreator() {
               Download PDF
             </Button>
           </div>
-          
+
           {/* Letterhead Preview */}
           <div className="bg-gray-100 p-4 rounded-lg">
             <div
@@ -805,9 +805,9 @@ export function LetterheadCreator() {
                 <div className="flex items-center">
                   {logo && (
                     <div className="mr-4 w-16 h-16">
-                      <img 
-                        src={logo} 
-                        alt="Company Logo" 
+                      <img
+                        src={logo}
+                        alt="Company Logo"
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
@@ -823,7 +823,7 @@ export function LetterheadCreator() {
                   <p>{website && `Web: ${website}`}</p>
                 </div>
               </div>
-              
+
               {/* Registration Details */}
               {Object.keys(registrationFields).some(key => registrationFields[key]) && (
                 <div className="text-xs text-gray-500 mb-8 border-t pt-2" style={{ borderColor: secondaryColor }}>
@@ -838,29 +838,29 @@ export function LetterheadCreator() {
                   })}
                 </div>
               )}
-              
+
               {/* Date */}
               <div className="mb-8">
                 <p>{date}</p>
               </div>
-              
+
               {/* Recipient */}
               <div className="mb-8 whitespace-pre-line">
                 <p>{recipient || 'Recipient details'}</p>
               </div>
-              
+
               {/* Subject */}
               {subject && (
                 <div className="mb-6">
                   <p className="font-semibold">Subject: {subject}</p>
                 </div>
               )}
-              
+
               {/* Content */}
               <div className="mb-12 whitespace-pre-line min-h-[200px]">
                 <p>{content || 'Your letter content will appear here...'}</p>
               </div>
-              
+
               {/* Signature */}
               <div>
                 <p className="mb-1">Sincerely,</p>

@@ -13,8 +13,8 @@ import { Separator } from '@repo/ui/components/ui/separator'
 import { useToast } from '@repo/ui/hooks/use-toast'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import AuthPopup from "../authentication"
-import { 
-  Loader2, Heart, Save, BookOpen, RefreshCw, 
+import {
+  Loader2, Heart, Save, BookOpen, RefreshCw,
   Sparkles, Star, Bolt, Zap, Lightbulb,
   FileEdit, Hash, Search
 } from 'lucide-react'
@@ -69,34 +69,34 @@ export function BlogNameGenerator() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [showAuthPopup, setShowAuthPopup] = useState<boolean>(false)
   const [dailyUsage, setDailyUsage] = useState<UsageTracking>({ count: 0, date: '' })
-  
+
   const DAILY_FREE_LIMIT = 3
-  
+
   // Define available name styles
   const nameStyles: NameStyle[] = [
-    { 
-      value: 'descriptive', 
-      label: 'Descriptive', 
+    {
+      value: 'descriptive',
+      label: 'Descriptive',
       description: 'Clear, straightforward names that directly communicate your blog topic'
     },
-    { 
-      value: 'creative', 
-      label: 'Creative', 
+    {
+      value: 'creative',
+      label: 'Creative',
       description: 'Unique, memorable names with creative wordplay and metaphors'
     },
-    { 
-      value: 'seo-focused', 
-      label: 'SEO-Focused', 
+    {
+      value: 'seo-focused',
+      label: 'SEO-Focused',
       description: 'Keyword-rich names optimized for search engines'
     },
-    { 
-      value: 'brandable', 
-      label: 'Brandable', 
+    {
+      value: 'brandable',
+      label: 'Brandable',
       description: 'Short, catchy names that work well as a brand'
     },
-    { 
-      value: 'balanced', 
-      label: 'Balanced', 
+    {
+      value: 'balanced',
+      label: 'Balanced',
       description: 'Mix of creative and descriptive names with good SEO potential'
     }
   ]
@@ -107,11 +107,11 @@ export function BlogNameGenerator() {
     if (savedItems) {
       setSavedNames(JSON.parse(savedItems))
     }
-    
+
     checkAuthStatus()
     loadDailyUsage()
   }, [])
-  
+
   // Check user authentication status
   const checkAuthStatus = async () => {
     try {
@@ -122,12 +122,12 @@ export function BlogNameGenerator() {
       console.error('Error checking auth status:', error)
     }
   }
-  
+
   // Load daily usage from localStorage
   const loadDailyUsage = () => {
     const today = new Date().toDateString()
     const savedUsage = localStorage.getItem('blogNameGenerator_dailyUsage')
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage)
       if (usage.date === today) {
@@ -144,7 +144,7 @@ export function BlogNameGenerator() {
       localStorage.setItem('blogNameGenerator_dailyUsage', JSON.stringify(newUsage))
     }
   }
-  
+
   // Increment daily usage counter
   const incrementDailyUsage = () => {
     const today = new Date().toDateString()
@@ -155,7 +155,7 @@ export function BlogNameGenerator() {
     setDailyUsage(newUsage)
     localStorage.setItem('blogNameGenerator_dailyUsage', JSON.stringify(newUsage))
   }
-  
+
   // Check if user can generate (auth check or increment usage)
   const checkUsageLimit = (): boolean => {
     if (isAuthenticated) {
@@ -175,7 +175,7 @@ export function BlogNameGenerator() {
 
     return true
   }
-  
+
   // Handle successful authentication
   const handleSuccessfulAuth = () => {
     setIsAuthenticated(true)
@@ -205,7 +205,7 @@ export function BlogNameGenerator() {
       })
       return
     }
-    
+
     // Check usage limits for free users
     if (!checkUsageLimit()) {
       return
@@ -213,7 +213,7 @@ export function BlogNameGenerator() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call API endpoint
       const response = await fetch('/api/tools/blog-name-generator', {
@@ -228,20 +228,20 @@ export function BlogNameGenerator() {
           nameStyle
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate blog names');
       }
-      
+
       setGeneratedNames(data.names);
-      
+
       // Increment usage for free users
       if (!isAuthenticated) {
         incrementDailyUsage();
       }
-      
+
       toast({
         title: "Names generated",
         description: "We've crafted some blog name ideas for you to consider.",
@@ -270,7 +270,7 @@ export function BlogNameGenerator() {
       setShowAuthPopup(true);
       return;
     }
-    
+
     const newId = Date.now().toString()
     const newSaved: SavedName = {
       id: newId,
@@ -280,11 +280,11 @@ export function BlogNameGenerator() {
       topic: topic || keywords || niche || "Untitled",
       date: new Date().toLocaleDateString()
     }
-    
+
     const updatedSaved = [...savedNames, newSaved]
     setSavedNames(updatedSaved)
     localStorage.setItem('savedBlogNames', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Name saved",
       description: "Blog name has been saved to your collection.",
@@ -294,11 +294,11 @@ export function BlogNameGenerator() {
   // Delete a saved name
   const deleteSavedName = (id: string, e: React.MouseEvent): void => {
     e.stopPropagation() // Prevent triggering the parent click handler
-    
+
     const updatedSaved = savedNames.filter(item => item.id !== id)
     setSavedNames(updatedSaved)
     localStorage.setItem('savedBlogNames', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Name deleted",
       description: "The saved blog name has been removed."
@@ -342,7 +342,7 @@ export function BlogNameGenerator() {
           </AlertDescription>
         </Alert>
       )}
-    
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="bg-muted rounded-lg p-1 mb-6">
           <TabsList className="grid w-full grid-cols-2 bg-transparent">
@@ -358,7 +358,7 @@ export function BlogNameGenerator() {
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         {/* Generator Tab */}
         <TabsContent value="generator" className="mt-0">
           <div className="grid gap-3 md:grid-cols-3">
@@ -373,7 +373,7 @@ export function BlogNameGenerator() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="topic" className="text-base">Blog Topic</Label>
-                    <Input 
+                    <Input
                       id="topic"
                       placeholder="e.g., Sustainable Living, Tech Reviews"
                       value={topic}
@@ -381,10 +381,10 @@ export function BlogNameGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="keywords" className="text-base">Keywords</Label>
-                    <Input 
+                    <Input
                       id="keywords"
                       placeholder="e.g., eco-friendly, green, sustainability"
                       value={keywords}
@@ -393,10 +393,10 @@ export function BlogNameGenerator() {
                     />
                     <p className="text-xs text-muted-foreground mt-1">Separate keywords with commas</p>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="niche" className="text-base">Niche/Industry</Label>
-                    <Input 
+                    <Input
                       id="niche"
                       placeholder="e.g., Finance, Travel, Food"
                       value={niche}
@@ -404,7 +404,7 @@ export function BlogNameGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="nameStyle" className="text-base">Name Style</Label>
                     <Select value={nameStyle} onValueChange={setNameStyle}>
@@ -431,9 +431,9 @@ export function BlogNameGenerator() {
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>
-                <Button 
-                  onClick={generateNames} 
-                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)} 
+                <Button
+                  onClick={generateNames}
+                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                   className="px-6"
                 >
                   {loading ? (
@@ -450,7 +450,7 @@ export function BlogNameGenerator() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-3 md:col-span-2">
               <CardHeader>
                 <CardTitle className="text-xl flex items-center">
@@ -469,9 +469,9 @@ export function BlogNameGenerator() {
                   <div className="text-destructive text-center h-[400px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating blog names</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={resetForm}
                     >
@@ -493,9 +493,9 @@ export function BlogNameGenerator() {
                             </div>
                             <p className="text-sm text-muted-foreground mt-2">{item.explanation}</p>
                           </div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             className="h-8 w-8 p-0"
                             onClick={() => saveName(item)}
                             disabled={!isAuthenticated}
@@ -520,7 +520,7 @@ export function BlogNameGenerator() {
             </Card>
           </div>
         </TabsContent>
-        
+
         {/* Saved Names Tab */}
         <TabsContent value="saved" className="mt-0">
           <Card>
@@ -530,7 +530,7 @@ export function BlogNameGenerator() {
                 Favorite Blog Names
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               {!isAuthenticated ? (
                 <div className="text-center p-8">
@@ -539,7 +539,7 @@ export function BlogNameGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Please sign in to save and access your favorite blog names.
                   </p>
-                  <Button 
+                  <Button
                     className="mt-4"
                     onClick={() => setShowAuthPopup(true)}
                   >
@@ -553,8 +553,8 @@ export function BlogNameGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     When you find a name you like, click the heart icon to save it for future reference.
                   </p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={() => setActiveTab('generator')}
                   >
@@ -578,8 +578,8 @@ export function BlogNameGenerator() {
                           <p className="text-sm mt-2">{item.explanation}</p>
                         </div>
                         <div className="flex">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 p-0 px-2"
                             onClick={(e) => deleteSavedName(item.id, e)}
@@ -596,7 +596,7 @@ export function BlogNameGenerator() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       <AuthPopup
         isOpen={showAuthPopup}
         onClose={() => setShowAuthPopup(false)}

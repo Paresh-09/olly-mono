@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useScrollTop } from "@/components/hooks/use-scroll-top";
 import { Button } from "@repo/ui/components/ui/button";
-import { cn } from "@repo/ui/lib/utils";
+import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import Image from "next/image";
 

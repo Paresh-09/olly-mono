@@ -16,8 +16,8 @@ interface Message {
 }
 
 interface ChatBubbleProps {
-    onChatOpenChange: (isOpen: boolean) => void;
-  }
+  onChatOpenChange: (isOpen: boolean) => void;
+}
 
 const sampleQuestions: string[] = [
   "How can Agencies use Olly?",
@@ -71,10 +71,10 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ onChatOpenChange }) => {
     }
 
     const userMessage: Message = { text: text, isUser: true };
-    const assistantMessage: Message = { 
-      text: "", 
+    const assistantMessage: Message = {
+      text: "",
       isUser: false,
-      isStreaming: true 
+      isStreaming: true
     };
 
     setMessages(prev => [...prev, userMessage, assistantMessage]);
@@ -87,9 +87,9 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ onChatOpenChange }) => {
       const response = await fetch('/api/contact-us/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: text,
-          threadId: threadId 
+          threadId: threadId
         }),
         signal: abortControllerRef.current.signal
       });
@@ -142,9 +142,9 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ onChatOpenChange }) => {
       console.error('Error:', error);
       setMessages(prev => [
         ...prev.slice(0, -1),
-        { 
-          text: "Sorry, I'm having trouble connecting. Please try again.", 
-          isUser: false 
+        {
+          text: "Sorry, I'm having trouble connecting. Please try again.",
+          isUser: false
         }
       ]);
     } finally {
@@ -170,13 +170,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ onChatOpenChange }) => {
         <Card className="w-[95vw] h-[80vh] md:w-[450px] md:h-[600px] flex flex-col shadow-xl animate-in slide-in-from-bottom-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 bg-primary">
             <CardTitle className="text-lg font-medium text-primary-foreground">This Chat is AI-Powered! Ask me anything!</CardTitle>
-            <Button 
-                variant="ghost" 
-                size="icon"
-                className="h-8 w-8 text-primary-foreground hover:bg-primary/90"
-                onClick={() => handleOpenChange(false)}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-primary-foreground hover:bg-primary/90"
+              onClick={() => handleOpenChange(false)}
             >
-                <X className="h-5 w-5" />
+              <X className="h-5 w-5" />
             </Button>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col p-4 gap-4 overflow-hidden">
@@ -200,8 +200,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ onChatOpenChange }) => {
                     <div
                       className={cn(
                         "rounded-lg px-4 py-2 max-w-[75%] break-words",
-                        msg.isUser 
-                          ? "bg-primary text-primary-foreground" 
+                        msg.isUser
+                          ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground",
                         msg.isStreaming && "animate-pulse"
                       )}
@@ -231,7 +231,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ onChatOpenChange }) => {
             <div className="flex gap-2 mt-auto">
               <Input
                 value={inputValue}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setInputValue(e.target.value)
                 }
                 onKeyPress={handleKeyPress}

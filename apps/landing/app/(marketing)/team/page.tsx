@@ -102,7 +102,7 @@ const TeamPage = () => {
         <h2 className="text-3xl font-bold border-b pb-3">Our Team</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
-            <div 
+            <div
               key={index}
               className="bg-card rounded-xl p-6 hover:shadow-md transition-shadow border border-border"
             >

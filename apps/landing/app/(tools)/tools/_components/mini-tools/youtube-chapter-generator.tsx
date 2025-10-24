@@ -67,7 +67,7 @@ export const ChapterGenerator = () => {
 
       const data = await response.json()
       setResult(data)
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -125,8 +125,8 @@ export const ChapterGenerator = () => {
           />
         </div>
 
-        <Button 
-          onClick={generateChapters} 
+        <Button
+          onClick={generateChapters}
           className="w-full"
           disabled={loading || (!isAuthenticated && remainingUses <= 0)}
         >

@@ -37,7 +37,7 @@ const YoutubeComment = () => {
     try {
       const response = await fetch('/api/user/auth');
       const data: AuthCheckResponse = await response.json();
-      
+
       if (!data.authenticated) {
         setShowAuthPopup(true);
         return;
@@ -172,14 +172,14 @@ const YoutubeComment = () => {
     <div className="container mx-auto p-4 mt-10">
       <Card>
         <CardHeader>
-        <CardHeader>
-          <h1 className="text-xl sm:text-2xl text-center font-bold">
-            Free Youtube Shorts Comment Generator
-          </h1>
-          <h2 className="text-sm text-center text-gray-500">
-            Generate Youtube Shorts comments with AI
-          </h2>
-        </CardHeader>
+          <CardHeader>
+            <h1 className="text-xl sm:text-2xl text-center font-bold">
+              Free Youtube Shorts Comment Generator
+            </h1>
+            <h2 className="text-sm text-center text-gray-500">
+              Generate Youtube Shorts comments with AI
+            </h2>
+          </CardHeader>
         </CardHeader>
         <CardContent>
           <div className="flex">
@@ -206,8 +206,8 @@ const YoutubeComment = () => {
                 Download Comment
               </Button>
 
-              
-              <SocialPresenceCTA 
+
+              <SocialPresenceCTA
                 title="Blow up your Shorts"
                 subtitle="Grow your YouTube Shorts with AI"
                 description="Join 10,000+ creators growing their YouTube Shorts presence with AI-powered engagement."

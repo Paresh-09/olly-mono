@@ -80,7 +80,7 @@ export function AICourseImageGenerator() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call our API endpoint
       const response = await fetch('/api/tools/ai-course-image', {
@@ -99,16 +99,16 @@ export function AICourseImageGenerator() {
           includeIcons
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate course image');
       }
-      
+
       setGeneratedImage(data.imageUrl);
       setActiveTab('preview');
-      
+
       toast({
         title: "Image generated",
         description: "Your course image has been created successfully.",
@@ -180,7 +180,7 @@ export function AICourseImageGenerator() {
             <Download className="h-4 w-4 mr-2" /> Generated Image
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="edit" className="mt-0">
           <div className="grid gap-8 md:grid-cols-3">
             <Card className="col-span-3 md:col-span-2">
@@ -194,7 +194,7 @@ export function AICourseImageGenerator() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="courseName" className="text-base">Course Name <span className="text-destructive">*</span></Label>
-                    <Input 
+                    <Input
                       id="courseName"
                       placeholder="e.g., Complete Web Development Bootcamp"
                       value={courseName}
@@ -202,11 +202,11 @@ export function AICourseImageGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
                       <Label htmlFor="courseSubject" className="text-base">Course Subject</Label>
-                      <Input 
+                      <Input
                         id="courseSubject"
                         placeholder="e.g., Web Development, Machine Learning"
                         value={courseSubject}
@@ -214,7 +214,7 @@ export function AICourseImageGenerator() {
                         className="mt-1.5"
                       />
                     </div>
-                    
+
                     <div>
                       <div className="flex items-center mb-1.5">
                         <Palette className="h-4 w-4 mr-1.5 text-muted-foreground" />
@@ -234,7 +234,7 @@ export function AICourseImageGenerator() {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
                       <div className="flex items-center mb-1.5">
@@ -254,7 +254,7 @@ export function AICourseImageGenerator() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <div className="flex items-center mb-1.5">
                         <Palette className="h-4 w-4 mr-1.5 text-muted-foreground" />
@@ -274,10 +274,10 @@ export function AICourseImageGenerator() {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="additionalDetails" className="text-base">Additional Image Details</Label>
-                    <Textarea 
+                    <Textarea
                       id="additionalDetails"
                       placeholder="Specific imagery, concepts, or elements you want to include"
                       value={additionalDetails}
@@ -286,21 +286,21 @@ export function AICourseImageGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div className="space-y-3">
                     <Label className="text-base">Image Options</Label>
                     <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="includeTextOverlay" 
-                        checked={includeTextOverlay} 
+                      <Checkbox
+                        id="includeTextOverlay"
+                        checked={includeTextOverlay}
                         onCheckedChange={(checked) => setIncludeTextOverlay(checked as boolean)}
                       />
                       <Label htmlFor="includeTextOverlay" className="cursor-pointer">Include Course Name Overlay</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="includeIcons" 
-                        checked={includeIcons} 
+                      <Checkbox
+                        id="includeIcons"
+                        checked={includeIcons}
                         onCheckedChange={(checked) => setIncludeIcons(checked as boolean)}
                       />
                       <Label htmlFor="includeIcons" className="cursor-pointer">Include Subject-Related Icons</Label>
@@ -323,7 +323,7 @@ export function AICourseImageGenerator() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-3 md:col-span-1 h-fit">
               <CardHeader>
                 <CardTitle className="text-lg">Image Summary</CardTitle>
@@ -357,7 +357,7 @@ export function AICourseImageGenerator() {
                   <div>
                     <h4 className="text-sm font-medium text-muted-foreground mb-1">Color Palette</h4>
                     <p>{getColorPaletteLabel()}</p>
-                    </div>
+                  </div>
                   <Separator />
                   <div>
                     <h4 className="text-sm font-medium text-muted-foreground mb-1">Image Options</h4>
@@ -371,7 +371,7 @@ export function AICourseImageGenerator() {
             </Card>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="preview" className="mt-0">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
@@ -379,7 +379,7 @@ export function AICourseImageGenerator() {
                 <ImageIcon className="mr-2 h-5 w-5 text-primary" />
                 Generated Course Image
               </CardTitle>
-              
+
               {generatedImage && (
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm" onClick={downloadImage}>
@@ -391,7 +391,7 @@ export function AICourseImageGenerator() {
                 </div>
               )}
             </CardHeader>
-            
+
             <CardContent>
               <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
                 {loading ? (
@@ -404,9 +404,9 @@ export function AICourseImageGenerator() {
                   <div className="text-destructive text-center h-[500px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating image</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={() => setActiveTab('edit')}
                     >
@@ -416,8 +416,8 @@ export function AICourseImageGenerator() {
                 ) : generatedImage ? (
                   <div className="p-6 flex justify-center items-center">
                     <div className="max-w-full overflow-hidden rounded-lg shadow-md">
-                      <Image 
-                        src={generatedImage} 
+                      <Image
+                        src={generatedImage}
                         alt={`Generated image for ${courseName}`}
                         width={1200}
                         height={675}
@@ -434,7 +434,7 @@ export function AICourseImageGenerator() {
                   </div>
                 )}
               </div>
-              
+
               {generatedImage && (
                 <div className="mt-6 border-t pt-4">
                   <div className="flex flex-wrap items-center gap-2 justify-between">

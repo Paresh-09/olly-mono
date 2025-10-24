@@ -25,7 +25,7 @@ const InstagramPageIntroduction = () => {
               <p className="text-gray-700 leading-relaxed mb-6">
                 Welcome to the <Link href="/" className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">Olly</Link> Instagram Comment Generator, a powerful tool designed to help content creators and users alike enhance their Instagram experience. In the ever-evolving world of social media, Instagram has become a platform where creativity and engagement thrive. With this generator, you can take your Instagram content to new heights by creating realistic and visually stunning comments that will captivate your audience.
               </p>
-              
+
               <p className="text-gray-700 leading-relaxed mb-8">
                 At its core, the Instagram Comment Generator allows you to generate custom Instagram comments with a profile image and a simulated comment box. This feature opens up a world of possibilities for content creators, influencers, and brands seeking to engage with their followers in novel and entertaining ways.
               </p>

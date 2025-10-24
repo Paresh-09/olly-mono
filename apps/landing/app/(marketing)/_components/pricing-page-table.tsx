@@ -5,80 +5,80 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/
 
 const DetailedPlanComparisonTable = () => {
   const features = [
-    { 
-      name: "AI Comments", 
-      free: "5/day", 
-      monthly: "Unlimited", 
+    {
+      name: "AI Comments",
+      free: "5/day",
+      monthly: "Unlimited",
       lifetime: "Unlimited",
       description: "AI-generated comments for social media posts"
     },
-    { 
-      name: "Supported Platforms", 
-      free: "All Major Social Media", 
-      monthly: "All Social Media + Custom Integrations", 
+    {
+      name: "Supported Platforms",
+      free: "All Major Social Media",
+      monthly: "All Social Media + Custom Integrations",
       lifetime: "All Social Media + Custom Integrations",
       description: "Platforms where the tool can be used"
     },
-    { 
-      name: "AI Models", 
-      free: "Basic GPT", 
-      monthly: "OpenAI, Claude, Gemini, Straico, OpenRouter", 
+    {
+      name: "AI Models",
+      free: "Basic GPT",
+      monthly: "OpenAI, Claude, Gemini, Straico, OpenRouter",
       lifetime: "OpenAI, Claude, Gemini, Straico, OpenRouter, Local Models (via Ollama)",
       description: "Available AI models for generating content"
     },
-    { 
-      name: "AI Personalities", 
-      free: false, 
-      monthly: true, 
+    {
+      name: "AI Personalities",
+      free: false,
+      monthly: true,
       lifetime: true,
       description: "Customizable AI personalities for different tones and styles"
     },
-    { 
-      name: "Custom Actions", 
-      free: false, 
-      monthly: "Limited", 
+    {
+      name: "Custom Actions",
+      free: false,
+      monthly: "Limited",
       lifetime: "Unlimited",
       description: "Ability to create custom workflows and automations"
     },
-    { 
-      name: "Gamification & Leaderboard", 
-      free: false, 
-      monthly: true, 
+    {
+      name: "Gamification & Leaderboard",
+      free: false,
+      monthly: true,
       lifetime: true,
       description: "Engagement features to encourage consistent use"
     },
-    { 
-      name: "Customization Options", 
-      free: "Basic", 
-      monthly: "Advanced", 
+    {
+      name: "Customization Options",
+      free: "Basic",
+      monthly: "Advanced",
       lifetime: "Full Suite",
       description: "Ability to customize the tool's appearance and functionality"
     },
-    { 
-      name: "Support", 
-      free: "Community", 
-      monthly: "Priority Email", 
+    {
+      name: "Support",
+      free: "Community",
+      monthly: "Priority Email",
       lifetime: "Priority Email + Direct Founder Access",
       description: "Level of customer support provided"
     },
-    { 
-      name: "API Access", 
-      free: false, 
-      monthly: false, 
+    {
+      name: "API Access",
+      free: false,
+      monthly: false,
       lifetime: false,
       description: "Ability to integrate the tool with other systems via API"
     },
-    { 
-      name: "Analytics", 
-      free: false, 
-      monthly: "Advanced", 
+    {
+      name: "Analytics",
+      free: false,
+      monthly: "Advanced",
       lifetime: "Advanced",
       description: "Insights and data on your social media performance"
     },
-    { 
-      name: "Team Collaboration", 
-      free: false, 
-      monthly: "Up to 20 team members", 
+    {
+      name: "Team Collaboration",
+      free: false,
+      monthly: "Up to 20 team members",
       lifetime: "Up to 20 team members",
       description: "Ability to work with team members within the tool"
     },

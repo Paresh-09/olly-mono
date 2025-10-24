@@ -8,11 +8,11 @@ import { Label } from '@repo/ui/components/ui/label'
 import { Textarea } from '@repo/ui/components/ui/textarea'
 import { Slider } from '@repo/ui/components/ui/slider'
 import { Input } from '@repo/ui/components/ui/input'
-import { 
-  Play, 
-  Pause, 
-  SkipForward, 
-  SkipBack, 
+import {
+  Play,
+  Pause,
+  SkipForward,
+  SkipBack,
   Settings,
   ZoomIn,
   ZoomOut,
@@ -86,11 +86,11 @@ export const Teleprompter: React.FC = () => {
   const [currentScriptTitle, setCurrentScriptTitle] = useState('Untitled Script');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  
+
   // Refs
   const prompterRef = useRef<HTMLDivElement>(null);
   const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Load saved scripts from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('teleprompterScripts');
@@ -101,7 +101,7 @@ export const Teleprompter: React.FC = () => {
         console.error('Error loading saved scripts', e);
       }
     }
-    
+
     const savedSettings = localStorage.getItem('teleprompterSettings');
     if (savedSettings) {
       try {
@@ -111,12 +111,12 @@ export const Teleprompter: React.FC = () => {
       }
     }
   }, []);
-  
+
   // Save settings to localStorage when they change
   useEffect(() => {
     localStorage.setItem('teleprompterSettings', JSON.stringify(settings));
   }, [settings]);
-  
+
   // Control scrolling
   useEffect(() => {
     if (isPlaying && prompterRef.current) {
@@ -124,7 +124,7 @@ export const Teleprompter: React.FC = () => {
       if (scrollIntervalRef.current) {
         clearInterval(scrollIntervalRef.current);
       }
-      
+
       // Set up scrolling interval
       scrollIntervalRef.current = setInterval(() => {
         if (prompterRef.current) {
@@ -135,7 +135,7 @@ export const Teleprompter: React.FC = () => {
       clearInterval(scrollIntervalRef.current);
       scrollIntervalRef.current = null;
     }
-    
+
     // Clean up on unmount
     return () => {
       if (scrollIntervalRef.current) {
@@ -143,31 +143,31 @@ export const Teleprompter: React.FC = () => {
       }
     };
   }, [isPlaying, settings.scrollSpeed]);
-  
+
   // Handle script changes
   const handleScriptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setScript(e.target.value);
   };
-  
+
   // Handle play/pause
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
-  
+
   // Jump to start
   const jumpToStart = () => {
     if (prompterRef.current) {
       prompterRef.current.scrollTop = 0;
     }
   };
-  
+
   // Jump to end
   const jumpToEnd = () => {
     if (prompterRef.current) {
       prompterRef.current.scrollTop = prompterRef.current.scrollHeight;
     }
   };
-  
+
   // Update settings
   const updateSettings = (key: keyof TeleprompterSettings, value: any) => {
     setSettings(prev => ({
@@ -175,23 +175,23 @@ export const Teleprompter: React.FC = () => {
       [key]: value
     }));
   };
-  
+
   // Save current script
   const saveCurrentScript = () => {
     if (!script.trim()) return;
-    
+
     const newScript: SavedScript = {
       id: Date.now().toString(),
       title: currentScriptTitle,
       content: script,
       lastEdited: Date.now()
     };
-    
+
     const updatedScripts = [...savedScripts, newScript];
     setSavedScripts(updatedScripts);
     localStorage.setItem('teleprompterScripts', JSON.stringify(updatedScripts));
   };
-  
+
   // Load a saved script
   const loadScript = (scriptId: string) => {
     const scriptToLoad = savedScripts.find(s => s.id === scriptId);
@@ -201,7 +201,7 @@ export const Teleprompter: React.FC = () => {
       setActiveTab('input');
     }
   };
-  
+
   // Delete a saved script
   const deleteScript = (scriptId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -209,7 +209,7 @@ export const Teleprompter: React.FC = () => {
     setSavedScripts(updatedScripts);
     localStorage.setItem('teleprompterScripts', JSON.stringify(updatedScripts));
   };
-  
+
   // Format timestamp for display
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString(undefined, {
@@ -218,7 +218,7 @@ export const Teleprompter: React.FC = () => {
       day: 'numeric'
     });
   };
-  
+
   // Clear current script
   const clearScript = () => {
     if (window.confirm('Are you sure you want to clear the current script?')) {
@@ -226,7 +226,7 @@ export const Teleprompter: React.FC = () => {
       setCurrentScriptTitle('Untitled Script');
     }
   };
-  
+
   // Enter fullscreen
   const enterFullscreen = () => {
     if (prompterRef.current && prompterRef.current.parentElement) {
@@ -235,26 +235,26 @@ export const Teleprompter: React.FC = () => {
       }
     }
   };
-  
+
   // Add effect to detect fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
-    
+
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
-  
+
   // Calculate reading time
   const calculateReadingTime = () => {
     const words = script.trim().split(/\s+/).length;
     const minutes = Math.ceil(words / 150); // Average reading speed of 150 words per minute
     return minutes === 1 ? '1 minute' : `${minutes} minutes`;
   };
-  
+
   return (
     <div className="space-y-6">
       <Card>
@@ -265,7 +265,7 @@ export const Teleprompter: React.FC = () => {
               <TabsTrigger value="teleprompter">Teleprompter View</TabsTrigger>
               <TabsTrigger value="saved">Saved Scripts</TabsTrigger>
             </TabsList>
-            
+
             {/* Script Input Tab */}
             <TabsContent value="input" className="space-y-4">
               <div className="flex items-center justify-between">
@@ -292,7 +292,7 @@ export const Teleprompter: React.FC = () => {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -311,7 +311,7 @@ export const Teleprompter: React.FC = () => {
                   className="min-h-64 font-mono"
                 />
               </div>
-              
+
               <div className="pt-4 flex justify-between">
                 <Button
                   variant="default"
@@ -320,7 +320,7 @@ export const Teleprompter: React.FC = () => {
                 >
                   Go to Teleprompter View
                 </Button>
-                
+
                 <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline">
@@ -351,7 +351,7 @@ export const Teleprompter: React.FC = () => {
                           <span className="w-10 text-center">{settings.scrollSpeed}</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="font-size">Font Size</Label>
                         <div className="flex items-center space-x-4">
@@ -367,7 +367,7 @@ export const Teleprompter: React.FC = () => {
                           <span className="w-10 text-center">{settings.fontSize}px</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="line-height">Line Height</Label>
                         <div className="flex items-center space-x-4">
@@ -383,11 +383,11 @@ export const Teleprompter: React.FC = () => {
                           <span className="w-10 text-center">{settings.lineHeight}</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="font-family">Font Family</Label>
-                        <Select 
-                          value={settings.fontFamily} 
+                        <Select
+                          value={settings.fontFamily}
                           onValueChange={(value) => updateSettings('fontFamily', value)}
                         >
                           <SelectTrigger id="font-family">
@@ -402,11 +402,11 @@ export const Teleprompter: React.FC = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="bg-color">Background Color</Label>
                         <div className="flex items-center space-x-2">
-                          <div 
+                          <div
                             className="w-8 h-8 rounded border"
                             style={{ backgroundColor: settings.backgroundColor }}
                           ></div>
@@ -418,11 +418,11 @@ export const Teleprompter: React.FC = () => {
                           />
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="text-color">Text Color</Label>
                         <div className="flex items-center space-x-2">
-                          <div 
+                          <div
                             className="w-8 h-8 rounded border"
                             style={{ backgroundColor: settings.textColor }}
                           ></div>
@@ -434,7 +434,7 @@ export const Teleprompter: React.FC = () => {
                           />
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -445,7 +445,7 @@ export const Teleprompter: React.FC = () => {
                         />
                         <Label htmlFor="mirror-text">Mirror Text</Label>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -456,7 +456,7 @@ export const Teleprompter: React.FC = () => {
                         />
                         <Label htmlFor="smooth-scrolling">Smooth Scrolling</Label>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -469,8 +469,8 @@ export const Teleprompter: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex justify-between">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={() => setSettings(defaultSettings)}
                       >
                         Reset to Default
@@ -483,7 +483,7 @@ export const Teleprompter: React.FC = () => {
                 </Dialog>
               </div>
             </TabsContent>
-            
+
             {/* Teleprompter View Tab */}
             <TabsContent value="teleprompter" className="space-y-4">
               <div className="flex justify-between items-center mb-4">
@@ -500,17 +500,17 @@ export const Teleprompter: React.FC = () => {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="relative w-full" style={{ height: 'calc(100vh - 300px)', minHeight: '400px' }}>
                 {/* Teleprompter container with controls */}
-                <div 
+                <div
                   className={`relative ${isFullscreen ? 'fixed inset-0 z-50 flex flex-col' : 'w-full h-full'}`}
                   style={{
                     backgroundColor: settings.backgroundColor,
                   }}
                 >
                   {/* Script container */}
-                  <div 
+                  <div
                     className={`${isFullscreen ? 'flex-grow' : 'absolute inset-0'} overflow-auto`}
                     style={{
                       scrollBehavior: settings.smoothScrolling ? 'smooth' : 'auto',
@@ -525,9 +525,9 @@ export const Teleprompter: React.FC = () => {
                         }}
                       />
                     )}
-                    
+
                     {/* Script text */}
-                    <div 
+                    <div
                       className="p-8 whitespace-pre-wrap"
                       style={{
                         color: settings.textColor,
@@ -541,10 +541,10 @@ export const Teleprompter: React.FC = () => {
                     >
                       {script}
                     </div>
-                    
+
                     {/* Fade bottom edge - adjusted to prevent dark line */}
                     {settings.fadeEdges && (
-                      <div 
+                      <div
                         className="absolute bottom-0 left-0 right-0 h-16 z-10 pointer-events-none"
                         style={{
                           background: `linear-gradient(to top, ${settings.backgroundColor}, transparent)`,
@@ -553,10 +553,10 @@ export const Teleprompter: React.FC = () => {
                       />
                     )}
                   </div>
-                  
+
                   {/* Fullscreen controls - shown only in fullscreen mode */}
                   {isFullscreen && (
-                    <div 
+                    <div
                       className="p-4 flex flex-col items-center space-y-4"
                       style={{ backgroundColor: settings.backgroundColor }}
                     >
@@ -572,11 +572,11 @@ export const Teleprompter: React.FC = () => {
                           <SkipForward size={20} />
                         </Button>
                       </div>
-                      
+
                       {/* Speed controls */}
                       <div className="flex items-center justify-center space-x-4">
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => updateSettings('scrollSpeed', Math.max(0.5, settings.scrollSpeed - 0.5))}
                         >
@@ -587,8 +587,8 @@ export const Teleprompter: React.FC = () => {
                           <div className="text-sm opacity-80">Scroll Speed</div>
                           <div className="font-medium">{settings.scrollSpeed}</div>
                         </div>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => updateSettings('scrollSpeed', Math.min(10, settings.scrollSpeed + 0.5))}
                         >
@@ -596,11 +596,11 @@ export const Teleprompter: React.FC = () => {
                           Faster
                         </Button>
                       </div>
-                      
+
                       {/* Exit fullscreen button */}
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => document.exitFullscreen()}
                       >
                         Exit Fullscreen
@@ -609,7 +609,7 @@ export const Teleprompter: React.FC = () => {
                   )}
                 </div>
               </div>
-              
+
               {/* Non-fullscreen controls - only shown when not in fullscreen */}
               {!isFullscreen && (
                 <>
@@ -625,11 +625,11 @@ export const Teleprompter: React.FC = () => {
                       <SkipForward size={20} />
                     </Button>
                   </div>
-                  
+
                   {/* Speed controls */}
                   <div className="flex items-center justify-center space-x-4">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => updateSettings('scrollSpeed', Math.max(0.5, settings.scrollSpeed - 0.5))}
                     >
@@ -640,8 +640,8 @@ export const Teleprompter: React.FC = () => {
                       <div className="text-sm text-gray-500">Scroll Speed</div>
                       <div className="font-medium">{settings.scrollSpeed}</div>
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => updateSettings('scrollSpeed', Math.min(10, settings.scrollSpeed + 0.5))}
                     >
@@ -652,11 +652,11 @@ export const Teleprompter: React.FC = () => {
                 </>
               )}
             </TabsContent>
-            
+
             {/* Saved Scripts Tab */}
             <TabsContent value="saved" className="space-y-4">
               <h3 className="text-lg font-medium">Your Saved Scripts</h3>
-              
+
               {savedScripts.length === 0 ? (
                 <div className="text-center p-8 text-gray-500">
                   <p>You don't have any saved scripts yet.</p>
@@ -665,8 +665,8 @@ export const Teleprompter: React.FC = () => {
               ) : (
                 <div className="space-y-2">
                   {savedScripts.map(savedScript => (
-                    <Card 
-                      key={savedScript.id} 
+                    <Card
+                      key={savedScript.id}
                       className="cursor-pointer hover:bg-gray-50 transition-colors"
                       onClick={() => loadScript(savedScript.id)}
                     >
@@ -680,7 +680,7 @@ export const Teleprompter: React.FC = () => {
                             {savedScript.content.split(/\s+/).length} words
                           </p>
                         </div>
-                        <Button 
+                        <Button
                           variant="ghost"
                           size="sm"
                           onClick={(e) => deleteScript(savedScript.id, e)}

@@ -40,7 +40,7 @@ export const InstagramAuditComponent = () => {
 
   const fetchAuditHistory = async () => {
     if (!isAuthenticated) return;
-    
+
     setIsHistoryLoading(true);
     try {
       const response = await fetch('/api/tools/audit/history/instagram');
@@ -117,10 +117,10 @@ export const InstagramAuditComponent = () => {
         if (data.status === 'COMPLETED') {
           setIsLoading(false);
           setAuditId(null);
-          
+
           // Redirect to the report page when complete
           router.push(`/tools/instagram-audit/report/${id}`);
-          
+
           if (isAuthenticated) {
             fetchAuditHistory();
           }
@@ -155,17 +155,17 @@ export const InstagramAuditComponent = () => {
       initiateAudit();
     }
   };
-  
+
   const handleLogin = () => {
     setShowAuthPopup(true);
   };
-  
+
   const handleAuthSuccess = () => {
     setShowAuthPopup(false);
     setIsAuthenticated(true);
     fetchAuditHistory();
   };
-  
+
   // Claim anonymous reports when logged in
   const handleClaimSuccess = () => {
     fetchAuditHistory();
@@ -185,13 +185,13 @@ export const InstagramAuditComponent = () => {
       <div className="space-y-6">
         {/* Show claim reports option if user is logged in */}
         {isAuthenticated && (
-          <ClaimReports 
+          <ClaimReports
             isAuthenticated={isAuthenticated}
             onLogin={handleLogin}
             onSuccess={handleClaimSuccess}
           />
         )}
-        
+
         <div className="space-y-4">
           <div className="flex gap-2">
             <Input
@@ -227,9 +227,9 @@ export const InstagramAuditComponent = () => {
         </div>
 
         {isAuthenticated ? (
-          <AuditHistory 
-            audits={auditHistory} 
-            onRefresh={fetchAuditHistory} 
+          <AuditHistory
+            audits={auditHistory}
+            onRefresh={fetchAuditHistory}
             isLoading={isHistoryLoading}
             platform="instagram"
             isAudit={true}

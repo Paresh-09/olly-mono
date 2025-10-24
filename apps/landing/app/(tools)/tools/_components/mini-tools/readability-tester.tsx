@@ -8,14 +8,14 @@ import { Button } from '@repo/ui/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/ui/select'
 import { Label } from '@repo/ui/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs'
-import { 
-  Loader2, 
-  Copy, 
-  Download, 
-  RefreshCw, 
-  FileText, 
-  Layers, 
-  BarChart, 
+import {
+  Loader2,
+  Copy,
+  Download,
+  RefreshCw,
+  FileText,
+  Layers,
+  BarChart,
   Target,
   Info
 } from 'lucide-react'
@@ -50,30 +50,30 @@ export function ReadabilityTester() {
   const [activeTab, setActiveTab] = useState<string>('edit')
 
   const readabilityAlgorithms: ReadabilityAlgorithm[] = [
-    { 
-      value: 'flesch-kincaid', 
-      label: 'Flesch-Kincaid', 
-      description: 'Measures text difficulty based on sentence length and word complexity' 
+    {
+      value: 'flesch-kincaid',
+      label: 'Flesch-Kincaid',
+      description: 'Measures text difficulty based on sentence length and word complexity'
     },
-    { 
-      value: 'coleman-liau', 
-      label: 'Coleman-Liau Index', 
-      description: 'Estimates readability using character and sentence count' 
+    {
+      value: 'coleman-liau',
+      label: 'Coleman-Liau Index',
+      description: 'Estimates readability using character and sentence count'
     },
-    { 
-      value: 'automated-readability', 
-      label: 'Automated Readability Index', 
-      description: 'Calculates readability using character and word count' 
+    {
+      value: 'automated-readability',
+      label: 'Automated Readability Index',
+      description: 'Calculates readability using character and word count'
     },
-    { 
-      value: 'smog', 
-      label: 'SMOG Readability', 
-      description: 'Focuses on polysyllabic word count' 
+    {
+      value: 'smog',
+      label: 'SMOG Readability',
+      description: 'Focuses on polysyllabic word count'
     },
-    { 
-      value: 'dale-chall', 
-      label: 'Dale-Chall Readability', 
-      description: 'Measures text complexity using familiar word lists' 
+    {
+      value: 'dale-chall',
+      label: 'Dale-Chall Readability',
+      description: 'Measures text complexity using familiar word lists'
     }
   ]
 
@@ -97,7 +97,7 @@ export function ReadabilityTester() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call our API endpoint
       const response = await fetch('/api/tools/readability-tester', {
@@ -111,16 +111,16 @@ export function ReadabilityTester() {
           contentType
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to analyze readability');
       }
-      
+
       setReadabilityResults(data.results);
       setActiveTab('results');
-      
+
       toast({
         title: "Analysis Complete",
         description: "Readability analysis has been generated successfully.",
@@ -194,21 +194,21 @@ export function ReadabilityTester() {
       <div className="container mx-auto max-w-6xl">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-100">
-            <TabsTrigger 
-              value="edit" 
+            <TabsTrigger
+              value="edit"
               className="text-base py-3 data-[state=active]:bg-primary data-[state=active]:text-white"
             >
               <FileText className="h-4 w-4 mr-2" /> Text Input
             </TabsTrigger>
-            <TabsTrigger 
-              value="results" 
-              className="text-base py-3 data-[state=active]:bg-primary data-[state=active]:text-white" 
+            <TabsTrigger
+              value="results"
+              className="text-base py-3 data-[state=active]:bg-primary data-[state=active]:text-white"
               disabled={!readabilityResults && !loading}
             >
               <BarChart className="h-4 w-4 mr-2" /> Readability Results
             </TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="edit" className="mt-0">
             <div className="grid gap-8 md:grid-cols-3">
               <Card className="col-span-3 md:col-span-2 shadow-lg border-primary/10">
@@ -221,7 +221,7 @@ export function ReadabilityTester() {
                 <CardContent className="space-y-6 p-6">
                   <div>
                     <Label htmlFor="text" className="text-base flex items-center">
-                      Text to Analyze 
+                      Text to Analyze
                       <span className="text-destructive ml-1">*</span>
                       <Tooltip>
                         <TooltipTrigger>
@@ -232,7 +232,7 @@ export function ReadabilityTester() {
                         </TooltipContent>
                       </Tooltip>
                     </Label>
-                    <Textarea 
+                    <Textarea
                       id="text"
                       placeholder="Paste your text here to check its readability..."
                       value={text}
@@ -251,7 +251,7 @@ export function ReadabilityTester() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
                       <div className="flex items-center mb-1.5">
@@ -281,7 +281,7 @@ export function ReadabilityTester() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <div className="flex items-center mb-1.5">
                         <Target className="h-4 w-4 mr-1.5 text-muted-foreground" />
@@ -303,18 +303,18 @@ export function ReadabilityTester() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between border-t pt-6 bg-gray-50/50">
-                  <Button 
-                    variant="outline" 
-                    onClick={resetForm} 
+                  <Button
+                    variant="outline"
+                    onClick={resetForm}
                     disabled={loading}
                     className="hover:bg-gray-100"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Reset
                   </Button>
-                  <Button 
-                    onClick={analyzeReadability} 
-                    disabled={loading} 
+                  <Button
+                    onClick={analyzeReadability}
+                    disabled={loading}
                     className="px-6 bg-primary hover:bg-primary/90"
                   >
                     {loading ? (
@@ -326,7 +326,7 @@ export function ReadabilityTester() {
                   </Button>
                 </CardFooter>
               </Card>
-              
+
               <Card className="col-span-3 md:col-span-1 h-fit shadow-lg border-primary/10">
                 <CardHeader className="bg-gray-50/50 border-b">
                   <CardTitle className="text-lg">Analysis Settings</CardTitle>
@@ -367,7 +367,7 @@ export function ReadabilityTester() {
               </Card>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="results" className="mt-0">
             <Card className="shadow-lg border-primary/10">
               <CardHeader className="flex flex-row items-center justify-between bg-gray-50/50 border-b">
@@ -388,7 +388,7 @@ export function ReadabilityTester() {
                   </div>
                 )}
               </CardHeader>
-              
+
               <CardContent>
                 <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
                   {loading ? (
@@ -401,9 +401,9 @@ export function ReadabilityTester() {
                     <div className="text-destructive text-center h-[500px] flex flex-col items-center justify-center p-6">
                       <p className="font-medium mb-2">Error during analysis</p>
                       <p className="text-sm">{error}</p>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         className="mt-4"
                         onClick={() => setActiveTab('edit')}
                       >
@@ -425,31 +425,31 @@ export function ReadabilityTester() {
                           ))
                         }
                       </div>
-                  
+
                       {readabilityResults['AI Readability Insights'] && (
                         <div className="mt-6 bg-gray-50 p-4 rounded-lg border">
                           <h3 className="text-lg font-semibold mb-3 text-primary">
                             AI Readability Insights
                           </h3>
                           <div className="prose prose-sm max-w-none">
-                            <ReactMarkdown 
+                            <ReactMarkdown
                               components={{
-                                h1: ({node, ...props}) => <h2 className="text-xl font-bold mt-4 mb-2" {...props} />,
-                                h2: ({node, ...props}) => <h3 className="text-lg font-semibold mt-3 mb-2" {...props} />,
-                                a: ({node, ...props}) => (
-                                  <a 
-                                    {...props} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
+                                h1: ({ node, ...props }) => <h2 className="text-xl font-bold mt-4 mb-2" {...props} />,
+                                h2: ({ node, ...props }) => <h3 className="text-lg font-semibold mt-3 mb-2" {...props} />,
+                                a: ({ node, ...props }) => (
+                                  <a
+                                    {...props}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-blue-600 hover:underline"
                                   />
                                 ),
-                                ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-3" {...props} />,
-                                ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-3" {...props} />,
-                                code: ({node, ...props}) => (
-                                  <code 
-                                    className="bg-gray-100 rounded px-1 py-0.5 text-sm" 
-                                    {...props} 
+                                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-3" {...props} />,
+                                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-3" {...props} />,
+                                code: ({ node, ...props }) => (
+                                  <code
+                                    className="bg-gray-100 rounded px-1 py-0.5 text-sm"
+                                    {...props}
                                   />
                                 )
                               }}
@@ -470,7 +470,7 @@ export function ReadabilityTester() {
                     </div>
                   )}
                 </div>
-                
+
                 {readabilityResults && (
                   <div className="mt-6 border-t pt-4">
                     <div className="flex flex-wrap items-center gap-2 justify-between">

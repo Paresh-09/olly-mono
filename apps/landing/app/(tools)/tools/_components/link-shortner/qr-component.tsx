@@ -18,30 +18,30 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
   const [qrBgColor, setQrBgColor] = useState<string>('#ffffff');
   const [qrLevel, setQrLevel] = useState<"L" | "M" | "Q" | "H">("H");
   const [activeTab, setActiveTab] = useState<string>("customize");
-  
+
   const downloadQRCodeAsPNG = () => {
     const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
     if (!canvas) return;
-    
+
     const link = document.createElement('a');
     link.download = shortCode ? `qrcode-${shortCode}.png` : 'qrcode.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
-  
+
   const downloadQRCodeAsSVG = () => {
     const svg = document.getElementById('qr-svg');
     if (!svg) return;
-    
+
     const svgData = new XMLSerializer().serializeToString(svg);
     const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
     const svgUrl = URL.createObjectURL(svgBlob);
-    
+
     const link = document.createElement('a');
     link.download = shortCode ? `qrcode-${shortCode}.svg` : 'qrcode.svg';
     link.href = svgUrl;
     link.click();
-    
+
     URL.revokeObjectURL(svgUrl);
   };
 
@@ -50,11 +50,11 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
       <CardHeader>
         <CardTitle className="text-xl">QR Code Generator</CardTitle>
       </CardHeader>
-      
+
       <CardContent>
-        <Tabs 
-          defaultValue="customize" 
-          value={activeTab} 
+        <Tabs
+          defaultValue="customize"
+          value={activeTab}
           onValueChange={setActiveTab}
           className="w-full"
         >
@@ -62,7 +62,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
             <TabsTrigger value="customize">Customize</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="customize" className="space-y-4 mt-4">
             <div className="space-y-4">
               <div>
@@ -80,7 +80,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                   <span className="w-12 text-center">{qrSize}px</span>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-1">QR Code Color</label>
                 <div className="flex gap-2">
@@ -91,7 +91,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                       onChange={(e) => setQrColor(e.target.value)}
                       className="w-10 h-10 p-1"
                     />
-                    <Input 
+                    <Input
                       type="text"
                       value={qrColor}
                       onChange={(e) => setQrColor(e.target.value)}
@@ -100,7 +100,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-1">Background Color</label>
                 <div className="flex gap-2">
@@ -111,7 +111,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                       onChange={(e) => setQrBgColor(e.target.value)}
                       className="w-10 h-10 p-1"
                     />
-                    <Input 
+                    <Input
                       type="text"
                       value={qrBgColor}
                       onChange={(e) => setQrBgColor(e.target.value)}
@@ -120,7 +120,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-1">Error Correction Level</label>
                 <Select value={qrLevel} onValueChange={(value) => setQrLevel(value as "L" | "M" | "Q" | "H")}>
@@ -140,7 +140,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
               </div>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="preview" className="mt-4">
             <div className="flex flex-col items-center justify-center py-4">
               <div className="bg-white p-4 rounded-md shadow-md inline-block mb-4">
@@ -153,7 +153,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                   bgColor={qrBgColor}
                   includeMargin={true}
                 />
-                
+
                 {/* Hidden SVG for SVG download */}
                 <div className="hidden">
                   <QRCodeSVG
@@ -167,7 +167,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
                   />
                 </div>
               </div>
-              
+
               <div className="text-center mb-4">
                 <p className="text-sm text-gray-600 break-all">{url}</p>
               </div>
@@ -175,7 +175,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ url, shortCode }) => 
           </TabsContent>
         </Tabs>
       </CardContent>
-      
+
       <CardFooter className="flex justify-center gap-3">
         <Button variant="outline" onClick={() => setActiveTab("customize")}>
           Edit QR Code

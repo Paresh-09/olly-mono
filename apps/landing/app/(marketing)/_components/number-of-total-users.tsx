@@ -43,8 +43,8 @@ const MakerRating: React.FC<MakerRatingProps> = ({ rating }) => {
     <div className="flex items-center space-x-4 bg-white p-3 rounded-lg border border-gray-200 shadow-sm max-w-md">
       <div className="flex -space-x-3">
         {makers.map((maker) => (
-          <Avatar 
-            key={maker.id} 
+          <Avatar
+            key={maker.id}
             className="w-10 h-10 border-2 border-white ring-1 ring-gray-200 shadow-sm"
           >
             <AvatarImage src={maker.avatar} alt={maker.name} />

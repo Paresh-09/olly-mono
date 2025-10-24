@@ -5,19 +5,20 @@ import { SquaresPattern } from "../(marketing)/_components/squares-pattern";
 import { PricingProvider } from "../web/providers/pricingContext";
 
 const MobileLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
+  return ( 
     <div className="flex flex-col h-full dark:bg-[#1F1F1F]">
       {/* <Navbar /> */}
-
+      <Header />
       <PricingProvider>
-        <main className="flex-grow pt-12 md:pt-20 isolate">
-          {children}
-          <SquaresPattern />
-        </main>
+      <main className="flex-grow pt-12 md:pt-20 isolate">
+        {children}
+        <SquaresPattern />
+      </main>
       </PricingProvider>
-
+      <PreFooter />
+      <Footer />
     </div>
   );
 }
-
+ 
 export default MobileLayout;

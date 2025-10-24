@@ -61,7 +61,7 @@ export function PricingPageComponent() {
   const [users, setUsers] = useState(1);
 
   const getLifetimePrice = (users: number): string => {
-    switch(users) {
+    switch (users) {
       case 1: return buyNowProps.price || '$49.99';
       case 5: return buyNowProps.teamPrice || '$199';
       case 10: return buyNowProps.agencyPrice || '$299';
@@ -71,7 +71,7 @@ export function PricingPageComponent() {
   };
 
   const getMonthlyPrice = (users: number): string => {
-    switch(users) {
+    switch (users) {
       case 1: return buyNowProps.monthlyPrice || '$9.99';
       case 5: return buyNowProps.teamMonthlyPrice || '$39';
       case 10: return buyNowProps.agencyMonthlyPrice || '$59';
@@ -86,7 +86,7 @@ export function PricingPageComponent() {
   };
 
   const getLifetimeUrl = (users: number): string => {
-    switch(users) {
+    switch (users) {
       case 1: return buyNowProps.url || '#';
       case 5: return buyNowProps.teamUrl || '#';
       case 10: return buyNowProps.agencyUrl || '#';
@@ -96,7 +96,7 @@ export function PricingPageComponent() {
   };
 
   const getMonthlyUrl = (users: number): string => {
-    switch(users) {
+    switch (users) {
       case 1: return buyNowProps.monthlyUrl || '#';
       case 5: return buyNowProps.teamMonthlyUrl || '#';
       case 10: return buyNowProps.agencyMonthlyUrl || '#';
@@ -196,9 +196,8 @@ export function PricingPageComponent() {
             {plans.map((plan, index) => (
               <div
                 key={index}
-                className={`rounded-3xl bg-white p-6 shadow-md ${
-                  plan.highlight ? "shadow-lg shadow-teal-600" : ""
-                }`}
+                className={`rounded-3xl bg-white p-6 shadow-md ${plan.highlight ? "shadow-lg shadow-teal-600" : ""
+                  }`}
               >
                 <div className="flex items-center">
                   <h3 className="font-cal text-xl text-gray-900 sm:text-2xl">

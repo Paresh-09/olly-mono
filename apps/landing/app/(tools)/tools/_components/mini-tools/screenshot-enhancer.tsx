@@ -122,13 +122,13 @@ const sampleImages = [
     src: "/features/twitter-main.png",
     title: "Twitter Analytics",
     style: "Gradient 1",
-    platform: "Twitter/X", 
+    platform: "Twitter/X",
     effects: {
       background: "Gradient 1",
       textColor: "#ffffff",
       textFont: "Arial",
       textSize: 36,
-      textPosition: {x: 50, y: 85},
+      textPosition: { x: 50, y: 85 },
       showBorder: true
     }
   },
@@ -143,7 +143,7 @@ const sampleImages = [
       textColor: "#ffffff",
       textFont: "Helvetica",
       textSize: 28,
-      textPosition: {x: 50, y: 20},
+      textPosition: { x: 50, y: 20 },
       showBorder: true
     }
   },
@@ -158,7 +158,7 @@ const sampleImages = [
       textColor: "#ffffff",
       textFont: "Georgia",
       textSize: 32,
-      textPosition: {x: 50, y: 15},
+      textPosition: { x: 50, y: 15 },
       showBorder: false
     }
   }
@@ -175,16 +175,16 @@ export default function ScreenshotEnhancer() {
   const [error, setError] = useState<string | null>(null);
   const [customWidth, setCustomWidth] = useState<number>(1200);
   const [customHeight, setCustomHeight] = useState<number>(800);
-  
+
   // Design options
   const [selectedBackground, setSelectedBackground] = useState<string>("Gradient 1");
   const [overlayText, setOverlayText] = useState<string>("");
   const [textColor, setTextColor] = useState<string>("#ffffff");
   const [textFont, setTextFont] = useState<string>("Arial");
   const [textSize, setTextSize] = useState<number>(32);
-  const [textPosition, setTextPosition] = useState<{x: number, y: number}>({x: 50, y: 50});
+  const [textPosition, setTextPosition] = useState<{ x: number, y: number }>({ x: 50, y: 50 });
   const [addWatermark, setAddWatermark] = useState<boolean>(true); // Default to true (free version)
-  
+
   // Canvas refs
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -199,7 +199,7 @@ export default function ScreenshotEnhancer() {
   const [enhancementDialogOpen, setEnhancementDialogOpen] = useState(false);
   const [sampleDialogOpen, setSampleDialogOpen] = useState(false);
   const [selectedSample, setSelectedSample] = useState<typeof sampleImages[0] | null>(null);
-  
+
   // Sample parameters
   const [platform, setPlatform] = useState<string>("twitter");
   const [dimensionIndex, setDimensionIndex] = useState<number>(0);
@@ -276,7 +276,7 @@ export default function ScreenshotEnhancer() {
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (event.target && typeof event.target.result === "string") {
         setScreenshotPreview(event.target.result);
-        
+
         // Create image element for the canvas
         const img = new Image();
         img.src = event.target.result;
@@ -320,7 +320,7 @@ export default function ScreenshotEnhancer() {
       console.log("Canvas or screenshot ref not available yet");
       return;
     }
-    
+
     try {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
@@ -328,10 +328,10 @@ export default function ScreenshotEnhancer() {
         console.error("Could not get canvas context");
         return;
       }
-      
+
       // Get dimensions based on selected platform
       let width, height;
-      
+
       if (selectedPlatform === "Custom") {
         width = customWidth;
         height = customHeight;
@@ -341,18 +341,18 @@ export default function ScreenshotEnhancer() {
           console.error("Selected platform not found");
           return;
         }
-        
+
         width = platform.dimensions[selectedDimension].width;
         height = platform.dimensions[selectedDimension].height;
       }
-      
+
       // Set canvas dimensions
       canvas.width = width;
       canvas.height = height;
-      
+
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
-      
+
       // Draw background
       if (selectedBackground !== "None") {
         if (selectedBackground.startsWith("Gradient")) {
@@ -385,7 +385,7 @@ export default function ScreenshotEnhancer() {
         } else if (selectedBackground === "Carbon Fiber") {
           ctx.fillStyle = "#222";
           ctx.fillRect(0, 0, width, height);
-          
+
           // Draw carbon fiber pattern
           ctx.save();
           for (let i = 0; i < width; i += 20) {
@@ -399,7 +399,7 @@ export default function ScreenshotEnhancer() {
         } else if (selectedBackground === "Dots") {
           ctx.fillStyle = "#f8fafc";
           ctx.fillRect(0, 0, width, height);
-          
+
           // Draw dots pattern
           ctx.save();
           for (let i = 0; i < width; i += 20) {
@@ -414,7 +414,7 @@ export default function ScreenshotEnhancer() {
         } else if (selectedBackground === "Lines") {
           ctx.fillStyle = "#f8fafc";
           ctx.fillRect(0, 0, width, height);
-          
+
           // Draw lines pattern
           ctx.save();
           ctx.strokeStyle = "#cbd5e1";
@@ -434,61 +434,61 @@ export default function ScreenshotEnhancer() {
           ctx.restore();
         }
       }
-      
+
       // Calculate screenshot position and dimensions to maintain aspect ratio
       const imgWidth = screenshotRef.current.width;
       const imgHeight = screenshotRef.current.height;
-      
+
       const ratio = Math.min(
         (width * 0.8) / imgWidth,
         (height * 0.8) / imgHeight
       );
-      
+
       const newWidth = imgWidth * ratio;
       const newHeight = imgHeight * ratio;
-      
+
       const x = (width - newWidth) / 2;
       const y = (height - newHeight) / 2;
-      
+
       // Draw the screenshot
       ctx.drawImage(screenshotRef.current, x, y, newWidth, newHeight);
-      
+
       // Add border to screenshot
       ctx.strokeStyle = "#ffffff";
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, newWidth, newHeight);
-      
+
       // Add text overlay - ensure it's on top of the image
       if (overlayText) {
         // Save context before modifying for text
         ctx.save();
-        
+
         // Calculate text position based on screenshot position/dimensions
         const textX = width * (textPosition.x / 100);
         const textY = height * (textPosition.y / 100);
-        
+
         // Optional: Add a semi-transparent background behind text for better visibility
         ctx.font = `${textSize}px ${textFont}`;
         const textWidth = ctx.measureText(overlayText).width;
         ctx.fillStyle = "rgba(0,0,0,0.4)";
-        ctx.fillRect(textX - textWidth/2 - 10, textY - textSize/2 - 5, textWidth + 20, textSize + 10);
-        
+        ctx.fillRect(textX - textWidth / 2 - 10, textY - textSize / 2 - 5, textWidth + 20, textSize + 10);
+
         // Draw text overlay
         ctx.fillStyle = textColor;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        
+
         // Add text shadow for better visibility
         ctx.shadowColor = "rgba(0,0,0,0.7)";
         ctx.shadowBlur = 4;
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        
+
         // Draw text
         ctx.fillText(overlayText, textX, textY);
         ctx.restore();
       }
-      
+
       // Add watermark if watermark is enabled (free version)
       if (addWatermark) {
         ctx.save();
@@ -497,10 +497,10 @@ export default function ScreenshotEnhancer() {
         ctx.textAlign = "end";
         ctx.textBaseline = "bottom";
         ctx.fillText("Created with AI", width - 20, height - 20);
-        
+
         // Just update the preview URL without logo
         setEnhancedImageUrl(canvas.toDataURL("image/png"));
-        
+
         ctx.restore();
       } else {
         // Paid version without watermark
@@ -508,11 +508,11 @@ export default function ScreenshotEnhancer() {
           id: "watermark-notice",
           duration: 3000
         });
-        
+
         // Update the preview URL
         setEnhancedImageUrl(canvas.toDataURL("image/png"));
       }
-      
+
     } catch (err) {
       console.error("Error updating canvas:", err);
       setError("Error rendering image");
@@ -527,7 +527,7 @@ export default function ScreenshotEnhancer() {
         updateCanvas();
       }
     }, 200);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -571,10 +571,10 @@ export default function ScreenshotEnhancer() {
       [axis]: value
     }));
   };
-  
+
   const downloadImage = () => {
     if (!enhancedImageUrl) return;
-    
+
     // Create download link
     const a = document.createElement("a");
     a.href = enhancedImageUrl;
@@ -582,12 +582,12 @@ export default function ScreenshotEnhancer() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    
+
     // Show success message
     setShowSuccess(true);
     toast.success("Screenshot downloaded successfully!");
     setTimeout(() => setShowSuccess(false), 3000);
-    
+
     // Close the enhancement dialog after download
     setEnhancementDialogOpen(false);
   };
@@ -652,7 +652,7 @@ export default function ScreenshotEnhancer() {
       toast.error("Please upload a screenshot first!");
       return;
     }
-    
+
     // Apply the sample's styling to the current image
     setSelectedPlatform(sample.platform);
     setSelectedBackground(sample.effects.background);
@@ -661,7 +661,7 @@ export default function ScreenshotEnhancer() {
     setTextFont(sample.effects.textFont);
     setTextSize(sample.effects.textSize);
     setTextPosition(sample.effects.textPosition);
-    
+
     // Open enhancement dialog with these settings
     setEnhancementDialogOpen(true);
     setSampleDialogOpen(false);
@@ -679,7 +679,7 @@ export default function ScreenshotEnhancer() {
       toast.error("Please upload a screenshot first!");
       return;
     }
-    
+
     // Apply the sample's styling to the current image
     setSelectedPlatform(sample.platform);
     setSelectedBackground(sample.effects.background);
@@ -688,12 +688,12 @@ export default function ScreenshotEnhancer() {
     setTextFont(sample.effects.textFont);
     setTextSize(sample.effects.textSize);
     setTextPosition(sample.effects.textPosition);
-    
+
     // Open enhancement dialog with these settings
     setEnhancementDialogOpen(true);
     setSampleDialogOpen(false);
   };
-  
+
   return (
     <Card className="w-full p-6">
       <div className="space-y-6">
@@ -701,8 +701,8 @@ export default function ScreenshotEnhancer() {
           Ultimate Screenshot Enhancer - Create Fancy Screenshots for X, LinkedIn & Instagram
         </h2>
         <p className="text-sm text-muted-foreground mb-6">
-          The best free social media screenshot generator for build in public, fancy screenshots for X/Twitter, 
-          LinkedIn posts, Instagram stories, Facebook content, and professional presentations. Enhance your 
+          The best free social media screenshot generator for build in public, fancy screenshots for X/Twitter,
+          LinkedIn posts, Instagram stories, Facebook content, and professional presentations. Enhance your
           social media presence with beautiful styled screenshots.
         </p>
 
@@ -722,9 +722,9 @@ export default function ScreenshotEnhancer() {
               <Wand2 className="mr-2 h-5 w-5" />
               See How Screenshots Look Before & After Enhancement
             </span>
-            <Button 
-              size="sm" 
-              variant="outline" 
+            <Button
+              size="sm"
+              variant="outline"
               onClick={() => setSampleDialogOpen(true)}
               disabled={!screenshotUploaded}
             >
@@ -732,23 +732,23 @@ export default function ScreenshotEnhancer() {
               Apply Sample Design
             </Button>
           </h3>
-          
+
           <div className="space-y-6">
             {sampleImages.map((sample) => (
-              <div 
-                key={sample.id} 
+              <div
+                key={sample.id}
                 className="border rounded-lg overflow-hidden cursor-pointer hover:shadow-md transition-shadow p-4"
                 onClick={() => openSamplePreview(sample)}
               >
                 <h4 className="font-medium text-base mb-2">{sample.title}</h4>
                 <p className="text-xs text-gray-500 mb-4">{sample.platform} • {sample.style}</p>
-                
+
                 <div className="flex flex-col md:flex-row gap-4 items-center">
                   {/* Before image */}
                   <div className="w-full md:w-1/2">
                     <div className="aspect-video relative rounded-md overflow-hidden border">
-                      <img 
-                        src={sample.src} 
+                      <img
+                        src={sample.src}
                         alt={`${sample.title} before`}
                         className="object-cover w-full h-full"
                       />
@@ -757,26 +757,26 @@ export default function ScreenshotEnhancer() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Arrow between */}
                   <div className="hidden md:flex -mx-4">
                     <ArrowRight className="h-6 w-6 text-gray-400" />
                   </div>
-                  
+
                   {/* After image - with effects */}
                   <div className="w-full md:w-1/2">
                     <div className="aspect-video relative rounded-md overflow-hidden border">
                       {/* We'll use the real sample.src but display it with stylings applied via CSS */}
-                      <div 
+                      <div
                         className="w-full h-full relative"
                         style={{
                           background: sample.effects.background === "Solid Blue" ? "#3b82f6" :
-                                     sample.effects.background === "Solid Green" ? "#10b981" :
-                                     sample.effects.background === "Solid Purple" ? "#8b5cf6" :
-                                     sample.effects.background === "Gradient 1" ? "linear-gradient(135deg, #4158D0, #C850C0, #FFCC70)" : 
-                                     sample.effects.background === "Gradient 2" ? "linear-gradient(180deg, #0093E9, #80D0C7)" :
-                                     sample.effects.background === "Gradient 3" ? "linear-gradient(90deg, #8EC5FC, #E0C3FC)" :
-                                     "#f8fafc"
+                            sample.effects.background === "Solid Green" ? "#10b981" :
+                              sample.effects.background === "Solid Purple" ? "#8b5cf6" :
+                                sample.effects.background === "Gradient 1" ? "linear-gradient(135deg, #4158D0, #C850C0, #FFCC70)" :
+                                  sample.effects.background === "Gradient 2" ? "linear-gradient(180deg, #0093E9, #80D0C7)" :
+                                    sample.effects.background === "Gradient 3" ? "linear-gradient(90deg, #8EC5FC, #E0C3FC)" :
+                                      "#f8fafc"
                         }}
                       >
                         {/* Image positioned in center */}
@@ -791,13 +791,13 @@ export default function ScreenshotEnhancer() {
                           overflow: 'hidden',
                           borderRadius: '4px'
                         }}>
-                          <img 
+                          <img
                             src={sample.src}
                             alt={`${sample.title} styled`}
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        
+
                         {/* Add text overlay */}
                         <div className="absolute p-2 text-center" style={{
                           top: `${sample.effects.textPosition.y}%`,
@@ -813,7 +813,7 @@ export default function ScreenshotEnhancer() {
                         }}>
                           {sample.title}
                         </div>
-                        
+
                         {/* Watermark */}
                         <div className="absolute bottom-2 right-2 text-white text-xs opacity-70">
                           Created with AI
@@ -825,11 +825,11 @@ export default function ScreenshotEnhancer() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-2 text-center">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       applySampleDesign(sample);
@@ -844,14 +844,14 @@ export default function ScreenshotEnhancer() {
             ))}
           </div>
         </div>
-        
+
         {/* Enhancement Dialog - Moved Step 2 into this dialog */}
         <Dialog open={enhancementDialogOpen} onOpenChange={setEnhancementDialogOpen}>
           <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Step 2: Enhance Your Screenshot</DialogTitle>
             </DialogHeader>
-            
+
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mt-4">
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -1045,8 +1045,8 @@ export default function ScreenshotEnhancer() {
               <div className="flex flex-col items-center space-y-4">
                 <h3 className="font-medium self-start mb-2">Preview</h3>
                 <div className="relative w-full overflow-hidden rounded-lg border bg-gray-100">
-                  <canvas 
-                    ref={canvasRef} 
+                  <canvas
+                    ref={canvasRef}
                     className="max-h-[400px] w-full object-contain"
                   />
                   {isProcessing && (
@@ -1088,30 +1088,30 @@ export default function ScreenshotEnhancer() {
             </div>
           </DialogContent>
         </Dialog>
-        
+
         {/* Sample Gallery Dialog */}
         <Dialog open={sampleDialogOpen} onOpenChange={setSampleDialogOpen}>
           <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Sample Screenshot Designs</DialogTitle>
             </DialogHeader>
-            
+
             <div className="grid grid-cols-1 gap-4 mt-4">
               {sampleImages.map((sample) => (
-                <div 
-                  key={sample.id} 
+                <div
+                  key={sample.id}
                   className="border rounded-lg p-4 cursor-pointer hover:border-blue-500 transition-colors"
                   onClick={() => applySampleDesign(sample)}
                 >
                   <h4 className="font-medium text-base mb-2">{sample.title}</h4>
                   <p className="text-xs text-gray-500 mb-3">{sample.platform} • {sample.style}</p>
-                  
+
                   <div className="flex flex-col md:flex-row gap-4 items-center">
                     {/* Before image */}
                     <div className="w-full md:w-1/2">
                       <div className="aspect-video relative rounded-md overflow-hidden border">
-                        <img 
-                          src={sample.src} 
+                        <img
+                          src={sample.src}
                           alt={`${sample.title} before`}
                           className="object-cover w-full h-full"
                         />
@@ -1120,26 +1120,26 @@ export default function ScreenshotEnhancer() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Arrow between */}
                     <div className="hidden md:flex -mx-4">
                       <ArrowRight className="h-6 w-6 text-gray-400" />
                     </div>
-                    
+
                     {/* After image - with effects */}
                     <div className="w-full md:w-1/2">
                       <div className="aspect-video relative rounded-md overflow-hidden border">
                         {/* Styled version with effects */}
-                        <div 
+                        <div
                           className="w-full h-full relative"
                           style={{
                             background: sample.effects.background === "Solid Blue" ? "#3b82f6" :
-                                      sample.effects.background === "Solid Green" ? "#10b981" :
-                                      sample.effects.background === "Solid Purple" ? "#8b5cf6" :
-                                      sample.effects.background === "Gradient 1" ? "linear-gradient(135deg, #4158D0, #C850C0, #FFCC70)" : 
-                                      sample.effects.background === "Gradient 2" ? "linear-gradient(180deg, #0093E9, #80D0C7)" :
+                              sample.effects.background === "Solid Green" ? "#10b981" :
+                                sample.effects.background === "Solid Purple" ? "#8b5cf6" :
+                                  sample.effects.background === "Gradient 1" ? "linear-gradient(135deg, #4158D0, #C850C0, #FFCC70)" :
+                                    sample.effects.background === "Gradient 2" ? "linear-gradient(180deg, #0093E9, #80D0C7)" :
                                       sample.effects.background === "Gradient 3" ? "linear-gradient(90deg, #8EC5FC, #E0C3FC)" :
-                                      "#f8fafc"
+                                        "#f8fafc"
                           }}
                         >
                           {/* Image positioned in center */}
@@ -1154,13 +1154,13 @@ export default function ScreenshotEnhancer() {
                             overflow: 'hidden',
                             borderRadius: '4px'
                           }}>
-                            <img 
+                            <img
                               src={sample.src}
                               alt={`${sample.title} styled`}
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          
+
                           {/* Add text overlay */}
                           <div className="absolute p-2 text-center" style={{
                             top: `${sample.effects.textPosition.y}%`,
@@ -1176,7 +1176,7 @@ export default function ScreenshotEnhancer() {
                           }}>
                             {sample.title}
                           </div>
-                          
+
                           {/* Watermark */}
                           <div className="absolute bottom-2 right-2 text-white text-xs opacity-70">
                             Created with AI
@@ -1188,7 +1188,7 @@ export default function ScreenshotEnhancer() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mt-3 flex justify-center">
                     <Button
                       variant="default"
@@ -1206,7 +1206,7 @@ export default function ScreenshotEnhancer() {
                 </div>
               ))}
             </div>
-            
+
             <div className="flex justify-end gap-2 mt-4">
               <Button variant="outline" onClick={() => setSampleDialogOpen(false)}>
                 <X className="h-4 w-4 mr-2" />
@@ -1224,7 +1224,7 @@ export default function ScreenshotEnhancer() {
             </div>
           </DialogContent>
         </Dialog>
-        
+
         {/* SEO-friendly content section */}
         <div className="mt-8 border-t pt-6">
           <h3 className="text-lg font-medium mb-4">
@@ -1257,8 +1257,8 @@ export default function ScreenshotEnhancer() {
             </div>
           </div>
           <p className="mt-4 text-sm text-gray-500">
-            Elevate your social media presence with professionally styled screenshots. Our free screenshot generator 
-            helps founders, creators, and marketers create beautiful visual content for Twitter/X, LinkedIn, 
+            Elevate your social media presence with professionally styled screenshots. Our free screenshot generator
+            helps founders, creators, and marketers create beautiful visual content for Twitter/X, LinkedIn,
             Instagram, and Facebook without design skills.
           </p>
         </div>

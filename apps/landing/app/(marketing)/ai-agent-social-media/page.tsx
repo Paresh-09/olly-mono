@@ -59,10 +59,10 @@ const VideoModal = ({ isOpen, onClose }: VideoModalProps) => {
 
 const SocialAgentPage = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-  
+
   const openVideoModal = () => setVideoModalOpen(true);
   const closeVideoModal = () => setVideoModalOpen(false);
-  
+
   return (
     <div className="flex flex-col min-h-screen text-gray-900">
       {/* Hero Section */}
@@ -70,7 +70,7 @@ const SocialAgentPage = () => {
         <div className="absolute inset-0 z-0 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-purple-800/10" />
         </div>
-        
+
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="inline-block mb-6 px-4 py-1.5 bg-green-50 border border-green-100 rounded-full text-sm font-medium text-green-700">
@@ -115,14 +115,14 @@ const SocialAgentPage = () => {
           </div>
           <div className="relative max-w-5xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-gray-200">
             <div className="relative">
-              <Image 
-                src="/ac/ac-thumb.jpg" 
-                alt="AI Auto-Commenter Demo" 
-                width={1280} 
-                height={720} 
+              <Image
+                src="/ac/ac-thumb.jpg"
+                alt="AI Auto-Commenter Demo"
+                width={1280}
+                height={720}
                 className="w-full aspect-video object-cover"
               />
-              <button 
+              <button
                 onClick={openVideoModal}
                 className="absolute inset-0 flex items-center justify-center transition-colors group"
               >
@@ -133,7 +133,7 @@ const SocialAgentPage = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Video Modal */}
           <VideoModal isOpen={videoModalOpen} onClose={closeVideoModal} />
         </div>
@@ -151,7 +151,7 @@ const SocialAgentPage = () => {
               Three simple steps to automate your social media engagement
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-10">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-5 rounded-xl transition-opacity duration-300"></div>
@@ -165,7 +165,7 @@ const SocialAgentPage = () => {
                 </p>
               </div>
             </div>
-            
+
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-5 rounded-xl transition-opacity duration-300"></div>
               <div className="relative bg-white p-8 rounded-xl border border-gray-200 shadow-md h-full transform group-hover:-translate-y-1 transition-transform duration-300">
@@ -181,7 +181,7 @@ const SocialAgentPage = () => {
                 </Link>
               </div>
             </div>
-            
+
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-5 rounded-xl transition-opacity duration-300"></div>
               <div className="relative bg-white p-8 rounded-xl border border-gray-200 shadow-md h-full transform group-hover:-translate-y-1 transition-transform duration-300">
@@ -210,7 +210,7 @@ const SocialAgentPage = () => {
               Advanced AI technology that transforms your social media strategy
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-5">
@@ -221,7 +221,7 @@ const SocialAgentPage = () => {
                 Works in a browser tab to automatically comment, like, and engage with your audience on autopilot.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-5">
                 <CheckCircle className="h-6 w-6 text-white" />
@@ -231,7 +231,7 @@ const SocialAgentPage = () => {
                 Identifies and engages with content relevant to your specified keywords and interests.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-5">
                 <CheckCircle className="h-6 w-6 text-white" />
@@ -241,7 +241,7 @@ const SocialAgentPage = () => {
                 Connect your brand voice and sample replies for authentic-sounding comments.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-5">
                 <CheckCircle className="h-6 w-6 text-white" />
@@ -251,7 +251,7 @@ const SocialAgentPage = () => {
                 Subtly promotes your products, services, or content in engagement when appropriate.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-5">
                 <CheckCircle className="h-6 w-6 text-white" />
@@ -261,7 +261,7 @@ const SocialAgentPage = () => {
                 Runs in your browser and doesn't require passwords or sensitive information.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-5">
                 <CheckCircle className="h-6 w-6 text-white" />
@@ -287,7 +287,7 @@ const SocialAgentPage = () => {
               Starting with LinkedIn, expanding to more platforms soon
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-xl"></div>
@@ -306,7 +306,7 @@ const SocialAgentPage = () => {
                 <p className="text-green-600 font-medium">Available Now</p>
               </div>
             </div>
-            
+
             <div className="relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-xl"></div>
               <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-md text-center relative transform group-hover:-translate-y-1 transition-transform duration-300">
@@ -324,7 +324,7 @@ const SocialAgentPage = () => {
                 <p className="text-gray-600">Coming soon</p>
               </div>
             </div>
-            
+
             <div className="relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-400 opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-xl"></div>
               <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-md text-center relative transform group-hover:-translate-y-1 transition-transform duration-300">
@@ -358,7 +358,7 @@ const SocialAgentPage = () => {
               Common questions about our social media agent
             </p>
           </div>
-          
+
           <div className="max-w-3xl mx-auto space-y-8">
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Is it safe to use this agent?</h3>
@@ -366,21 +366,21 @@ const SocialAgentPage = () => {
                 Yes, our agent is completely safe. It runs in your browser and leverages your existing social media sessions without requiring passwords or sensitive information. It operates on top of the platforms, just like you would manually.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl font-semibold mb-3 text-gray-900">How many credits will I need?</h3>
               <p className="text-gray-600">
                 Each agent action (comment, like, follow) uses 1 credit. The number of credits needed depends on your engagement goals. Typical users might use 50-200 credits per week for active engagement.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Can I customize what the agent says?</h3>
               <p className="text-gray-600">
                 Absolutely! You can connect your brand voice, provide sample replies, specify items to promote, and set guidelines for engagement in your settings. The agent will use these to generate authentic-sounding comments.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Will platforms detect this as automated?</h3>
               <p className="text-gray-600">
@@ -396,7 +396,7 @@ const SocialAgentPage = () => {
         <div className="absolute inset-0 z-0 opacity-10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-white to-transparent" />
         </div>
-        
+
         <div className="container relative z-10 mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 max-w-3xl mx-auto text-white">Ready to Automate Your LinkedIn Presence?</h2>
           <p className="text-xl mb-10 max-w-2xl mx-auto text-blue-100">

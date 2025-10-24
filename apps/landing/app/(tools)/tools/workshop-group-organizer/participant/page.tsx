@@ -11,12 +11,12 @@ import { AlertCircle, CheckCircle, Users, HelpCircle, Loader2 } from 'lucide-rea
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/ui/alert'
 import { Separator } from '@repo/ui/components/ui/separator'
 import { toast } from 'sonner'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 
 interface Group {
@@ -57,7 +57,7 @@ const ParticipantView = () => {
   const searchParams = useSearchParams()
   const workshopId = searchParams.get('workshopId')
   const accessCode = searchParams.get('accessCode') || undefined
-  
+
   const [loading, setLoading] = useState(true)
   const [joining, setJoining] = useState(false)
   const [workshop, setWorkshop] = useState<Workshop | null>(null)
@@ -65,7 +65,7 @@ const ParticipantView = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [participant, setParticipant] = useState<Participant | null>(null)
   const [error, setError] = useState<string | null>(null)
-  
+
   // Form states
   const [participantName, setParticipantName] = useState('')
   const [participantEmail, setParticipantEmail] = useState('')
@@ -87,11 +87,11 @@ const ParticipantView = () => {
         setLoading(true)
         const response = await axios.get(`/api/workshops/join?workshopId=${workshopId}${accessCode ? `&accessCode=${accessCode}` : ''}`)
         const workshopInfo = response.data
-        
-        
+
+
         // Always set needsAccessCode based on API response
         setNeedsAccessCode(!!workshopInfo.needsAccessCode)
-        
+
         // Set basic workshop info regardless of access code
         setWorkshop({
           id: workshopInfo.id,
@@ -99,7 +99,7 @@ const ParticipantView = () => {
           description: workshopInfo.description,
           joinMode: workshopInfo.joinMode
         })
-        
+
         // Show error if we need an access code but can't join
         if (workshopInfo.needsAccessCode && !workshopInfo.canJoin && !accessCode) {
           setError('This workshop requires an access code')
@@ -109,7 +109,7 @@ const ParticipantView = () => {
         } else {
           // Clear previous errors if we can join
           setError(null)
-          
+
           // For CHOICE join mode, fetch available groups
           if (workshopInfo.joinMode === 'CHOICE') {
             try {
@@ -120,7 +120,7 @@ const ParticipantView = () => {
               // Continue without groups - will be handled in UI
             }
           }
-          
+
           // Check localStorage for a saved participant ID for this workshop
           const savedParticipantId = localStorage.getItem(`participant-${workshopId}`)
           if (savedParticipantId) {
@@ -128,7 +128,7 @@ const ParticipantView = () => {
               // Try to fetch the participant details
               const participantResponse = await axios.get(`/api/workshops/${workshopId}/participants/${savedParticipantId}`)
               setParticipant(participantResponse.data.participant)
-              
+
               // Fetch tasks for the workshop
               fetchTasks()
             } catch (err) {
@@ -137,7 +137,7 @@ const ParticipantView = () => {
             }
           }
         }
-        
+
         setLoading(false)
       } catch (err: any) {
         console.error('Error fetching workshop details:', err)
@@ -145,13 +145,13 @@ const ParticipantView = () => {
         setLoading(false)
       }
     }
-    
+
     fetchWorkshopDetails()
   }, [workshopId, accessCode])
-  
+
   const fetchTasks = async () => {
     if (!workshopId) return
-    
+
     try {
       const response = await axios.get(`/api/workshops/${workshopId}/tasks`)
       setTasks(response.data.tasks)
@@ -159,29 +159,29 @@ const ParticipantView = () => {
       console.error('Error fetching tasks:', err)
     }
   }
-  
+
   const handleJoinWorkshop = async () => {
     if (!workshopId || !workshop) return
-    
+
     if (!participantName.trim()) {
       toast.error('Please enter your name')
       return
     }
-    
+
     if (workshop.joinMode === 'CHOICE' && !selectedGroupId) {
       toast.error('Please select a group')
       return
     }
-    
+
     if (needsAccessCode && !workshopAccessCode.trim()) {
       toast.error('This workshop requires an access code')
       return
     }
-    
+
     try {
       setJoining(true)
       setError(null)
-      
+
       // Create payload with explicit typing
       interface JoinPayload {
         workshopId: string;
@@ -190,46 +190,46 @@ const ParticipantView = () => {
         email?: string;
         preferredGroupId?: string;
       }
-      
+
       const payload: JoinPayload = {
         workshopId: workshopId,
         name: participantName.trim(),
       }
-      
+
       // Only add non-empty values
       if (workshopAccessCode.trim()) {
         payload.accessCode = workshopAccessCode.trim()
       }
-      
+
       if (participantEmail.trim()) {
         payload.email = participantEmail.trim()
       }
-      
+
       if (selectedGroupId) {
         payload.preferredGroupId = selectedGroupId
       }
-      
-     
-      
+
+
+
       const response = await axios.post('/api/workshops/join', payload)
-      
+
       if (response.data.success) {
         setParticipant(response.data.participant)
-        
+
         // Save participant ID in localStorage to remember this session
         localStorage.setItem(`participant-${workshopId}`, response.data.participant.id)
-        
+
         toast.success('Successfully joined the workshop!')
-        
+
         // Fetch tasks after joining
         fetchTasks()
       }
     } catch (err: any) {
       console.error('Error joining workshop:', err)
-      
+
       // Enhanced error handling
       let errorMessage = 'Failed to join workshop'
-      
+
       if (err.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -248,29 +248,29 @@ const ParticipantView = () => {
         // The request was made but no response was received
         errorMessage = 'No response from server. Please check your connection'
       }
-      
+
       setError(errorMessage)
     } finally {
       setJoining(false)
     }
   }
-  
+
   const handleCompleteTask = async (taskId: string) => {
     if (!workshopId || !participant) return
-    
+
     try {
       await axios.post(`/api/workshops/${workshopId}/tasks/${taskId}/completion`, {
         groupId: participant.group.id,
         participantId: participant.id
       })
-      
+
       toast.success('Task marked as completed!')
     } catch (err: any) {
       console.error('Error completing task:', err)
       toast.error(err.response?.data?.error || 'Failed to mark task as completed')
     }
   }
-  
+
   if (loading) {
     return (
       <div className="container max-w-3xl mx-auto py-12">
@@ -283,7 +283,7 @@ const ParticipantView = () => {
       </div>
     )
   }
-  
+
   if (error) {
     return (
       <div className="container max-w-3xl mx-auto py-12">
@@ -297,10 +297,10 @@ const ParticipantView = () => {
               <AlertTitle>Something went wrong</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
-            
+
             <div className="flex justify-center mt-6">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => router.push('/tools/workshop-group-organizer')}
               >
                 Back to Workshops
@@ -311,7 +311,7 @@ const ParticipantView = () => {
       </div>
     )
   }
-  
+
   if (!workshop) {
     return (
       <div className="container max-w-3xl mx-auto py-12">
@@ -324,7 +324,7 @@ const ParticipantView = () => {
       </div>
     )
   }
-  
+
   // If user hasn't joined yet, show the join form
   if (!participant) {
     return (
@@ -339,7 +339,7 @@ const ParticipantView = () => {
           <CardContent className="space-y-6">
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Join this workshop</h3>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="participant-name">Your Name*</Label>
                 <Input
@@ -349,7 +349,7 @@ const ParticipantView = () => {
                   onChange={e => setParticipantName(e.target.value)}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="participant-email">Email (Optional)</Label>
                 <Input
@@ -360,7 +360,7 @@ const ParticipantView = () => {
                   onChange={e => setParticipantEmail(e.target.value)}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="workshop-access-code">Access Code {!needsAccessCode && '(Optional)'}</Label>
                 <Input
@@ -375,7 +375,7 @@ const ParticipantView = () => {
                   </p>
                 )}
               </div>
-              
+
               {workshop.joinMode === 'CHOICE' && groups.length > 0 && (
                 <div className="space-y-2">
                   <Label htmlFor="group-select">Select a Group</Label>
@@ -385,18 +385,18 @@ const ParticipantView = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {groups.map(group => (
-                        <SelectItem 
-                          key={group.id} 
+                        <SelectItem
+                          key={group.id}
                           value={group.id}
                           disabled={group.participantCount >= group.maxSize}
                         >
                           <div className="flex items-center gap-2">
-                            <div 
-                              className="w-2 h-2 rounded-full" 
+                            <div
+                              className="w-2 h-2 rounded-full"
                               style={{ backgroundColor: group.color }}
                             />
                             <span>
-                              {group.name} 
+                              {group.name}
                               ({group.participantCount}/{group.maxSize})
                               {group.participantCount >= group.maxSize ? " (Full)" : ""}
                             </span>
@@ -407,7 +407,7 @@ const ParticipantView = () => {
                   </Select>
                 </div>
               )}
-              
+
               {workshop.joinMode === 'RANDOM' && (
                 <Alert>
                   <AlertDescription>
@@ -415,7 +415,7 @@ const ParticipantView = () => {
                   </AlertDescription>
                 </Alert>
               )}
-              
+
               {workshop.joinMode === 'ASSIGNED' && (
                 <Alert>
                   <AlertDescription>
@@ -423,9 +423,9 @@ const ParticipantView = () => {
                   </AlertDescription>
                 </Alert>
               )}
-              
-              <Button 
-                onClick={handleJoinWorkshop} 
+
+              <Button
+                onClick={handleJoinWorkshop}
                 className="w-full"
                 disabled={joining || !participantName.trim() || (workshop.joinMode === 'CHOICE' && !selectedGroupId)}
               >
@@ -444,7 +444,7 @@ const ParticipantView = () => {
       </div>
     )
   }
-  
+
   // Participant has joined, show the participant view
   return (
     <div className="container max-w-3xl mx-auto py-12 space-y-6">
@@ -463,11 +463,11 @@ const ParticipantView = () => {
               You are a participant in this workshop.
             </AlertDescription>
           </Alert>
-          
+
           <div className="border rounded-md p-4 space-y-2">
             <div className="flex items-center gap-2">
-              <div 
-                className="w-4 h-4 rounded-full" 
+              <div
+                className="w-4 h-4 rounded-full"
                 style={{ backgroundColor: participant.group.color }}
               />
               <h3 className="text-lg font-medium">
@@ -475,14 +475,14 @@ const ParticipantView = () => {
               </h3>
             </div>
           </div>
-          
+
           {tasks.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Workshop Tasks</h3>
               <div className="divide-y border rounded-md">
                 {tasks.map((task, index) => (
-                  <div 
-                    key={task.id} 
+                  <div
+                    key={task.id}
                     className="p-4 flex items-start gap-3"
                   >
                     <div className="flex-shrink-0 rounded-full h-6 w-6 flex items-center justify-center border">

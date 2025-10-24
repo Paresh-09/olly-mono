@@ -38,10 +38,10 @@ export default function CustomGptResultsPage() {
       if (!response.ok) {
         throw new Error('Failed to fetch job details');
       }
-      
+
       const data = await response.json();
       setJob(data.job);
-      
+
       if (data.job?.status === 'PENDING' || data.job?.status === 'PROCESSING') {
         // Poll for updates if job is still in progress
         setTimeout(fetchJob, 10000);
@@ -102,7 +102,7 @@ export default function CustomGptResultsPage() {
 
   const isJobInProgress = job.status === 'PENDING' || job.status === 'PROCESSING';
   const hasResults = job.results && Array.isArray(job.results) && job.results.length > 0;
-  
+
   return (
     <div className="container max-w-4xl mx-auto py-8 px-4">
       <div className="mb-6">
@@ -111,7 +111,7 @@ export default function CustomGptResultsPage() {
           Back to Username Lookup
         </Link>
       </div>
-      
+
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -123,16 +123,16 @@ export default function CustomGptResultsPage() {
           <div className="flex items-center gap-2">
             <span className={`
               text-sm px-3 py-1 rounded-full font-medium
-              ${job.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : 
+              ${job.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
                 job.status === 'FAILED' ? 'bg-red-100 text-red-700' :
-                'bg-amber-100 text-amber-700'}
+                  'bg-amber-100 text-amber-700'}
             `}>
               {job.status.toLowerCase()}
             </span>
             {isJobInProgress && (
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleRefresh}
                 disabled={isLoading}
               >
@@ -145,18 +145,18 @@ export default function CustomGptResultsPage() {
             )}
           </div>
         </div>
-        
+
         {isJobInProgress && (
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin mb-4 text-primary" />
             <h3 className="text-lg font-medium mb-2">Search in progress</h3>
             <p className="text-muted-foreground text-center max-w-md">
-              We're searching for {job.username} across multiple platforms. 
+              We're searching for {job.username} across multiple platforms.
               This may take a minute or two. The page will automatically update.
             </p>
           </div>
         )}
-        
+
         {job.status === 'FAILED' && (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="text-red-500 mb-4">⚠️</div>
@@ -167,7 +167,7 @@ export default function CustomGptResultsPage() {
             <Button className="mt-4" onClick={handleRefresh}>Try Again</Button>
           </div>
         )}
-        
+
         {job.status === 'COMPLETED' && !hasResults && (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="text-amber-500 mb-4">⚠️</div>
@@ -177,7 +177,7 @@ export default function CustomGptResultsPage() {
             </p>
           </div>
         )}
-        
+
         {job.status === 'COMPLETED' && hasResults && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -186,7 +186,7 @@ export default function CustomGptResultsPage() {
                 {job.results.length} profiles found
               </span>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {job.results.map((result, index) => (
                 <ProfileLink
@@ -196,7 +196,7 @@ export default function CustomGptResultsPage() {
                 />
               ))}
             </div>
-            
+
             <div className="pt-6 mt-6 border-t">
               <h3 className="text-lg font-medium mb-4">Want to save these results?</h3>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -214,7 +214,7 @@ export default function CustomGptResultsPage() {
           </div>
         )}
       </Card>
-      
+
       <div className="mt-8 text-center">
         <p className="text-sm text-muted-foreground">
           Powered by <a href="https://olly.social" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center">

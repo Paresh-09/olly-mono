@@ -14,9 +14,9 @@ import { Switch } from '@repo/ui/components/ui/switch'
 import { useToast } from '@repo/ui/hooks/use-toast'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import AuthPopup from "../authentication"
-import { 
-  Loader2, Copy, Save, RefreshCw, 
-  Youtube, Tag, Bookmark, Search, 
+import {
+  Loader2, Copy, Save, RefreshCw,
+  Youtube, Tag, Bookmark, Search,
   Trash2, Info, FileText, ArrowRight
 } from 'lucide-react'
 
@@ -63,9 +63,9 @@ export function YouTubeTagGenerator() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [showAuthPopup, setShowAuthPopup] = useState<boolean>(false)
   const [dailyUsage, setDailyUsage] = useState<UsageTracking>({ count: 0, date: '' })
-  
+
   const DAILY_FREE_LIMIT = 3
-  
+
   // Define available content categories
   const contentCategories: TagCategory[] = [
     { value: 'general', label: 'General' },
@@ -81,9 +81,9 @@ export function YouTubeTagGenerator() {
     { value: 'food', label: 'Food & Cooking' },
     { value: 'music', label: 'Music' },
     { value: 'art', label: 'Art & Design' },
-    {value:"news",label:'News' }
+    { value: "news", label: 'News' }
   ]
-  
+
   // Define competition levels
   const competitionLevels = [
     { value: 'low', label: 'Low Competition (Niche Topics)' },
@@ -97,11 +97,11 @@ export function YouTubeTagGenerator() {
     if (savedItems) {
       setSavedTagSets(JSON.parse(savedItems))
     }
-    
+
     checkAuthStatus()
     loadDailyUsage()
   }, [])
-  
+
   // Check user authentication status
   const checkAuthStatus = async () => {
     try {
@@ -112,12 +112,12 @@ export function YouTubeTagGenerator() {
       console.error('Error checking auth status:', error)
     }
   }
-  
+
   // Load daily usage from localStorage
   const loadDailyUsage = () => {
     const today = new Date().toDateString()
     const savedUsage = localStorage.getItem('youtubeTagGenerator_dailyUsage')
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage)
       if (usage.date === today) {
@@ -134,7 +134,7 @@ export function YouTubeTagGenerator() {
       localStorage.setItem('youtubeTagGenerator_dailyUsage', JSON.stringify(newUsage))
     }
   }
-  
+
   // Increment daily usage counter
   const incrementDailyUsage = () => {
     const today = new Date().toDateString()
@@ -145,7 +145,7 @@ export function YouTubeTagGenerator() {
     setDailyUsage(newUsage)
     localStorage.setItem('youtubeTagGenerator_dailyUsage', JSON.stringify(newUsage))
   }
-  
+
   // Check if user can generate (auth check or increment usage)
   const checkUsageLimit = (): boolean => {
     if (isAuthenticated) {
@@ -165,7 +165,7 @@ export function YouTubeTagGenerator() {
 
     return true
   }
-  
+
   // Handle successful authentication
   const handleSuccessfulAuth = () => {
     setIsAuthenticated(true)
@@ -195,7 +195,7 @@ export function YouTubeTagGenerator() {
       })
       return
     }
-    
+
     // Check usage limits for free users
     if (!checkUsageLimit()) {
       return
@@ -203,7 +203,7 @@ export function YouTubeTagGenerator() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call API endpoint
       const response = await fetch('/api/tools/youtube-tag-generator', {
@@ -219,20 +219,20 @@ export function YouTubeTagGenerator() {
           competitionLevel
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate YouTube tags');
       }
-      
+
       setGeneratedTags(data.tags);
-      
+
       // Increment usage for free users
       if (!isAuthenticated) {
         incrementDailyUsage();
       }
-      
+
       toast({
         title: "Tags generated",
         description: "Your SEO-optimized YouTube tags are ready to use.",
@@ -253,7 +253,7 @@ export function YouTubeTagGenerator() {
   // Copy tags to clipboard
   const copyToClipboard = (): void => {
     if (generatedTags.length === 0) return;
-    
+
     navigator.clipboard.writeText(generatedTags.join(', '))
     toast({
       title: "Copied to clipboard",
@@ -264,7 +264,7 @@ export function YouTubeTagGenerator() {
   // Save tags to collection
   const saveTags = (): void => {
     if (generatedTags.length === 0) return;
-    
+
     if (!isAuthenticated) {
       toast({
         title: "Authentication Required",
@@ -274,7 +274,7 @@ export function YouTubeTagGenerator() {
       setShowAuthPopup(true);
       return;
     }
-    
+
     const newId = Date.now().toString()
     const newSaved: SavedTagSet = {
       id: newId,
@@ -283,11 +283,11 @@ export function YouTubeTagGenerator() {
       category: category,
       date: new Date().toLocaleDateString()
     }
-    
+
     const updatedSaved = [...savedTagSets, newSaved]
     setSavedTagSets(updatedSaved)
     localStorage.setItem('savedYouTubeTags', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Tags saved",
       description: "Your tags have been saved to your collection.",
@@ -297,11 +297,11 @@ export function YouTubeTagGenerator() {
   // Delete a saved tag set
   const deleteTagSet = (id: string, e: React.MouseEvent): void => {
     e.stopPropagation() // Prevent triggering the parent click handler
-    
+
     const updatedSaved = savedTagSets.filter(item => item.id !== id)
     setSavedTagSets(updatedSaved)
     localStorage.setItem('savedYouTubeTags', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Tags deleted",
       description: "The saved tag set has been removed."
@@ -336,7 +336,7 @@ export function YouTubeTagGenerator() {
           </AlertDescription>
         </Alert>
       )}
-    
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="bg-muted rounded-lg p-1 mb-6">
           <TabsList className="grid w-full grid-cols-2 bg-transparent">
@@ -352,7 +352,7 @@ export function YouTubeTagGenerator() {
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         {/* Generator Tab */}
         <TabsContent value="generator" className="mt-0">
           <div className="grid gap-8 md:grid-cols-12">
@@ -367,7 +367,7 @@ export function YouTubeTagGenerator() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="videoTitle" className="text-base">Video Title <span className="text-destructive">*</span></Label>
-                    <Input 
+                    <Input
                       id="videoTitle"
                       placeholder="Enter your YouTube video title"
                       value={videoTitle}
@@ -375,10 +375,10 @@ export function YouTubeTagGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="videoDescription" className="text-base">Video Description (Optional)</Label>
-                    <Textarea 
+                    <Textarea
                       id="videoDescription"
                       placeholder="Enter a brief description of your video content"
                       value={videoDescription}
@@ -388,7 +388,7 @@ export function YouTubeTagGenerator() {
                     />
                     <p className="text-xs text-muted-foreground mt-1">Adding a description helps generate more relevant tags</p>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="category" className="text-base">Content Category</Label>
                     <Select value={category} onValueChange={setCategory}>
@@ -404,7 +404,7 @@ export function YouTubeTagGenerator() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="competitionLevel" className="text-base">Competition Level</Label>
                     <Select value={competitionLevel} onValueChange={setCompetitionLevel}>
@@ -421,12 +421,12 @@ export function YouTubeTagGenerator() {
                     </Select>
                     <p className="text-xs text-muted-foreground mt-1">Choose based on how competitive your topic is</p>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
-                    <Switch 
-                      id="includeTrending" 
-                      checked={includeTrending} 
-                      onCheckedChange={setIncludeTrending} 
+                    <Switch
+                      id="includeTrending"
+                      checked={includeTrending}
+                      onCheckedChange={setIncludeTrending}
                     />
                     <Label htmlFor="includeTrending" className="text-base">
                       Include trending/popular tags
@@ -439,9 +439,9 @@ export function YouTubeTagGenerator() {
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>
-                <Button 
-                  onClick={generateTags} 
-                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)} 
+                <Button
+                  onClick={generateTags}
+                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                   className="px-6"
                 >
                   {loading ? (
@@ -458,7 +458,7 @@ export function YouTubeTagGenerator() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-12 md:col-span-7">
               <CardHeader>
                 <CardTitle className="text-xl flex items-center justify-between">
@@ -466,19 +466,19 @@ export function YouTubeTagGenerator() {
                     <Tag className="mr-2 h-5 w-5 text-primary" />
                     Generated Tags
                   </div>
-                  
+
                   {generatedTags.length > 0 && (
                     <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={copyToClipboard}
                       >
                         <Copy className="h-4 w-4 mr-1" /> Copy All
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={saveTags}
                         disabled={!isAuthenticated}
                       >
@@ -499,9 +499,9 @@ export function YouTubeTagGenerator() {
                   <div className="text-destructive text-center h-[400px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating tags</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={resetForm}
                     >
@@ -516,9 +516,9 @@ export function YouTubeTagGenerator() {
                         <p className="text-sm break-all font-mono">
                           {generatedTags.join(', ')}
                         </p>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="absolute top-2 right-2 h-8 w-8 p-0"
                           onClick={copyToClipboard}
                         >
@@ -527,12 +527,12 @@ export function YouTubeTagGenerator() {
                         </Button>
                       </div>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-base font-medium mb-3">Individual Tags:</h3>
                       <div className="flex flex-wrap gap-2">
                         {generatedTags.map((tag, index) => (
-                          <Badge 
+                          <Badge
                             key={index}
                             variant="secondary"
                             className="px-3 py-1 text-sm"
@@ -542,7 +542,7 @@ export function YouTubeTagGenerator() {
                         ))}
                       </div>
                     </div>
-                    
+
                     <Alert>
                       <Info className="h-4 w-4" />
                       <AlertDescription>
@@ -563,7 +563,7 @@ export function YouTubeTagGenerator() {
             </Card>
           </div>
         </TabsContent>
-        
+
         {/* Saved Tags Tab */}
         <TabsContent value="saved" className="mt-0">
           <Card>
@@ -573,7 +573,7 @@ export function YouTubeTagGenerator() {
                 Saved Tag Sets
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               {!isAuthenticated ? (
                 <div className="text-center p-8">
@@ -582,7 +582,7 @@ export function YouTubeTagGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Please sign in to save and access your YouTube tag sets.
                   </p>
-                  <Button 
+                  <Button
                     className="mt-4"
                     onClick={() => setShowAuthPopup(true)}
                   >
@@ -596,8 +596,8 @@ export function YouTubeTagGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Generate and save tag sets to access them later for your YouTube videos.
                   </p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={() => setActiveTab('generator')}
                   >
@@ -607,8 +607,8 @@ export function YouTubeTagGenerator() {
               ) : (
                 <div className="space-y-4">
                   {savedTagSets.map((tagSet) => (
-                    <div 
-                      key={tagSet.id} 
+                    <div
+                      key={tagSet.id}
                       className="border rounded-lg p-4 hover:border-primary/50 transition-colors cursor-pointer"
                       onClick={() => loadTagSet(tagSet)}
                     >
@@ -630,7 +630,7 @@ export function YouTubeTagGenerator() {
                           </div>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {tagSet.tags.slice(0, 5).map((tag, index) => (
-                              <Badge 
+                              <Badge
                                 key={index}
                                 variant="secondary"
                                 className="text-xs"
@@ -646,8 +646,8 @@ export function YouTubeTagGenerator() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
                             onClick={(e) => {
@@ -662,8 +662,8 @@ export function YouTubeTagGenerator() {
                             <Copy className="h-4 w-4" />
                             <span className="sr-only">Copy</span>
                           </Button>
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
                             onClick={(e) => deleteTagSet(tagSet.id, e)}
@@ -685,7 +685,7 @@ export function YouTubeTagGenerator() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       <AuthPopup
         isOpen={showAuthPopup}
         onClose={() => setShowAuthPopup(false)}

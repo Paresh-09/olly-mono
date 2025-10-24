@@ -105,7 +105,7 @@ export default function UserInfoForm({ initialLicenseData, isLoggedIn }: UserInf
       });
 
       const responseData = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(responseData.error || "Failed to activate license");
       }
@@ -143,10 +143,10 @@ export default function UserInfoForm({ initialLicenseData, isLoggedIn }: UserInf
         <div>
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Input 
-              id="password" 
-              type={showPassword ? "text" : "password"} 
-              {...register("password")} 
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              {...register("password")}
               className="w-full pr-10"
             />
             <button
@@ -163,10 +163,10 @@ export default function UserInfoForm({ initialLicenseData, isLoggedIn }: UserInf
         <div>
           <Label htmlFor="confirmPassword">Confirm Password</Label>
           <div className="relative">
-            <Input 
-              id="confirmPassword" 
-              type={showConfirmPassword ? "text" : "password"} 
-              {...register("confirmPassword")} 
+            <Input
+              id="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              {...register("confirmPassword")}
               className="w-full pr-10"
             />
             <button
@@ -217,7 +217,7 @@ export default function UserInfoForm({ initialLicenseData, isLoggedIn }: UserInf
           <Input id="name" type="text" {...register("name")} />
           {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name?.message as string}</p>}
         </div>
-        
+
         <div>
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" {...register("email")} />

@@ -30,7 +30,8 @@ import {
   UserPlus,
   Gauge,
 } from "lucide-react";
-import { useToast } from "@repo/ui/hooks/use-toast";import { Separator } from "@repo/ui/components/ui/separator";
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { Separator } from "@repo/ui/components/ui/separator";
 import { Checkbox } from "@repo/ui/components/ui/checkbox";
 
 // Define types for our options
@@ -314,11 +315,10 @@ export function AICourseReviewsGenerator() {
                             className="focus:outline-none"
                           >
                             <Star
-                              className={`h-6 w-6 ${
-                                rating >= star
-                                  ? "fill-amber-400 text-amber-400"
-                                  : "text-gray-300"
-                              }`}
+                              className={`h-6 w-6 ${rating >= star
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-gray-300"
+                                }`}
                             />
                           </button>
                         ))}
@@ -511,11 +511,10 @@ export function AICourseReviewsGenerator() {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`h-4 w-4 ${
-                            rating >= star
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-gray-300"
-                          }`}
+                          className={`h-4 w-4 ${rating >= star
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-gray-300"
+                            }`}
                         />
                       ))}
                     </div>

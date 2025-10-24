@@ -11,12 +11,12 @@ import { Textarea } from '@repo/ui/components/ui/textarea'
 import { AlertCircle, Save, Trash } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/ui/alert'
 import { toast } from 'sonner'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 import { Switch } from '@repo/ui/components/ui/switch'
 import {
@@ -48,18 +48,18 @@ interface ManageSettingsTabProps {
 }
 
 const JOIN_MODE_OPTIONS = [
-  { 
-    value: 'CHOICE', 
+  {
+    value: 'CHOICE',
     label: 'Participant Choice',
     description: 'Participants can choose which group to join'
   },
-  { 
-    value: 'RANDOM', 
+  {
+    value: 'RANDOM',
     label: 'Random Assignment',
     description: 'Participants are randomly assigned to groups'
   },
-  { 
-    value: 'ASSIGNED', 
+  {
+    value: 'ASSIGNED',
     label: 'Instructor Assigned',
     description: 'Only you can assign participants to groups'
   }
@@ -70,35 +70,35 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
   const [loading, setLoading] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+
   const [name, setName] = useState(workshop.name || '')
   const [description, setDescription] = useState(workshop.description || '')
   const [joinMode, setJoinMode] = useState(workshop.joinMode || 'ASSIGNED')
   const [requireAccessCode, setRequireAccessCode] = useState(!!workshop.accessCode)
   const [accessCode, setAccessCode] = useState(workshop.accessCode || '')
-  
+
   const handleUpdateWorkshop = async () => {
     if (!name.trim()) {
       toast.error('Workshop name is required')
       return
     }
-    
+
     if (requireAccessCode && !accessCode.trim()) {
       toast.error('Please provide an access code or disable the requirement')
       return
     }
-    
+
     try {
       setLoading(true)
       setError(null)
-      
+
       const response = await axios.patch(`/api/workshops/${workshopId}`, {
         name: name.trim(),
         description: description.trim() || null,
         joinMode,
         accessCode: requireAccessCode ? accessCode.trim() : null
       })
-      
+
       setWorkshop(response.data.workshop)
       toast.success('Workshop settings updated successfully!')
     } catch (err: any) {
@@ -108,13 +108,13 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
       setLoading(false)
     }
   }
-  
+
   const handleDeleteWorkshop = async () => {
     try {
       setDeleting(true)
-      
+
       await axios.delete(`/api/workshops/${workshopId}`)
-      
+
       toast.success('Workshop deleted successfully!')
       router.push('/tools/workshop-group-organizer')
     } catch (err: any) {
@@ -123,13 +123,13 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
       setDeleting(false)
     }
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Workshop Settings</h2>
       </div>
-      
+
       <Card>
         <CardContent className="p-6 space-y-4">
           <div className="space-y-2">
@@ -141,7 +141,7 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
               onChange={e => setName(e.target.value)}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="workshop-description">Description (Optional)</Label>
             <Textarea
@@ -152,7 +152,7 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
               rows={3}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="join-mode">Join Mode</Label>
             <Select value={joinMode} onValueChange={setJoinMode}>
@@ -173,7 +173,7 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -188,7 +188,7 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
                 onCheckedChange={setRequireAccessCode}
               />
             </div>
-            
+
             {requireAccessCode && (
               <div className="space-y-2 pt-2">
                 <Label htmlFor="access-code">Access Code</Label>
@@ -204,16 +204,16 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
               </div>
             )}
           </div>
-          
+
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
-          <Button 
-            onClick={handleUpdateWorkshop} 
+
+          <Button
+            onClick={handleUpdateWorkshop}
             className="w-full"
             disabled={loading}
           >
@@ -222,7 +222,7 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
           </Button>
         </CardContent>
       </Card>
-      
+
       <Card className="border-destructive/50">
         <CardHeader>
           <CardTitle className="text-destructive">Danger Zone</CardTitle>
@@ -233,8 +233,8 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
         <CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 className="w-full"
                 disabled={deleting}
               >
@@ -246,13 +246,13 @@ export default function ManageSettingsTab({ workshopId, workshop, setWorkshop }:
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently delete the workshop and all its data including groups, participants, and tasks. 
+                  This will permanently delete the workshop and all its data including groups, participants, and tasks.
                   This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction 
+                <AlertDialogAction
                   onClick={handleDeleteWorkshop}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >

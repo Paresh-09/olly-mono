@@ -9,15 +9,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/ui/alert'
 import { Skeleton } from '@repo/ui/components/ui/skeleton'
 import { Badge } from '@repo/ui/components/ui/badge'
-import { 
-  ArrowLeft, 
-  Copy, 
-  Key, 
-  Link, 
-  Settings, 
-  Share2, 
-  UserPlus, 
-  Users 
+import {
+  ArrowLeft,
+  Copy,
+  Key,
+  Link,
+  Settings,
+  Share2,
+  UserPlus,
+  Users
 } from 'lucide-react'
 import { toast } from 'sonner'
 import ManageGroupsTab from '../../_components/manage-groups-tab'
@@ -56,7 +56,7 @@ export default function WorkshopManagePage(props: { params: Promise<{ id: string
         setLoading(false)
       }
     }
-    
+
     fetchWorkshop()
   }, [params.id])
 
@@ -129,9 +129,9 @@ export default function WorkshopManagePage(props: { params: Promise<{ id: string
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold">{workshop.name}</h1>
             <Badge variant="outline" className="px-2 py-0.5">
-              {workshop.joinMode === 'CHOICE' ? 'Participant Choice' : 
-               workshop.joinMode === 'RANDOM' ? 'Random Assignment' : 
-               'Instructor Assigned'}
+              {workshop.joinMode === 'CHOICE' ? 'Participant Choice' :
+                workshop.joinMode === 'RANDOM' ? 'Random Assignment' :
+                  'Instructor Assigned'}
             </Badge>
           </div>
           {workshop.description && (
@@ -149,9 +149,9 @@ export default function WorkshopManagePage(props: { params: Promise<{ id: string
               Copy Access Code
             </Button>
           )}
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => router.push('/tools/workshop-group-organizer')}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -159,7 +159,7 @@ export default function WorkshopManagePage(props: { params: Promise<{ id: string
           </Button>
         </div>
       </div>
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
           <TabsTrigger value="groups">
@@ -179,19 +179,19 @@ export default function WorkshopManagePage(props: { params: Promise<{ id: string
             Settings
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="groups">
           <ManageGroupsTab workshopId={params.id} />
         </TabsContent>
-        
+
         <TabsContent value="participants">
           <ManageParticipantsTab workshopId={params.id} />
         </TabsContent>
-        
+
         <TabsContent value="tasks">
           <ManageTasksTab workshopId={params.id} />
         </TabsContent>
-        
+
         <TabsContent value="settings">
           <ManageSettingsTab workshopId={params.id} workshop={workshop} setWorkshop={setWorkshop} />
         </TabsContent>

@@ -40,36 +40,36 @@ const CommentPanel: React.FC<CommentOptionsPanelProps> = ({ onClose, onCommentPo
   ]);
 
   const quickReplies = [
-    { 
-      label: 'Congratulate', 
-      text: 'Congratulations on this amazing achievement! Your success is well-deserved.' 
+    {
+      label: 'Congratulate',
+      text: 'Congratulations on this amazing achievement! Your success is well-deserved.'
     },
-    { 
-      label: 'Disagree', 
+    {
+      label: 'Disagree',
       text: 'I respectfully disagree. While your points are interesting, I think there are other factors to consider.'
     },
-    { 
-      label: 'Support', 
+    {
+      label: 'Support',
       text: 'I fully support this perspective. It aligns well with what I\'ve observed in the industry.'
     },
-    { 
-      label: 'Funny', 
+    {
+      label: 'Funny',
       text: 'This reminds me of a similar situation - except everything went hilariously wrong! 😄'
     },
-    { 
-      label: 'Recommend', 
+    {
+      label: 'Recommend',
       text: 'I highly recommend looking into this further. The potential impact could be significant.'
     },
-    { 
-      label: 'Ask', 
+    {
+      label: 'Ask',
       text: 'Interesting perspective! Have you considered how this might affect smaller businesses?'
     },
-    { 
-      label: 'Marketing Manager', 
+    {
+      label: 'Marketing Manager',
       text: 'From a marketing perspective, this could create some interesting opportunities for brand positioning.'
     },
-    { 
-      label: 'AI Expert', 
+    {
+      label: 'AI Expert',
       text: 'As someone working in AI, I can confirm that these trends align with current technological capabilities.'
     }
   ];
@@ -92,11 +92,11 @@ const CommentPanel: React.FC<CommentOptionsPanelProps> = ({ onClose, onCommentPo
         timestamp: "Just now",
         isLiked: false
       };
-      
+
       setComments([newComment, ...comments]);
       setCommentText('');
       setStep('done');
-      
+
       if (onCommentPosted) {
         onCommentPosted();
       }
@@ -134,9 +134,9 @@ const CommentPanel: React.FC<CommentOptionsPanelProps> = ({ onClose, onCommentPo
             <Image className="w-5 h-5" />
           </button>
           <div className="relative">
-            <Button 
-              size="sm" 
-              variant="ghost" 
+            <Button
+              size="sm"
+              variant="ghost"
               className={cn(
                 "text-blue-600 hover:text-blue-700 hover:bg-blue-50",
                 step === 'post' && "ring-2 ring-blue-500 ring-offset-2"
@@ -220,7 +220,7 @@ const CommentPanel: React.FC<CommentOptionsPanelProps> = ({ onClose, onCommentPo
                   <p className="text-sm text-start mt-1">{comment.text}</p>
                 </div>
                 <div className="flex gap-4 mt-1 text-xs text-gray-500">
-                  <button 
+                  <button
                     className={`hover:text-blue-600 ${comment.isLiked ? 'text-blue-600 font-semibold' : ''}`}
                     onClick={() => handleLikeComment(comment.id)}
                   >

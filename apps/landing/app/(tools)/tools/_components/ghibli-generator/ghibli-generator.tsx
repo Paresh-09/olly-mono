@@ -59,7 +59,7 @@ export const GhibliImageGenerator = () => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
   const [activeTab, setActiveTab] = useState("create")
   const [creditsRemaining, setCreditsRemaining] = useState<number>(0)
-  
+
   // Check if user is logged in and fetch history
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,7 +68,7 @@ export const GhibliImageGenerator = () => {
         const data = await response.json();
         const isAuthenticated = data.authenticated;
         setIsLoggedIn(isAuthenticated);
-        
+
         if (isAuthenticated) {
           fetchUserCredits();
           fetchGenerationHistory();
@@ -78,10 +78,10 @@ export const GhibliImageGenerator = () => {
         setIsLoggedIn(false);
       }
     };
-    
+
     checkAuth();
   }, []);
-  
+
   const fetchUserCredits = async () => {
     try {
       const response = await fetch('/api/user/credits');
@@ -93,10 +93,10 @@ export const GhibliImageGenerator = () => {
       console.error('Error fetching user credits:', error);
     }
   };
-  
+
   const fetchGenerationHistory = async () => {
     if (!isLoggedIn) return;
-    
+
     setIsLoadingHistory(true);
     try {
       const response = await fetch('/api/tools/picasso');
@@ -122,7 +122,7 @@ export const GhibliImageGenerator = () => {
     const files = e.target.files
     if (files && files.length > 0) {
       const selectedFile = files[0]
-      
+
       // Validate file type
       if (!selectedFile.type.startsWith('image/')) {
         toast({
@@ -132,7 +132,7 @@ export const GhibliImageGenerator = () => {
         })
         return
       }
-      
+
       // Validate file size (max 20MB)
       if (selectedFile.size > 20 * 1024 * 1024) {
         toast({
@@ -142,7 +142,7 @@ export const GhibliImageGenerator = () => {
         })
         return
       }
-      
+
       setFile(selectedFile)
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -161,7 +161,7 @@ export const GhibliImageGenerator = () => {
       setShowAuthDialog(true)
       return
     }
-    
+
     if (creditsRemaining < 5) {
       toast({
         title: 'Insufficient credits',
@@ -170,9 +170,9 @@ export const GhibliImageGenerator = () => {
       });
       return;
     }
-    
+
     setIsGenerating(true)
-    
+
     try {
       const formData = new FormData()
       if (file) {
@@ -184,7 +184,7 @@ export const GhibliImageGenerator = () => {
       formData.append('size', size)
       formData.append('quality', 'auto')
       formData.append('style', 'ghibli') // Explicitly hardcode ghibli style
-      
+
       // Use the Picasso API endpoint
       const response = await fetch('/api/tools/picasso', {
         method: 'POST',
@@ -199,14 +199,14 @@ export const GhibliImageGenerator = () => {
       }
 
       const data = await response.json()
-      
+
       // Extract the first result from Picasso API response
       if (data.results && data.results.length > 0) {
         const result = data.results[0];
         setGeneratedImage(result.generatedImageUrl)
         setRevisedPrompt(result.prompt || '')
         setCreditsRemaining(data.creditsRemaining)
-        
+
         // Add the new generation to the list
         setPreviousGenerations(prev => [{
           id: result.id,
@@ -216,7 +216,7 @@ export const GhibliImageGenerator = () => {
           size: size,
           createdAt: new Date().toISOString()
         }, ...prev]);
-        
+
         toast({
           title: 'Image generated',
           description: 'Your Ghibli-style image has been created',
@@ -255,7 +255,7 @@ export const GhibliImageGenerator = () => {
 
   const handleDownload = async (imageUrl: string) => {
     if (!imageUrl) return;
-    
+
     try {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
@@ -279,7 +279,7 @@ export const GhibliImageGenerator = () => {
 
   const handleCopyPrompt = (textToCopy: string) => {
     if (!textToCopy) return;
-    
+
     navigator.clipboard.writeText(textToCopy)
       .then(() => {
         toast({
@@ -320,28 +320,28 @@ export const GhibliImageGenerator = () => {
             )}
           </div>
         </CardHeader>
-        
+
         <CardContent>
           {isTemporarilyDisabled ? (
             <div className="py-8 text-center space-y-6">
               <AlertCircle className="h-12 w-12 mx-auto text-amber-500" />
-              
+
               <div className="space-y-3">
                 <h3 className="text-xl font-semibold">Temporarily Unavailable</h3>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  We've hit our rate limit with the image generation API. The Ghibli Image Generator 
+                  We've hit our rate limit with the image generation API. The Ghibli Image Generator
                   is temporarily unavailable.
                 </p>
               </div>
-              
+
               <div className="bg-muted p-4 rounded-lg max-w-md mx-auto">
                 <h4 className="font-medium mb-2">Want to try Ghibli image generation?</h4>
                 <p className="text-sm text-muted-foreground mb-4">
                   Sign up or log in first to access our tools. Then, while you wait for our service to be back online, you can use this tutorial:
                 </p>
                 {isLoggedIn ? (
-                  <Button 
-                    variant="default" 
+                  <Button
+                    variant="default"
                     className="w-full"
                     onClick={() => window.open("https://youtu.be/Aqe4m5c9M7M", "_blank")}
                   >
@@ -349,8 +349,8 @@ export const GhibliImageGenerator = () => {
                     Watch Video Tutorial
                   </Button>
                 ) : (
-                  <Button 
-                    variant="default" 
+                  <Button
+                    variant="default"
                     className="w-full"
                     onClick={() => setShowAuthDialog(true)}
                   >
@@ -363,7 +363,7 @@ export const GhibliImageGenerator = () => {
                   </p>
                 )}
               </div>
-              
+
               <p className="text-sm text-muted-foreground">
                 Our team is working to restore the Ghibli Image Generator. Thanks for your patience!
               </p>
@@ -374,7 +374,7 @@ export const GhibliImageGenerator = () => {
                 <TabsTrigger value="create">Create</TabsTrigger>
                 <TabsTrigger value="history">History</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="create" className="space-y-6">
                 {creditsRemaining < 5 && (
                   <Alert variant="destructive" className="mb-4">
@@ -384,7 +384,7 @@ export const GhibliImageGenerator = () => {
                     </AlertDescription>
                   </Alert>
                 )}
-                
+
                 <Alert className="mb-4">
                   <FileStack className="h-4 w-4 mr-2" />
                   <AlertDescription>
@@ -395,24 +395,23 @@ export const GhibliImageGenerator = () => {
                     tool.
                   </AlertDescription>
                 </Alert>
-              
+
                 {/* Optional Reference Image Upload Area */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Reference Image (Optional)
                   </label>
-                  <div 
-                    className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center h-48 cursor-pointer transition-colors ${
-                      imagePreview ? 'border-gray-300' : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center h-48 cursor-pointer transition-colors ${imagePreview ? 'border-gray-300' : 'border-gray-300 hover:border-gray-400'
+                      }`}
                     onClick={handleBrowseClick}
                   >
                     {imagePreview ? (
                       <div className="relative w-full h-full">
-                        <Image 
-                          src={imagePreview} 
-                          alt="Reference image" 
-                          fill 
+                        <Image
+                          src={imagePreview}
+                          alt="Reference image"
+                          fill
                           className="object-contain"
                         />
                       </div>
@@ -427,7 +426,7 @@ export const GhibliImageGenerator = () => {
                         </p>
                       </>
                     )}
-                    <input 
+                    <input
                       ref={fileInputRef}
                       type="file"
                       className="hidden"
@@ -445,7 +444,7 @@ export const GhibliImageGenerator = () => {
                   <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 mb-1">
                     Prompt
                   </label>
-                  <Textarea 
+                  <Textarea
                     id="prompt"
                     placeholder="Create a magical forest with a small cottage, a winding path, and spirits hiding among the trees in Studio Ghibli style..."
                     value={prompt}
@@ -456,7 +455,7 @@ export const GhibliImageGenerator = () => {
                     Describe what you want to see in your Ghibli-style image
                   </p>
                 </div>
-                
+
                 {/* Image Size Selection */}
                 <div>
                   <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">
@@ -478,21 +477,21 @@ export const GhibliImageGenerator = () => {
                 {generatedImage && (
                   <div className="space-y-4">
                     <div className="relative aspect-square w-full border rounded-md overflow-hidden">
-                      <Image 
+                      <Image
                         src={generatedImage}
-                        alt="Generated Ghibli image" 
+                        alt="Generated Ghibli image"
                         fill
                         className="object-contain"
                       />
                     </div>
-                    
+
                     {revisedPrompt && (
                       <div className="bg-gray-50 p-4 rounded-lg">
                         <div className="flex justify-between items-start">
                           <h3 className="text-sm font-medium text-gray-700 mb-2">Prompt Used</h3>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => handleCopyPrompt(revisedPrompt)}
                           >
                             <Copy className="h-4 w-4" />
@@ -501,10 +500,10 @@ export const GhibliImageGenerator = () => {
                         <p className="text-sm text-gray-600">{revisedPrompt}</p>
                       </div>
                     )}
-                    
+
                     <div className="flex justify-center">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={() => handleDownload(generatedImage)}
                         className="flex items-center"
                       >
@@ -514,16 +513,16 @@ export const GhibliImageGenerator = () => {
                     </div>
                   </div>
                 )}
-                
+
                 <div className="flex justify-between pt-4">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={handleReset}
                     disabled={isGenerating}
                   >
                     Reset
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleGenerate}
                     disabled={isGenerating || creditsRemaining < 5}
                   >
@@ -541,7 +540,7 @@ export const GhibliImageGenerator = () => {
                   </Button>
                 </div>
               </TabsContent>
-              
+
               <TabsContent value="history">
                 {isLoadingHistory ? (
                   <div className="flex justify-center items-center py-12">
@@ -558,10 +557,10 @@ export const GhibliImageGenerator = () => {
                     {previousGenerations.map((gen) => (
                       <div key={gen.id} className="border rounded-lg overflow-hidden">
                         <div className="relative aspect-square w-full">
-                          <Image 
-                            src={gen.imageUrl} 
-                            alt="Generated image" 
-                            fill 
+                          <Image
+                            src={gen.imageUrl}
+                            alt="Generated image"
+                            fill
                             className="object-cover"
                           />
                         </div>
@@ -576,27 +575,27 @@ export const GhibliImageGenerator = () => {
                             </div>
                           </div>
                           <div className="flex space-x-2 mt-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="flex-1 h-8"
                               onClick={() => handleCopyPrompt(gen.revisedPrompt)}
                             >
                               <Copy className="h-3 w-3 mr-1" />
                               <span className="text-xs">Copy Prompt</span>
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="flex-1 h-8"
                               onClick={() => handleDownload(gen.imageUrl)}
                             >
                               <Download className="h-3 w-3 mr-1" />
                               <span className="text-xs">Download</span>
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="flex-1 h-8"
                               onClick={() => reusePreviousPrompt(gen.prompt)}
                             >
@@ -616,7 +615,7 @@ export const GhibliImageGenerator = () => {
       </Card>
 
       {showAuthDialog && (
-        <AuthPopup 
+        <AuthPopup
           isOpen={showAuthDialog}
           onClose={() => setShowAuthDialog(false)}
           onSuccess={handleAuthSuccess}

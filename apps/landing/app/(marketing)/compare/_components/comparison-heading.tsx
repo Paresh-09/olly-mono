@@ -16,12 +16,12 @@ import { Button } from "@repo/ui/components/ui/button";
 export function HeroText(props: { children: React.ReactNode; className?: string; }) {
   const { className, ...rest } = props;
   return (
-    <h1 
+    <h1
       className={cn(
         "font-cal text-4xl sm:text-5xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white",
         className
-      )} 
-      {...rest} 
+      )}
+      {...rest}
     />
   );
 }
@@ -36,21 +36,21 @@ export function HeroSubtitle(props: { children: React.ReactNode }) {
   );
 }
 
-export const ComparisonHeading = ({ 
+export const ComparisonHeading = ({
   title,
   subtitle,
-  competitor 
-}: { 
+  competitor
+}: {
   title: string;
   subtitle: string;
   competitor: Competitor;
 }) => {
   // Get a Lucide icon for competitor
   const iconName = competitor.name.replace(/\s+/g, '');
-  const CompetitorIcon = (LucideIcons as any)[iconName] || 
-                        (LucideIcons as any).Briefcase || 
-                        (LucideIcons as any).Activity;
-  
+  const CompetitorIcon = (LucideIcons as any)[iconName] ||
+    (LucideIcons as any).Briefcase ||
+    (LucideIcons as any).Activity;
+
   // Function to scroll to comparison table
   const scrollToComparisonTable = () => {
     const tableElement = document.getElementById('comparison-table');
@@ -58,7 +58,7 @@ export const ComparisonHeading = ({
       tableElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  
+
   return (
     <div className="relative isolate pt-14 pb-8">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -75,19 +75,19 @@ export const ComparisonHeading = ({
             <HeroSubtitle>{subtitle}</HeroSubtitle>
           </div>
         </div>
-        
+
         <div className="mt-10 flex flex-col lg:flex-row gap-8 items-center justify-center animate-fade-in-up delay-300">
           <div className="w-full lg:w-2/5 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-center mb-4">
-              <Image 
-                src="/icon-2.png" 
-                alt="Olly.social Logo" 
-                width={60} 
-                height={60} 
-                className="h-12 w-auto" 
+              <Image
+                src="/icon-2.png"
+                alt="Olly.social Logo"
+                width={60}
+                height={60}
+                className="h-12 w-auto"
               />
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center">
@@ -98,7 +98,7 @@ export const ComparisonHeading = ({
                   <p className="text-sm text-gray-500 dark:text-gray-400">Multiple AI models with custom personalities</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center">
                   <BadgeCheck className="w-4 h-4 text-indigo-700 dark:text-indigo-300" />
@@ -108,7 +108,7 @@ export const ComparisonHeading = ({
                   <p className="text-sm text-gray-500 dark:text-gray-400">Supports 12+ social platforms vs. competitors' limited options</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center">
                   <BarChart3 className="w-4 h-4 text-amber-700 dark:text-amber-300" />
@@ -118,7 +118,7 @@ export const ComparisonHeading = ({
                   <p className="text-sm text-gray-500 dark:text-gray-400">Virality scores, custom panels, and user-defined actions</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
                   <Shield className="w-4 h-4 text-rose-700 dark:text-rose-300" />
@@ -130,16 +130,16 @@ export const ComparisonHeading = ({
               </div>
             </div>
           </div>
-          
+
           <div className="text-center text-3xl font-bold text-gray-500 dark:text-gray-400">VS</div>
-          
+
           <div className="w-full lg:w-2/5 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
             <div className="flex items-center justify-center mb-4">
               <div className="h-12 w-12 flex items-center justify-center">
                 <CompetitorIcon size={40} />
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
@@ -150,7 +150,7 @@ export const ComparisonHeading = ({
                   <p className="text-sm text-gray-500 dark:text-gray-400">Restricted to fewer AI models with basic customization</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                   <BadgeCheck className="w-4 h-4 text-gray-700 dark:text-gray-300" />
@@ -160,7 +160,7 @@ export const ComparisonHeading = ({
                   <p className="text-sm text-gray-500 dark:text-gray-400">Limited platform support, typically {competitor.features[1]?.features[0]?.competitor && typeof competitor.features[1]?.features[0]?.competitor === 'object' ? (competitor.features[1]?.features[0]?.competitor as string[]).length : '2-3'} platforms</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                   <BarChart3 className="w-4 h-4 text-gray-700 dark:text-gray-300" />
@@ -170,7 +170,7 @@ export const ComparisonHeading = ({
                   <p className="text-sm text-gray-500 dark:text-gray-400">Missing advanced analytics and engagement tools</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                   <Shield className="w-4 h-4 text-gray-700 dark:text-gray-300" />
@@ -185,7 +185,7 @@ export const ComparisonHeading = ({
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-center animate-fade-in-up delay-400">
-          <Button 
+          <Button
             onClick={scrollToComparisonTable}
             className="group"
             variant="outline"
@@ -197,9 +197,9 @@ export const ComparisonHeading = ({
         </div>
 
         <div className="mt-10 flex flex-col lg:flex-row gap-8 items-center justify-center animate-fade-in-up delay-300">
-            <HeroCTA />
+          <HeroCTA />
         </div>
-        
+
         <div className="animate-fade-in-up delay-500 mt-10">
           <LogoStrip />
         </div>

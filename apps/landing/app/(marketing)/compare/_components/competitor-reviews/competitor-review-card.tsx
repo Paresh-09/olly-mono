@@ -17,13 +17,13 @@ export function ReviewCard({ review, competitor }: ReviewCardProps) {
   // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     }).format(date);
   };
-  
+
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
     return name
@@ -48,7 +48,7 @@ export function ReviewCard({ review, competitor }: ReviewCardProps) {
             <AvatarFallback>{getInitials(review.authorName)}</AvatarFallback>
           )}
         </Avatar>
-        
+
         <div className="flex-1">
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
             <h3 className="font-semibold">{review.authorName}</h3>
@@ -58,7 +58,7 @@ export function ReviewCard({ review, competitor }: ReviewCardProps) {
               </Badge>
             )}
           </div>
-          
+
           <div className="mt-2 flex flex-col sm:flex-row gap-4">
             <div className="flex items-center">
               <span className="text-sm font-medium mr-2">Olly.social:</span>
@@ -77,9 +77,9 @@ export function ReviewCard({ review, competitor }: ReviewCardProps) {
               )}
             </div>
           </div>
-          
+
           <p className="mt-3 text-gray-600 dark:text-gray-300">{review.reviewBody}</p>
-          
+
           <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
             {formatDate(review.createdAt)}
           </div>

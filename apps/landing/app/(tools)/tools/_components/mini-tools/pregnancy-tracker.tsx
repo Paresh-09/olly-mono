@@ -124,28 +124,28 @@ const APPOINTMENTS = [
 const calculateImportantDates = (lmpDate: Date) => {
   // EDD (Estimated Due Date) = LMP + 280 days (40 weeks)
   const dueDate = addDays(lmpDate, 280);
-  
+
   // First trimester: Weeks 1-12
   const firstTrimesterEnd = addDays(lmpDate, 84);
-  
+
   // Second trimester: Weeks 13-27
   const secondTrimesterEnd = addDays(lmpDate, 189);
-  
+
   // Third trimester: Weeks 28-40
   const thirdTrimesterEnd = dueDate;
-  
+
   // Anatomy scan typically around week 20
   const anatomyScanDate = addDays(lmpDate, 140);
-  
+
   // Glucose test typically around week 24-28
   const glucoseTestDate = addDays(lmpDate, 182);
-  
+
   // Calculate all appointment dates
   const appointmentDates = APPOINTMENTS.map(appointment => ({
     ...appointment,
     date: addDays(lmpDate, appointment.week * 7)
   }));
-  
+
   return {
     dueDate,
     firstTrimesterEnd,
@@ -160,7 +160,7 @@ const calculateImportantDates = (lmpDate: Date) => {
 // Create a custom hook for managing the LMP date with localStorage
 function useLmpDate() {
   const [lmpDate, setLmpDateState] = useState<Date>(DEFAULT_LMP_DATE);
-  
+
   // Load from localStorage on mount
   useEffect(() => {
     try {
@@ -179,23 +179,23 @@ function useLmpDate() {
       console.error("Error loading LMP date from localStorage:", error);
     }
   }, []);
-  
+
   // Custom setter that updates localStorage
   const setLmpDate = (date: Date) => {
     try {
       // Update state
       setLmpDateState(date);
-      
+
       // Update localStorage immediately
       window.localStorage.setItem(
-        LOCAL_STORAGE_KEY, 
+        LOCAL_STORAGE_KEY,
         JSON.stringify({ lmpDate: date.toISOString() })
       );
     } catch (error) {
       console.error("Error saving LMP date to localStorage:", error);
     }
   };
-  
+
   return [lmpDate, setLmpDate] as const;
 }
 
@@ -203,7 +203,7 @@ export const PregnancyTracker = () => {
   const [lmpDate, setLmpDate] = useLmpDate();
   const [currentTab, setCurrentTab] = useState<string>('overview');
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -222,20 +222,20 @@ export const PregnancyTracker = () => {
     const today = new Date();
     const weeks = differenceInWeeks(today, date);
     const days = differenceInDays(today, date) % 7;
-    
+
     return { weeks, days };
   };
 
   const { weeks, days } = calculateProgress(lmpDate);
   const importantDates = calculateImportantDates(lmpDate);
   const currentSize = BABY_SIZE[Math.min(Math.max(weeks, 4), 40) as keyof typeof BABY_SIZE] || "Not visible yet";
-  
+
   // Determine current trimester
   const currentTrimester = weeks < 0 ? "pre-pregnancy" :
-                          weeks < 13 ? "first" :
-                          weeks < 28 ? "second" :
-                          weeks <= 40 ? "third" : "post-term";
-  
+    weeks < 13 ? "first" :
+      weeks < 28 ? "second" :
+        weeks <= 40 ? "third" : "post-term";
+
   // Calculate pregnancy progress percentage
   const progressPercentage = Math.min(Math.max(Math.round((weeks / 40) * 100), 0), 100);
 
@@ -245,7 +245,7 @@ export const PregnancyTracker = () => {
       setLmpDate(date);
     }
   };
-  
+
   // Handler for saving the date (with usage limit check)
   const handleSaveDate = () => {
     if (!checkUsageLimit()) {
@@ -258,14 +258,14 @@ export const PregnancyTracker = () => {
       if (!isAuthenticated) {
         incrementUsage();
       }
-      
+
       toast({
         title: "Date Saved",
         description: "Your LMP date has been saved successfully."
       });
-      
+
       // API call for authenticated users would go here
-      
+
       setDatePickerOpen(false);
     } catch (error) {
       console.error("Error in handleSaveDate:", error);
@@ -294,12 +294,12 @@ export const PregnancyTracker = () => {
             <h3 className="text-lg font-medium mb-1">Last Menstrual Period (LMP)</h3>
             <p className="text-sm text-muted-foreground mb-2">This is used to calculate all pregnancy dates</p>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="flex items-center gap-2 justify-between min-w-[240px] border-2 border-primary/20 hover:border-primary/40 transition-all"
                 >
                   <CalendarDays className="h-4 w-4 text-primary" />
@@ -321,7 +321,7 @@ export const PregnancyTracker = () => {
                   initialFocus
                 />
                 <div className="p-3 border-t">
-                  <Button 
+                  <Button
                     onClick={handleSaveDate}
                     className="w-full"
                     disabled={!isAuthenticated && remainingUses <= 0}
@@ -357,30 +357,30 @@ export const PregnancyTracker = () => {
             <TabsTrigger value="dates">Appointments</TabsTrigger>
             <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="overview" className="space-y-6">
             <div className="bg-gradient-to-r from-pink-50 to-pink-100 p-6 rounded-lg text-center">
               <h3 className="text-xl font-semibold mb-2">Your Pregnancy Progress</h3>
               <p className="text-3xl font-bold text-pink-600 mb-2">
-                {weeks >= 0 && weeks <= 42 ? `${weeks} weeks, ${days} days` : 
-                 weeks < 0 ? "Planning for pregnancy" : "Baby is due!"}
+                {weeks >= 0 && weeks <= 42 ? `${weeks} weeks, ${days} days` :
+                  weeks < 0 ? "Planning for pregnancy" : "Baby is due!"}
               </p>
               <Badge variant={weeks >= 0 && weeks <= 42 ? "default" : "outline"} className="mb-2">
-                {weeks < 0 ? "Pre-pregnancy" : 
-                 weeks < 13 ? "First Trimester" : 
-                 weeks < 28 ? "Second Trimester" : 
-                 weeks <= 40 ? "Third Trimester" : "Post-term"}
+                {weeks < 0 ? "Pre-pregnancy" :
+                  weeks < 13 ? "First Trimester" :
+                    weeks < 28 ? "Second Trimester" :
+                      weeks <= 40 ? "Third Trimester" : "Post-term"}
               </Badge>
               <p className="mt-2">
-                {weeks >= 4 && weeks <= 40 ? 
+                {weeks >= 4 && weeks <= 40 ?
                   <span className="flex flex-col items-center">
                     <span className="text-lg font-medium">Baby is the size of a</span>
                     <span className="text-xl font-bold mt-1">{currentSize}</span>
-                  </span> : 
+                  </span> :
                   weeks > 40 ? "Baby is full term!" : "Baby size will appear in week 4"}
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-4">
               <Card className="p-4 border">
                 <h3 className="font-semibold mb-2 flex items-center">
@@ -392,7 +392,7 @@ export const PregnancyTracker = () => {
                   {differenceInDays(importantDates.dueDate, new Date())} days from today
                 </p>
               </Card>
-              
+
               <Card className="p-4 border">
                 <h3 className="font-semibold mb-2">Next Appointment</h3>
                 {importantDates.appointmentDates
@@ -409,10 +409,10 @@ export const PregnancyTracker = () => {
                   ))}
               </Card>
             </div>
-            
+
             <Card className="p-4 border">
               <h3 className="font-semibold mb-3">Next Milestone</h3>
-              {weeks >= 0 && weeks < 40 ? 
+              {weeks >= 0 && weeks < 40 ?
                 MILESTONES.filter(m => m.week > weeks)
                   .sort((a, b) => a.week - b.week)
                   .slice(0, 1)
@@ -424,18 +424,18 @@ export const PregnancyTracker = () => {
                         {milestone.week - weeks} {milestone.week - weeks === 1 ? 'week' : 'weeks'} from now
                       </Badge>
                     </div>
-                  )) : 
+                  )) :
                 <p>No upcoming milestones</p>
               }
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="timeline" className="space-y-4">
             <h3 className="text-xl font-semibold mb-4">Pregnancy Timeline</h3>
             <div className="space-y-4">
               {MILESTONES.map((milestone, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className={`
                     relative pl-6 py-3 rounded-lg
                     ${weeks >= milestone.week ? 'bg-green-50 border-l-4 border-green-500' : 'bg-gray-50 border-l-4 border-gray-200'}
@@ -444,7 +444,7 @@ export const PregnancyTracker = () => {
                   <div className="flex justify-between items-center mb-1">
                     <h4 className="font-medium flex items-center">
                       <span className="text-lg">Week {milestone.week}: {milestone.title}</span>
-                      {weeks >= milestone.week && 
+                      {weeks >= milestone.week &&
                         <CheckCircle2 className="ml-2 h-5 w-5 text-green-500" />
                       }
                       {weeks < milestone.week && weeks + 2 >= milestone.week &&
@@ -460,7 +460,7 @@ export const PregnancyTracker = () => {
               ))}
             </div>
           </TabsContent>
-          
+
           <TabsContent value="dates" className="space-y-4">
             <h3 className="text-xl font-semibold mb-4">Recommended Appointments</h3>
             <div className="space-y-3">
@@ -468,23 +468,23 @@ export const PregnancyTracker = () => {
                 {importantDates.appointmentDates.map((appointment, idx) => (
                   <div key={idx} className={`
                     py-3 px-4 rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between
-                    ${isToday(appointment.date) ? 'bg-blue-50 border-l-4 border-blue-500' : 
-                      isBefore(appointment.date, new Date()) ? 'bg-gray-50 border-l-4 border-green-500' : 
-                      'bg-white border border-gray-200'}
+                    ${isToday(appointment.date) ? 'bg-blue-50 border-l-4 border-blue-500' :
+                      isBefore(appointment.date, new Date()) ? 'bg-gray-50 border-l-4 border-green-500' :
+                        'bg-white border border-gray-200'}
                   `}>
                     <div className="mb-2 sm:mb-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-lg">{appointment.name}</span>
-                        {isBefore(appointment.date, new Date()) && 
+                        {isBefore(appointment.date, new Date()) &&
                           <CheckCircle2 className="h-4 w-4 text-green-500" />
                         }
-                        {isToday(appointment.date) && 
+                        {isToday(appointment.date) &&
                           <Badge variant="default" className="ml-2">Today</Badge>
                         }
                       </div>
                       <p className="text-sm text-muted-foreground">{appointment.description}</p>
                     </div>
-                    
+
                     <div className="sm:text-right">
                       <div className="text-sm font-medium">
                         Week {appointment.week}
@@ -498,10 +498,10 @@ export const PregnancyTracker = () => {
               </div>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="symptoms" className="space-y-6">
             <h3 className="text-xl font-semibold mb-4">Common Pregnancy Symptoms</h3>
-            
+
             <Accordion type="single" collapsible defaultValue={currentTrimester !== "pre-pregnancy" ? currentTrimester : undefined}>
               <AccordionItem value="first">
                 <AccordionTrigger className="text-lg">
@@ -522,7 +522,7 @@ export const PregnancyTracker = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-              
+
               <AccordionItem value="second">
                 <AccordionTrigger className="text-lg">
                   Second Trimester (Weeks 13-27)
@@ -542,7 +542,7 @@ export const PregnancyTracker = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-              
+
               <AccordionItem value="third">
                 <AccordionTrigger className="text-lg">
                   Third Trimester (Weeks 28-40)

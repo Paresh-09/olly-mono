@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
-import { useToast } from "@repo/ui/hooks/use-toast";import { Sparkles } from 'lucide-react';
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { Sparkles } from 'lucide-react';
 
 interface Position {
   x: number;
@@ -32,7 +33,7 @@ const CatchTheElf = ({ gameState, setGameState, sessionId, onComplete }: Props) 
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -64,10 +65,10 @@ const CatchTheElf = ({ gameState, setGameState, sessionId, onComplete }: Props) 
     const maxY = window.innerHeight - (isMobile ? 60 : 100);
     const level = gameState.catches + 1;
     const randomOffset = level * (isMobile ? 20 : 40);
-    
+
     const newX = Math.random() * (maxX - randomOffset) + randomOffset;
     const newY = Math.random() * (maxY - randomOffset) + randomOffset;
-    
+
     setElfPosition({ x: newX, y: newY });
     setCurrentElfImage(getRandomElfImage());
   }, [gameState.catches, getRandomElfImage, isMobile]);
@@ -97,7 +98,7 @@ const CatchTheElf = ({ gameState, setGameState, sessionId, onComplete }: Props) 
 
     const currentLevel = gameState.catches + 1;
     const catchConfig = catchChances.find(c => c.level === currentLevel);
-    
+
     try {
       const didCatch = Math.random() <= (catchConfig?.chance || 1);
 
@@ -112,7 +113,7 @@ const CatchTheElf = ({ gameState, setGameState, sessionId, onComplete }: Props) 
           didCatch
         })
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
         toast({
@@ -122,12 +123,12 @@ const CatchTheElf = ({ gameState, setGameState, sessionId, onComplete }: Props) 
         });
         return;
       }
-      
+
       setGameState({
         attempts: gameState.attempts - 1,
         catches: didCatch ? gameState.catches + 1 : gameState.catches,
       });
-      
+
       if (didCatch) {
         toast({
           title: "🎄 Caught!",
@@ -177,7 +178,7 @@ const CatchTheElf = ({ gameState, setGameState, sessionId, onComplete }: Props) 
     >
       <div className="relative">
         <div className="absolute inset-0 bg-green-400 blur-xl opacity-20 animate-pulse rounded-full scale-150" />
-        
+
         <div className="relative group">
           <Image
             src={currentElfImage}

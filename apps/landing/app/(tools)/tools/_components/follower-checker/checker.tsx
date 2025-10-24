@@ -49,7 +49,7 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
 
   const fetchAuditHistory = async () => {
     if (!isAuthenticated) return;
-    
+
     setIsHistoryLoading(true);
     try {
       const response = await fetch(`/api/tools/audit/history/${platform}`);
@@ -67,10 +67,10 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
   const initiateAudit = async () => {
     // Validate URL
     if (!validateProfileUrl(platform, profileUrl)) {
-      toast({ 
-        title: "Error", 
-        description: `Please enter a valid ${platform.charAt(0).toUpperCase() + platform.slice(1)} profile URL`, 
-        variant: "destructive" 
+      toast({
+        title: "Error",
+        description: `Please enter a valid ${platform.charAt(0).toUpperCase() + platform.slice(1)} profile URL`,
+        variant: "destructive"
       });
       return;
     }
@@ -128,7 +128,7 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
 
   if (!isValidPlatform(platform)) {
     return (
-      <NotFound/>
+      <NotFound />
     );
   }
 
@@ -142,13 +142,13 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
       <div className="space-y-6">
         {/* Show claim reports option if user is logged in */}
         {isAuthenticated && (
-          <ClaimReports 
+          <ClaimReports
             isAuthenticated={isAuthenticated}
             onLogin={() => setShowAuthPopup(true)}
             onSuccess={fetchAuditHistory}
           />
         )}
-        
+
         <div className="space-y-4">
           <div className="flex gap-2">
             <Input
@@ -183,9 +183,9 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
         </div>
 
         {auditResult && (
-          <FakeFollowerResult 
-            result={auditResult} 
-            platform={platform} 
+          <FakeFollowerResult
+            result={auditResult}
+            platform={platform}
             isAuthenticated={isAuthenticated}
             onLogin={() => setShowAuthPopup(true)}
             onClaimReport={() => {
@@ -198,12 +198,12 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
         )}
 
         {isAuthenticated ? (
-          <AuditHistory 
-            audits={auditHistory} 
-            onRefresh={fetchAuditHistory} 
+          <AuditHistory
+            audits={auditHistory}
+            onRefresh={fetchAuditHistory}
             isLoading={isHistoryLoading}
             platform={platform}
-            isAudit= {false}
+            isAudit={false}
           />
         ) : (
           <AuditHistoryLoginPrompt onLogin={() => setShowAuthPopup(true)} />
@@ -224,10 +224,10 @@ export const FollowerCheckerComponent = ({ platform }: { platform: string }) => 
 };
 
 // Page Component for each platform
-export default function FollowerCheckerPage({ 
-  platform 
-}: { 
-  platform: string 
+export default function FollowerCheckerPage({
+  platform
+}: {
+  platform: string
 }) {
   return (
     <div className="container py-8 space-y-8">

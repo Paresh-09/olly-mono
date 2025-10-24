@@ -7,10 +7,10 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@repo/ui/components/ui/tabs'
 import { Switch } from '@repo/ui/components/ui/switch'
 import { useToast } from '@repo/ui/hooks/use-toast'
-import { 
-  Loader2, 
-  Copy, 
-  CheckSquare, 
+import {
+  Loader2,
+  Copy,
+  CheckSquare,
   Download,
   Search,
   FileText,
@@ -87,7 +87,7 @@ export const formatDuration = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = Math.floor(seconds % 60);
-  
+
   if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
@@ -132,13 +132,13 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
       setLoading(false);
       return;
     }
-    
+
     // Save this videoId as the last one we processed
     lastVideoIdRef.current = videoId;
-    
+
     // Create a flag to track if component is mounted
     let isMounted = true;
-    
+
     // Only fetch if videoId changed or we don't have data
     if (!data || data.metadata?.videoId !== videoId) {
       // Modified fetch function with isMounted check
@@ -146,36 +146,36 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
         try {
           // Signal that the component is in loading state
           setLoading(true);
-          
+
           // Construct URL with refresh parameter
           const url = `/api/tools/youtube/transcript/extractor?videoId=${videoId}`;
-          
+
           // Fetch with timeout and abort controller
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 15000);
-          
+
           const response = await fetch(url, { signal: controller.signal });
           clearTimeout(timeoutId);
-          
+
           if (!response.ok) {
             throw new Error(`Failed to fetch transcript: ${response.status}`);
           }
-          
+
           const rawData = await response.json();
-          
+
           // Process the data only if component is still mounted
           if (isMounted) {
             if (!rawData || !rawData.transcript || !Array.isArray(rawData.transcript)) {
               throw new Error('Invalid transcript data format');
             }
-            
+
             // Validate transcript segments
             const validatedTranscript = rawData.transcript.map((segment: any) => ({
               timestamp: segment.timestamp || "00:00:00",
               text: segment.text || "",
               offset: typeof segment.offset === 'number' ? segment.offset : 0
             }));
-            
+
             // Create validated data object
             const validatedData: TranscriptData = {
               transcript: validatedTranscript,
@@ -187,7 +187,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                 duration: rawData.metadata?.duration,
               }
             };
-            
+
             // Add optional metadata if available
             if (rawData.metadata?.channelName) validatedData.metadata.channelName = rawData.metadata.channelName;
             if (rawData.metadata?.publishDate) validatedData.metadata.publishDate = rawData.metadata.publishDate;
@@ -196,11 +196,11 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
             if (rawData.metadata?.likeCount) validatedData.metadata.likeCount = rawData.metadata.likeCount;
             if (rawData.metadata?.categories) validatedData.metadata.categories = rawData.metadata.categories;
             if (rawData.metadata?.tags) validatedData.metadata.tags = rawData.metadata.tags;
-            
+
             // Set the data only if component is still mounted
             setData(validatedData);
-            setTabProcessed(prev => ({...prev, transcript: true}));
-            
+            setTabProcessed(prev => ({ ...prev, transcript: true }));
+
             // Finally set loading to false
             setLoading(false);
           }
@@ -216,14 +216,14 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
           }
         }
       };
-      
+
       // Start the fetch
       fetchData();
     } else {
       // Ensure loading is false in this case too
       setLoading(false);
     }
-    
+
     // Cleanup function runs on unmount or when dependency changes
     return () => {
       isMounted = false;
@@ -251,13 +251,13 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
   const handleAIAction = async (action: AIAction, forceRefresh = false) => {
     if (processingAI) return;
     if (!data) return;
-    
+
     setProcessingAI(action);
-    
+
     try {
       let endpoint;
       let tabKey: TabType;
-      
+
       switch (action) {
         case 'summarize':
           endpoint = '/api/tools/youtube/transcript/ai';
@@ -282,26 +282,26 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
         default:
           throw new Error('Invalid action');
       }
-      
+
       // Construct different payloads for different endpoints
-      const payload = action === 'virality' 
-        ? { videoId: data.metadata.videoId, forceRefresh } 
+      const payload = action === 'virality'
+        ? { videoId: data.metadata.videoId, forceRefresh }
         : { videoId: data.metadata.videoId, action, forceRegenerate: forceRefresh };
-      
+
       // Log request for debugging
-      
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      
+
       if (!response.ok) {
         const errorText = await response.text().catch(() => 'No error details');
         console.error(`Failed to ${action}:`, response.status, errorText);
         throw new Error(`Failed to ${action}: ${response.status}`);
       }
-      
+
       const result = await response.json();
 
       // Update the data based on the action
@@ -314,9 +314,9 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
         // Handle other AI content types - get content from correct property
         setData(prev => {
           if (!prev) return null;
-          
+
           const updatedData: TranscriptData = { ...prev };
-          
+
           // Access the data using the correct property name from the response
           if (action === 'summarize') {
             updatedData.summary = result.summary;
@@ -327,17 +327,17 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
           } else if (action === 'questions') {
             updatedData.questions = result.questions || result[action];
           }
-          
+
           return updatedData;
         });
       }
-      
-      setTabProcessed(prev => ({...prev, [tabKey]: true}));
-      toast({ 
-        title: "Success", 
-        description: `Retrieved ${action.replace('_', ' ')}` 
+
+      setTabProcessed(prev => ({ ...prev, [tabKey]: true }));
+      toast({
+        title: "Success",
+        description: `Retrieved ${action.replace('_', ' ')}`
       });
-      
+
     } catch (error) {
       console.error(`AI ${action} error:`, error);
       toast({
@@ -352,11 +352,11 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
 
   const downloadTranscript = (format: 'txt' | 'srt' | 'vtt') => {
     if (!data?.transcript) return
-    
-    const filename = data.metadata.title 
+
+    const filename = data.metadata.title
       ? `${data.metadata.title.slice(0, 30).replace(/[^\w\s]/gi, '')}_transcript.${format}`
       : `transcript_${videoId}.${format}`;
-    
+
     const content = data.transcript
       .map(segment => {
         if (format === 'srt') {
@@ -377,11 +377,11 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
 
   const formatTranscriptText = () => {
     if (!data?.transcript) return 'No transcript available';
-    
+
     const filteredTranscript = searchQuery
-      ? data.transcript.filter(segment => 
-          segment.text.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      ? data.transcript.filter(segment =>
+        segment.text.toLowerCase().includes(searchQuery.toLowerCase())
+      )
       : data.transcript;
 
     return filteredTranscript
@@ -418,18 +418,18 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   }
 
   const renderViralityTab = () => {
     if (!data?.viralityScore) return null;
-    
+
     const score = data.viralityScore;
-    
+
     return (
       <div className="space-y-6">
         {/* Overall Score */}
@@ -446,7 +446,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
             </div>
           </div>
         </div>
-        
+
         {/* Score Breakdown */}
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
@@ -477,7 +477,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
             <Progress value={score.trend} className="h-1.5" />
           </div>
         </div>
-        
+
         {/* Insights */}
         {score.insights && score.insights.length > 0 && (
           <div className="space-y-3">
@@ -491,7 +491,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
             </ul>
           </div>
         )}
-        
+
         {/* Recommendations */}
         {score.recommendations && score.recommendations.length > 0 && (
           <div className="space-y-3">
@@ -537,10 +537,10 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
             <Button onClick={() => {
               // Reset loading state and let the useEffect handle the fetch
               setLoading(true);
-              
+
               // Force a re-fetch by clearing the data
               setData(null);
-              
+
               // Display toast to indicate retry
               toast({
                 title: "Retrying",
@@ -556,19 +556,19 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 px-4"> 
+    <div className="max-w-7xl mx-auto space-y-6 px-4">
       <Card className="p-0 md:p-0 overflow-hidden border-none shadow-lg">
-        <div className="grid lg:grid-cols-[380px_1fr] gap-0"> 
+        <div className="grid lg:grid-cols-[380px_1fr] gap-0">
           {/* Thumbnail and Sidebar Section */}
           <div className="bg-gray-50 dark:bg-gray-900 p-6 border-r border-gray-100 dark:border-gray-800">
             <div className="space-y-5">
               <div className="relative group rounded-lg overflow-hidden shadow-md">
                 {showVideoPlayer ? (
                   <div className="relative pb-[56.25%] h-0">
-                    <iframe 
+                    <iframe
                       src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
                       className="absolute top-0 left-0 w-full h-full rounded-lg"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   </div>
@@ -579,7 +579,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                       alt="Video thumbnail"
                       className="w-full rounded-lg"
                     />
-                    <div 
+                    <div
                       className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all cursor-pointer"
                       onClick={openYouTubeVideo}
                     >
@@ -593,19 +593,19 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                   </>
                 )}
               </div>
-              
+
               <div className="space-y-3">
                 {data?.metadata.title && (
                   <h1 className="text-xl font-semibold line-clamp-2">{data.metadata.title}</h1>
                 )}
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col">
                     {data?.metadata.channelName && (
                       <div className="flex items-center gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="p-0 h-auto font-medium text-primary hover:bg-transparent hover:text-primary/80"
                           onClick={() => window.open(`https://www.youtube.com/channel/search?query=${encodeURIComponent(data.metadata.channelName || '')}`, '_blank')}
                         >
@@ -613,12 +613,12 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                         </Button>
                       </div>
                     )}
-                    
+
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       {data?.metadata.viewCount && (
                         <span>{parseInt(data.metadata.viewCount).toLocaleString()} views</span>
                       )}
-                      
+
                       {data?.metadata.publishDate && (
                         <>
                           <span className="text-xs">•</span>
@@ -627,7 +627,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                       )}
                     </div>
                   </div>
-                  
+
                   {data?.metadata.likeCount && (
                     <div className="flex items-center gap-1 text-sm">
                       <ThumbsUp className="h-4 w-4" />
@@ -635,7 +635,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Video Tags */}
                 {data?.metadata.tags && data.metadata.tags.length > 0 && (
                   <div className="space-y-2">
@@ -649,7 +649,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                       <span>Tags</span>
                       {showTags ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                     </Button>
-                    
+
                     {showTags && (
                       <div className="flex flex-wrap gap-1.5 pt-1">
                         {data.metadata.tags.slice(0, 10).map((tag, i) => (
@@ -666,7 +666,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     )}
                   </div>
                 )}
-                
+
                 {/* Video Description */}
                 {data?.metadata.description && (
                   <div className="space-y-2 border-t border-gray-100 dark:border-gray-800 pt-3">
@@ -679,7 +679,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                       <span>Description</span>
                       {showDescription ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                     </Button>
-                    
+
                     {showDescription && (
                       <div className="text-sm text-muted-foreground mt-2 whitespace-pre-line line-clamp-10">
                         {data.metadata.description}
@@ -688,7 +688,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                   </div>
                 )}
               </div>
-              
+
               {/* Controls */}
               <div className="space-y-4 mt-4 border-t border-gray-100 dark:border-gray-800 pt-4">
                 <div className="flex items-center justify-between p-3 bg-gray-100/50 dark:bg-gray-800/30 rounded-lg">
@@ -701,26 +701,26 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     onCheckedChange={setShowTimestamps}
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-3 gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full"
                     onClick={() => downloadTranscript('txt')}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     TXT
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full"
                     onClick={() => downloadTranscript('srt')}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     SRT
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full"
                     onClick={openYouTubeVideo}
                   >
@@ -736,8 +736,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
           <div className="p-6 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h2 className="text-2xl font-semibold">Video Transcript</h2>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => copyToClipboard(getTranscriptForCopy(), 'transcript')}
                 className="w-full sm:w-auto"
               >
@@ -761,8 +761,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                 />
               </div>
               {searchQuery && (
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="w-full sm:w-auto"
                   onClick={() => setSearchQuery('')}
                 >
@@ -777,8 +777,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                   <FileText className="h-4 w-4 mr-2 hidden sm:block" />
                   Transcript
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="summary" 
+                <TabsTrigger
+                  value="summary"
                   onClick={() => !tabProcessed.summary && handleAIAction('summarize')}
                 >
                   <Bot className="h-4 w-4 mr-2 hidden sm:block" />
@@ -787,8 +787,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     <Loader2 className="h-3 w-3 ml-2 animate-spin" />
                   )}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="chapters" 
+                <TabsTrigger
+                  value="chapters"
                   onClick={() => !tabProcessed.chapters && handleAIAction('chapters')}
                 >
                   <ListVideo className="h-4 w-4 mr-2 hidden sm:block" />
@@ -797,8 +797,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     <Loader2 className="h-3 w-3 ml-2 animate-spin" />
                   )}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="keyPoints" 
+                <TabsTrigger
+                  value="keyPoints"
                   onClick={() => !tabProcessed.keyPoints && handleAIAction('key_points')}
                 >
                   <BookKey className="h-4 w-4 mr-2 hidden sm:block" />
@@ -807,8 +807,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     <Loader2 className="h-3 w-3 ml-2 animate-spin" />
                   )}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="questions" 
+                <TabsTrigger
+                  value="questions"
                   onClick={() => !tabProcessed.questions && handleAIAction('questions')}
                 >
                   <HelpCircle className="h-4 w-4 mr-2 hidden sm:block" />
@@ -817,8 +817,8 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                     <Loader2 className="h-3 w-3 ml-2 animate-spin" />
                   )}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="virality" 
+                <TabsTrigger
+                  value="virality"
                   onClick={() => !tabProcessed.virality && handleAIAction('virality')}
                 >
                   <TrendingUp className="h-4 w-4 mr-2 hidden sm:block" />
@@ -838,7 +838,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                       <pre className="whitespace-pre-wrap p-5 text-sm overflow-y-auto max-h-[70vh] font-sans">
                         {getContentForTab(tab)}
                       </pre>
-                      
+
                       {/* Controls Overlay */}
                       <div className="absolute top-2 right-2 flex items-center space-x-2">
                         <Button
@@ -864,10 +864,10 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                   ) : (
                     // AI generated tabs (summary, chapters, keyPoints, questions)
                     processingAI === (
-                      tab === 'summary' ? 'summarize' : 
-                      tab === 'keyPoints' ? 'key_points' : 
-                      tab === 'questions' ? 'questions' : 
-                      tab === 'chapters' ? 'chapters' : null
+                      tab === 'summary' ? 'summarize' :
+                        tab === 'keyPoints' ? 'key_points' :
+                          tab === 'questions' ? 'questions' :
+                            tab === 'chapters' ? 'chapters' : null
                     ) ? (
                       // Processing AI state
                       <div className="flex flex-col items-center justify-center h-60 gap-4 bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
@@ -880,7 +880,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                         <pre className="whitespace-pre-wrap p-5 text-sm overflow-y-auto max-h-[70vh] font-sans">
                           {getContentForTab(tab)}
                         </pre>
-                        
+
                         {/* Controls Overlay */}
                         <div className="absolute top-2 right-2 flex items-center space-x-2">
                           {/* Regenerate Button (for AI tabs only) */}
@@ -890,9 +890,9 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                               size="sm"
                               className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
                               onClick={() => {
-                                const action = tab === 'summary' ? 'summarize' : 
-                                            tab === 'chapters' ? 'chapters' : 
-                                            tab === 'keyPoints' ? 'key_points' : 'questions';
+                                const action = tab === 'summary' ? 'summarize' :
+                                  tab === 'chapters' ? 'chapters' :
+                                    tab === 'keyPoints' ? 'key_points' : 'questions';
                                 handleAIAction(action, true);
                               }}
                               disabled={processingAI !== null}
@@ -901,7 +901,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                               <span className="ml-1.5 text-xs">Regenerate</span>
                             </Button>
                           )}
-                          
+
                           {/* Copy Button */}
                           <Button
                             variant="outline"
@@ -928,7 +928,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                   )}
                 </TabsContent>
               ))}
-              
+
               {/* Virality Tab Content (Special rendering) */}
               <TabsContent value="virality" className="relative mt-0">
                 {processingAI === 'virality' ? (
@@ -942,7 +942,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                       renderViralityTab()
                     ) : (
                       <div className="flex flex-col items-center justify-center h-40 gap-4">
-                        <Button 
+                        <Button
                           onClick={() => data && handleAIAction('virality')}
                           disabled={processingAI !== null || !data}
                         >
@@ -954,7 +954,7 @@ export default function TranscriptViewer({ videoId }: { videoId: string }) {
                         </p>
                       </div>
                     )}
-                    
+
                     {/* Controls Overlay */}
                     <div className="absolute top-2 right-2 flex items-center space-x-2">
                       {/* Regenerate Button */}

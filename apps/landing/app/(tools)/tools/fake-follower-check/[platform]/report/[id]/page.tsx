@@ -44,20 +44,20 @@ export default function FollowerCheckReportPage(props: FollowerCheckReportPagePr
     setIsLoading(true);
     try {
       const response = await fetch(`/api/tools/follower-check/${platform}/${id}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
-          toast({ 
-            title: "Report not found", 
-            description: "The follower check report you're looking for doesn't exist or isn't accessible", 
-            variant: "destructive" 
+          toast({
+            title: "Report not found",
+            description: "The follower check report you're looking for doesn't exist or isn't accessible",
+            variant: "destructive"
           });
           router.push(`/tools/fake-follower-check/${platform}`);
           return;
         }
         throw new Error("Failed to fetch report data");
       }
-      
+
       const data = await response.json();
       if (data.success) {
         setAuditData(data.data);
@@ -65,10 +65,10 @@ export default function FollowerCheckReportPage(props: FollowerCheckReportPagePr
         throw new Error(data.error || "Failed to load report data");
       }
     } catch (error: any) {
-      toast({ 
-        title: "Error", 
-        description: error.message || "Something went wrong", 
-        variant: "destructive" 
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong",
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
@@ -88,25 +88,25 @@ export default function FollowerCheckReportPage(props: FollowerCheckReportPagePr
 
   const handleClaimReport = async () => {
     if (!isAuthenticated || !auditData?.isAnonymous) return;
-    
+
     try {
       const response = await fetch('/api/tools/audit/claim', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reportIds: [id] }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to claim report');
       }
-      
+
       toast({
         title: "Report Claimed",
         description: "This report has been successfully added to your account.",
       });
-      
+
       // Re-fetch data to get updated ownership status
       fetchReportData();
     } catch (error: any) {
@@ -130,7 +130,7 @@ export default function FollowerCheckReportPage(props: FollowerCheckReportPagePr
         </Button>
         <h1 className="text-2xl font-bold">{platform.charAt(0).toUpperCase() + platform.slice(1)} Follower Check Report</h1>
       </div>
-      
+
       {isLoading ? (
         <Card className="p-8 flex items-center justify-center">
           <div className="text-center">
@@ -139,9 +139,9 @@ export default function FollowerCheckReportPage(props: FollowerCheckReportPagePr
           </div>
         </Card>
       ) : auditData ? (
-        <FakeFollowerResult 
-          result={auditData} 
-          platform={platform} 
+        <FakeFollowerResult
+          result={auditData}
+          platform={platform}
           isAuthenticated={isAuthenticated}
           onLogin={handleLogin}
           onClaimReport={handleClaimReport}
@@ -154,7 +154,7 @@ export default function FollowerCheckReportPage(props: FollowerCheckReportPagePr
           </Button>
         </Card>
       )}
-      
+
       <AuthPopup
         isOpen={showAuthPopup}
         onClose={() => setShowAuthPopup(false)}

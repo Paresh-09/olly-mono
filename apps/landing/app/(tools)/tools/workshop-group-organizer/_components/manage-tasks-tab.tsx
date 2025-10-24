@@ -37,7 +37,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState<Task[]>([])
   const [error, setError] = useState<string | null>(null)
-  
+
   // Form states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -45,11 +45,11 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
   const [taskTitle, setTaskTitle] = useState('')
   const [taskDescription, setTaskDescription] = useState('')
   const [taskDuration, setTaskDuration] = useState<number | undefined>(undefined)
-  
+
   useEffect(() => {
     fetchTasks()
   }, [workshopId])
-  
+
   const fetchTasks = async () => {
     try {
       setLoading(true)
@@ -64,21 +64,21 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       setLoading(false)
     }
   }
-  
+
   const handleAddTask = async () => {
     try {
       if (!taskTitle.trim()) {
         toast.error('Task title is required')
         return
       }
-      
+
       const response = await axios.post(`/api/workshops/${workshopId}/tasks`, {
         title: taskTitle.trim(),
         description: taskDescription.trim() || undefined,
         durationMinutes: taskDuration || undefined,
         order: tasks.length // Add at the end
       })
-      
+
       setTasks([...tasks, response.data.task])
       setIsAddDialogOpen(false)
       resetForm()
@@ -88,7 +88,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       toast.error(err.response?.data?.error || 'Failed to add task')
     }
   }
-  
+
   const handleEditTask = async () => {
     try {
       if (!currentTask) return
@@ -96,13 +96,13 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
         toast.error('Task title is required')
         return
       }
-      
+
       const response = await axios.patch(`/api/workshops/${workshopId}/tasks/${currentTask.id}`, {
         title: taskTitle.trim(),
         description: taskDescription.trim() || undefined,
         durationMinutes: taskDuration || undefined,
       })
-      
+
       setTasks(tasks.map(t => t.id === currentTask.id ? response.data.task : t))
       setIsEditDialogOpen(false)
       resetForm()
@@ -112,16 +112,16 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       toast.error(err.response?.data?.error || 'Failed to update task')
     }
   }
-  
+
   const handleDeleteTask = async (taskId: string) => {
     try {
       await axios.delete(`/api/workshops/${workshopId}/tasks/${taskId}`)
       setTasks(tasks.filter(t => t.id !== taskId))
       toast.success('Task deleted successfully!')
-      
+
       // Update orders for remaining tasks
       const remainingTasks = tasks.filter(t => t.id !== taskId).sort((a, b) => a.order - b.order)
-      
+
       for (let i = 0; i < remainingTasks.length; i++) {
         if (remainingTasks[i].order !== i) {
           await axios.patch(`/api/workshops/${workshopId}/tasks/${remainingTasks[i].id}`, {
@@ -129,7 +129,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
           })
         }
       }
-      
+
       // Refresh tasks
       fetchTasks()
     } catch (err: any) {
@@ -137,7 +137,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       toast.error(err.response?.data?.error || 'Failed to delete task')
     }
   }
-  
+
   const openEditDialog = (task: Task) => {
     setCurrentTask(task)
     setTaskTitle(task.title)
@@ -145,29 +145,29 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
     setTaskDuration(task.durationMinutes)
     setIsEditDialogOpen(true)
   }
-  
+
   const resetForm = () => {
     setTaskTitle('')
     setTaskDescription('')
     setTaskDuration(undefined)
     setCurrentTask(null)
   }
-  
+
   const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) return
-    
+
     const startIndex = result.source.index
     const endIndex = result.destination.index
-    
+
     if (startIndex === endIndex) return
-    
+
     const reordered = [...tasks]
     const [removed] = reordered.splice(startIndex, 1)
     reordered.splice(endIndex, 0, removed)
-    
+
     // Update local state first for immediate feedback
     setTasks(reordered)
-    
+
     try {
       // Update orders in the database
       for (let i = 0; i < reordered.length; i++) {
@@ -177,7 +177,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
           })
         }
       }
-      
+
       toast.success('Task order updated')
     } catch (err: any) {
       console.error('Error updating task order:', err)
@@ -186,7 +186,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       fetchTasks()
     }
   }
-  
+
   if (loading) {
     return (
       <div className="space-y-4">
@@ -202,7 +202,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       </div>
     )
   }
-  
+
   if (error) {
     return (
       <Alert variant="destructive">
@@ -212,7 +212,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
       </Alert>
     )
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -274,7 +274,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
           </DialogContent>
         </Dialog>
       </div>
-      
+
       <Card>
         <CardContent className="p-6">
           {tasks.length === 0 ? (
@@ -362,7 +362,7 @@ export default function ManageTasksTab({ workshopId }: { workshopId: string }) {
           )}
         </CardContent>
       </Card>
-      
+
       {/* Edit Task Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>

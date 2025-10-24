@@ -6,7 +6,7 @@ import { Button } from '@repo/ui/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs"
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import { toast } from '@repo/ui/hooks/use-toast'
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -91,14 +91,14 @@ export const ChromeExtensionLogoGenerator = () => {
     try {
       const img = new Image();
       img.src = originalImage;
-      
+
       await new Promise((resolve) => {
         img.onload = resolve;
       });
 
       const canvas = canvasRef.current;
       if (!canvas) return;
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -106,7 +106,7 @@ export const ChromeExtensionLogoGenerator = () => {
         selectedSizes.map(async (size) => {
           canvas.width = size;
           canvas.height = size;
-          
+
           // Fill background if not transparent
           if (backgroundColor !== 'transparent') {
             ctx.fillStyle = backgroundColor;
@@ -114,14 +114,14 @@ export const ChromeExtensionLogoGenerator = () => {
           } else {
             ctx.clearRect(0, 0, size, size);
           }
-          
+
           // Draw image centered and scaled to fit
           const scale = Math.min(size / img.width, size / img.height);
           const x = (size - img.width * scale) / 2;
           const y = (size - img.height * scale) / 2;
-          
+
           ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-          
+
           return {
             size,
             dataUrl: canvas.toDataURL('image/png')
@@ -159,13 +159,13 @@ export const ChromeExtensionLogoGenerator = () => {
 
     try {
       const zip = new JSZip();
-      
+
       // Add each logo to the zip
       generatedLogos.forEach(logo => {
         const imgData = logo.dataUrl.split(',')[1];
-        zip.file(`icon-${logo.size}.png`, imgData, {base64: true});
+        zip.file(`icon-${logo.size}.png`, imgData, { base64: true });
       });
-      
+
       // Generate manifest.json example
       let manifestJson = '{\n';
       manifestJson += '  "manifest_version": 3,\n';
@@ -173,55 +173,55 @@ export const ChromeExtensionLogoGenerator = () => {
       manifestJson += '  "version": "1.0",\n';
       manifestJson += '  "description": "Description of my Chrome extension",\n';
       manifestJson += '  "icons": {\n';
-      
+
       // Add icon entries to manifest
-      CHROME_LOGO_SIZES.filter(size => 
-        selectedSizes.includes(size.size) && 
+      CHROME_LOGO_SIZES.filter(size =>
+        selectedSizes.includes(size.size) &&
         [16, 32, 48, 128].includes(size.size)
       ).forEach((size, index, array) => {
         manifestJson += `    "${size.size}": "icon-${size.size}.png"${index < array.length - 1 ? ',' : ''}\n`;
       });
-      
+
       manifestJson += '  },\n';
       manifestJson += '  "action": {\n';
       manifestJson += '    "default_icon": {\n';
-      
+
       // Add action icon entries
-      CHROME_LOGO_SIZES.filter(size => 
-        selectedSizes.includes(size.size) && 
+      CHROME_LOGO_SIZES.filter(size =>
+        selectedSizes.includes(size.size) &&
         [16, 32].includes(size.size)
       ).forEach((size, index, array) => {
         manifestJson += `      "${size.size}": "icon-${size.size}.png"${index < array.length - 1 ? ',' : ''}\n`;
       });
-      
+
       manifestJson += '    }\n';
       manifestJson += '  }\n';
       manifestJson += '}\n';
-      
+
       // Add the manifest file to the zip
       zip.file('manifest.json', manifestJson);
-      
+
       // Add a README file with instructions
       let readme = '# Chrome Extension Icons\n\n';
       readme += 'This package contains icons for your Chrome extension in various sizes:\n\n';
-      
-      CHROME_LOGO_SIZES.filter(size => 
+
+      CHROME_LOGO_SIZES.filter(size =>
         selectedSizes.includes(size.size)
       ).forEach(size => {
         readme += `- icon-${size.size}.png (${size.name}): ${size.description}\n`;
       });
-      
+
       readme += '\n## Usage\n\n';
       readme += 'These icons are referenced in the included manifest.json example.\n';
       readme += 'For more information on Chrome extension icons, visit:\n';
       readme += 'https://developer.chrome.com/docs/extensions/mv3/manifest/icons/\n';
-      
+
       zip.file('README.md', readme);
-      
+
       // Generate and download the zip file
-      const content = await zip.generateAsync({type: 'blob'});
+      const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, 'chrome-extension-icons.zip');
-      
+
       toast({
         title: "Success",
         description: "Chrome extension logos downloaded successfully"
@@ -257,14 +257,14 @@ export const ChromeExtensionLogoGenerator = () => {
   return (
     <Card className="p-6">
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="upload">Upload</TabsTrigger>
           <TabsTrigger value="generate" disabled={!originalImage}>Generate</TabsTrigger>
           <TabsTrigger value="download" disabled={generatedLogos.length === 0}>Download</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="upload" className="space-y-4 mt-4">
           <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 text-center">
             <input
@@ -274,7 +274,7 @@ export const ChromeExtensionLogoGenerator = () => {
               accept="image/*"
               className="hidden"
             />
-            <Button 
+            <Button
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
               className="mb-4"
@@ -285,21 +285,21 @@ export const ChromeExtensionLogoGenerator = () => {
               Upload a square image (PNG, JPG, SVG) for best results
             </p>
           </div>
-          
+
           {originalImage && (
             <div className="flex flex-col items-center mt-4">
               <p className="text-sm font-medium mb-2">Preview:</p>
               <div className="border rounded-lg p-2 bg-secondary">
-                <img 
-                  src={originalImage} 
-                  alt="Original" 
+                <img
+                  src={originalImage}
+                  alt="Original"
                   className="max-w-[200px] max-h-[200px] object-contain"
                 />
               </div>
             </div>
           )}
         </TabsContent>
-        
+
         <TabsContent value="generate" className="space-y-4 mt-4">
           {originalImage && (
             <>
@@ -307,19 +307,19 @@ export const ChromeExtensionLogoGenerator = () => {
                 <div className="w-full md:w-1/2">
                   <p className="text-sm font-medium mb-2">Original Image:</p>
                   <div className="border rounded-lg p-2 bg-secondary flex items-center justify-center">
-                    <img 
-                      src={originalImage} 
-                      alt="Original" 
+                    <img
+                      src={originalImage}
+                      alt="Original"
                       className="max-w-full max-h-[200px] object-contain"
                     />
                   </div>
                 </div>
-                
+
                 <div className="w-full md:w-1/2 space-y-4">
                   <div>
                     <p className="text-sm font-medium mb-2">Background Color:</p>
-                    <Select 
-                      value={backgroundColor} 
+                    <Select
+                      value={backgroundColor}
                       onValueChange={setBackgroundColor}
                     >
                       <SelectTrigger>
@@ -329,12 +329,12 @@ export const ChromeExtensionLogoGenerator = () => {
                         {BACKGROUND_COLORS.map(color => (
                           <SelectItem key={color.value} value={color.value}>
                             <div className="flex items-center">
-                              <div 
-                                className="w-4 h-4 mr-2 rounded-full border" 
-                                style={{ 
+                              <div
+                                className="w-4 h-4 mr-2 rounded-full border"
+                                style={{
                                   backgroundColor: color.value,
-                                  backgroundImage: color.value === 'transparent' ? 
-                                    'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)' : 
+                                  backgroundImage: color.value === 'transparent' ?
+                                    'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)' :
                                     'none',
                                   backgroundSize: '6px 6px',
                                   backgroundPosition: '0 0, 3px 3px'
@@ -347,21 +347,21 @@ export const ChromeExtensionLogoGenerator = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div>
                     <div className="flex justify-between mb-2">
                       <p className="text-sm font-medium">Select Sizes:</p>
                       <div className="space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => toggleAllSizes(true)}
                         >
                           Select All
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => toggleAllSizes(false)}
                         >
                           Clear All
@@ -387,9 +387,9 @@ export const ChromeExtensionLogoGenerator = () => {
                   </div>
                 </div>
               </div>
-              
-              <Button 
-                onClick={generateLogos} 
+
+              <Button
+                onClick={generateLogos}
                 disabled={isGenerating || selectedSizes.length === 0}
                 className="w-full"
               >
@@ -398,7 +398,7 @@ export const ChromeExtensionLogoGenerator = () => {
             </>
           )}
         </TabsContent>
-        
+
         <TabsContent value="download" className="space-y-4 mt-4">
           {generatedLogos.length > 0 && (
             <>
@@ -408,15 +408,15 @@ export const ChromeExtensionLogoGenerator = () => {
                   Download All (.zip)
                 </Button>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {generatedLogos.map(logo => {
                   const sizeInfo = CHROME_LOGO_SIZES.find(s => s.size === logo.size);
                   return (
                     <div key={logo.size} className="flex flex-col items-center border rounded-lg p-3 bg-secondary">
-                      <img 
-                        src={logo.dataUrl} 
-                        alt={`${logo.size}x${logo.size}`} 
+                      <img
+                        src={logo.dataUrl}
+                        alt={`${logo.size}x${logo.size}`}
                         className="mb-2"
                         style={{
                           width: logo.size > 64 ? 64 : logo.size,
@@ -426,8 +426,8 @@ export const ChromeExtensionLogoGenerator = () => {
                       />
                       <p className="text-xs font-medium mb-1">{logo.size}x{logo.size}</p>
                       <p className="text-xs text-center text-muted-foreground mb-2">{sizeInfo?.description}</p>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => downloadLogo(logo.dataUrl, logo.size)}
                         className="w-full"
@@ -438,7 +438,7 @@ export const ChromeExtensionLogoGenerator = () => {
                   );
                 })}
               </div>
-              
+
               <Alert className="mt-6">
                 <AlertDescription>
                   A zip file containing all logos, a manifest.json example, and a README with usage instructions will be downloaded when you click "Download All".

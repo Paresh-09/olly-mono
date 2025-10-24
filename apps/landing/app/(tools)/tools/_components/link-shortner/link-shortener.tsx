@@ -43,7 +43,7 @@ const LinkShortener: React.FC = () => {
     if (savedLinks) {
       setLinks(JSON.parse(savedLinks));
     }
-    
+
     const savedDeletedLinks = localStorage.getItem('deletedLinks');
     if (savedDeletedLinks) {
       setDeletedLinks(JSON.parse(savedDeletedLinks));
@@ -55,20 +55,20 @@ const LinkShortener: React.FC = () => {
     localStorage.setItem('shortenedLinks', JSON.stringify(links));
     // Filter links based on search term
     setFilteredLinks(
-      links.filter(link => 
-        link.originalUrl.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      links.filter(link =>
+        link.originalUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
         link.shortCode.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
   }, [links, searchTerm]);
-  
+
   // Save deleted links to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('deletedLinks', JSON.stringify(deletedLinks));
     // Filter deleted links based on search term
     setFilteredDeletedLinks(
-      deletedLinks.filter(link => 
-        link.originalUrl.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      deletedLinks.filter(link =>
+        link.originalUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
         link.shortCode.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -86,9 +86,9 @@ const LinkShortener: React.FC = () => {
       if (!/^https?:\/\//i.test(url)) {
         urlToShorten = 'https://' + url;
       }
-      
+
       new URL(urlToShorten);
-      
+
       setError(null);
       setIsGenerating(true);
 
@@ -107,7 +107,7 @@ const LinkShortener: React.FC = () => {
       }
 
       const data = await response.json();
-      
+
       // Add to links array at the beginning
       setLinks(prevLinks => [
         {
@@ -117,13 +117,13 @@ const LinkShortener: React.FC = () => {
           createdAt: data.createdAt,
           clicks: data.clicks,
           clickData: data.clickData || []
-        }, 
+        },
         ...prevLinks
       ]);
-      
+
       // Reset URL input
       setUrl('');
-      
+
     } catch (error) {
       console.error('Error shortening URL:', error);
       setError('Failed to generate short link. Please try again.');
@@ -138,9 +138,9 @@ const LinkShortener: React.FC = () => {
       await fetch(`/api/tools/link-shortener/track/${link.shortCode}`, {
         method: 'GET'
       });
-      
+
       // Update the link's click count locally
-      setLinks(prevLinks => 
+      setLinks(prevLinks =>
         prevLinks.map(l => {
           if (l.id === link.id) {
             // Update the click count
@@ -152,7 +152,7 @@ const LinkShortener: React.FC = () => {
           return l;
         })
       );
-      
+
       // Open the original URL
       window.open(link.originalUrl, '_blank');
     } catch (error) {
@@ -172,12 +172,12 @@ const LinkShortener: React.FC = () => {
     try {
       // Find the link to be moved to history
       const linkToDelete = links.find(link => link.id === id);
-      
+
       if (linkToDelete) {
         // Add to deleted links history
         setDeletedLinks(prev => [linkToDelete, ...prev]);
       }
-      
+
       // Call the API to delete the link (or implement soft delete if API supports it)
       try {
         await fetch(`/api/tools/link-shortener/delete/${id}`, {
@@ -186,10 +186,10 @@ const LinkShortener: React.FC = () => {
       } catch (e) {
         console.error("API delete failed, continuing with local delete", e);
       }
-      
+
       // Remove the link from the local state
       setLinks(prevLinks => prevLinks.filter(link => link.id !== id));
-      
+
       if (activeLink?.id === id) {
         setActiveLink(null);
         setShowAnalytics(false);
@@ -198,11 +198,11 @@ const LinkShortener: React.FC = () => {
       console.error('Error deleting link:', error);
     }
   };
-  
+
   const restoreLink = async (id: string) => {
     // Find the link to restore
     const linkToRestore = deletedLinks.find(link => link.id === id);
-    
+
     if (linkToRestore) {
       try {
         // First try API restore if available
@@ -221,27 +221,27 @@ const LinkShortener: React.FC = () => {
             body: JSON.stringify({ url: linkToRestore.originalUrl }),
           });
         }
-        
+
         // Add back to active links
         setLinks(prevLinks => [
-          linkToRestore, 
+          linkToRestore,
           ...prevLinks
         ]);
-        
+
         // Remove from deleted links
         setDeletedLinks(prevDeleted => prevDeleted.filter(link => link.id !== id));
-        
+
       } catch (error) {
         console.error('Error restoring link:', error);
       }
     }
   };
-  
+
   const permanentlyDeleteLink = (id: string) => {
     // Remove from deleted links history
     setDeletedLinks(prevDeleted => prevDeleted.filter(link => link.id !== id));
   };
-  
+
   const clearAllHistory = () => {
     if (confirm("Are you sure you want to clear all history? This cannot be undone.")) {
       setDeletedLinks([]);
@@ -252,15 +252,15 @@ const LinkShortener: React.FC = () => {
     try {
       // Call the API to get analytics for the link
       const response = await fetch(`/api/tools/link-shortener/analytics/${link.shortCode}`);
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch analytics');
       }
-      
+
       const data = await response.json();
-      
+
       // Update the link with the latest analytics data
-      setLinks(prevLinks => 
+      setLinks(prevLinks =>
         prevLinks.map(l => {
           if (l.id === link.id) {
             return {
@@ -272,7 +272,7 @@ const LinkShortener: React.FC = () => {
           return l;
         })
       );
-      
+
       // Set the active link and show analytics
       setActiveLink({
         ...link,
@@ -282,17 +282,17 @@ const LinkShortener: React.FC = () => {
       setShowAnalytics(true);
     } catch (error) {
       console.error('Error fetching analytics:', error);
-      
+
       // Fallback to show whatever data we have locally
       setActiveLink(link);
       setShowAnalytics(true);
     }
   };
-  
+
   const showQrCode = (link: ShortenedLink) => {
     setQrModalLink(link);
   };
-  
+
   const closeQrModal = () => {
     setQrModalLink(null);
   };
@@ -303,9 +303,9 @@ const LinkShortener: React.FC = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
       day: 'numeric'
     });
   };
@@ -313,7 +313,7 @@ const LinkShortener: React.FC = () => {
   const getShortUrl = (shortCode: string) => {
     return `${window.location.origin}/s/${shortCode}`;
   };
-  
+
   const truncateUrl = (url: string, maxLength = 40) => {
     if (url.length <= maxLength) return url;
     return url.substring(0, maxLength) + '...';
@@ -362,7 +362,7 @@ const LinkShortener: React.FC = () => {
           </div>
         </CardContent>
       </Card>
-      
+
       {links.length > 0 && <StatsCard links={links} />}
 
       <Tabs defaultValue="active" value={selectedTab} onValueChange={setSelectedTab}>
@@ -385,7 +385,7 @@ const LinkShortener: React.FC = () => {
               )}
             </TabsTrigger>
           </TabsList>
-          
+
           <div className="flex gap-2">
             {selectedTab === "active" && links.length > 0 && (
               <div className="relative">
@@ -397,17 +397,17 @@ const LinkShortener: React.FC = () => {
                   className="w-64"
                 />
                 {searchTerm && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6"
                     onClick={() => setSearchTerm("")}
                   >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      className="h-4 w-4" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -416,10 +416,10 @@ const LinkShortener: React.FC = () => {
                 )}
               </div>
             )}
-            
+
             {selectedTab === "history" && deletedLinks.length > 0 && (
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 size="sm"
                 onClick={clearAllHistory}
               >
@@ -450,8 +450,8 @@ const LinkShortener: React.FC = () => {
                           <td className="py-3 px-4">
                             <div className="max-w-xs truncate">
                               <Link
-                                href={link.originalUrl} 
-                                target="_blank" 
+                                href={link.originalUrl}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 hover:underline flex items-center gap-1"
                               >
@@ -461,9 +461,9 @@ const LinkShortener: React.FC = () => {
                             </div>
                             <div className="flex items-center space-x-2">
                               <span className="text-gray-800">{getShortUrl(link.shortCode)}</span>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
+                              <Button
+                                variant="ghost"
+                                size="icon"
                                 onClick={() => copyToClipboard(link)}
                                 className="h-6 w-6"
                               >
@@ -475,13 +475,13 @@ const LinkShortener: React.FC = () => {
                               </Button>
                             </div>
                           </td>
-             
+
                           <td className="py-3 px-4 text-center">{link.clicks}</td>
                           <td className="py-3 px-4">{formatDate(link.createdAt)}</td>
                           <td className="py-3 px-4">
                             <div className="flex justify-center space-x-2">
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="icon"
                                 onClick={() => trackClick(link)}
                                 title="Visit link"
@@ -489,8 +489,8 @@ const LinkShortener: React.FC = () => {
                               >
                                 <ArrowUpRight className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="icon"
                                 onClick={() => showQrCode(link)}
                                 title="Show QR code"
@@ -498,8 +498,8 @@ const LinkShortener: React.FC = () => {
                               >
                                 <QrCode className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="icon"
                                 onClick={() => getAnalytics(link)}
                                 title="View analytics"
@@ -507,8 +507,8 @@ const LinkShortener: React.FC = () => {
                               >
                                 <BarChart2 className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="icon"
                                 onClick={() => deleteLink(link.id)}
                                 title="Delete link"
@@ -524,10 +524,10 @@ const LinkShortener: React.FC = () => {
                   </table>
                 </div>
               ) : (
-                <EmptyState 
+                <EmptyState
                   type={links.length === 0 ? "links" : "search"}
                   message={
-                    links.length === 0 
+                    links.length === 0
                       ? "Enter a URL above to create your first short link."
                       : `No links found matching "${searchTerm}"`
                   }
@@ -566,7 +566,7 @@ const LinkShortener: React.FC = () => {
                           <td className="py-3 px-4">{formatDate(link.createdAt)}</td>
                           <td className="py-3 px-4">
                             <div className="flex justify-center space-x-2">
-                              <Button 
+                              <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => restoreLink(link.id)}
@@ -575,8 +575,8 @@ const LinkShortener: React.FC = () => {
                                 <RotateCcw className="h-3 w-3 mr-1" />
                                 Restore
                               </Button>
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="icon"
                                 onClick={() => permanentlyDeleteLink(link.id)}
                                 title="Permanently delete"
@@ -592,10 +592,10 @@ const LinkShortener: React.FC = () => {
                   </table>
                 </div>
               ) : (
-                <EmptyState 
+                <EmptyState
                   type={deletedLinks.length === 0 ? "history" : "search"}
                   message={
-                    deletedLinks.length === 0 
+                    deletedLinks.length === 0
                       ? "When you delete links, they'll appear here."
                       : `No deleted links found matching "${searchTerm}"`
                   }
@@ -618,26 +618,26 @@ const LinkShortener: React.FC = () => {
                 </svg>
               </Button>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-blue-800 mb-1">Original URL</h4>
                 <Link
-                  href={activeLink.originalUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                  href={activeLink.originalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-blue-600 hover:underline break-all"
                 >
                   {activeLink.originalUrl}
                 </Link>
               </div>
-              
+
               <div className="bg-green-50 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-green-800 mb-1">Short URL</h4>
                 <div className="flex items-center space-x-2">
                   <span className="text-green-600 break-all">{getShortUrl(activeLink.shortCode)}</span>
                   <Button
-                    variant="ghost" 
+                    variant="ghost"
                     size="icon"
                     onClick={() => copyToClipboard(activeLink)}
                     className="h-6 w-6"
@@ -650,13 +650,13 @@ const LinkShortener: React.FC = () => {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="bg-purple-50 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-purple-800 mb-1">Total Clicks</h4>
                 <p className="text-2xl font-bold text-purple-600">{activeLink.clicks}</p>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <h4 className="text-sm font-medium text-gray-700 mb-3">Click Activity (Last 7 Days)</h4>
               {activeLink.clickData && activeLink.clickData.length > 0 ? (
@@ -680,7 +680,7 @@ const LinkShortener: React.FC = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="flex justify-end">
               <Button
                 variant="outline"
@@ -692,7 +692,7 @@ const LinkShortener: React.FC = () => {
           </div>
         </div>
       )}
-      
+
       {/* QR Code Modal */}
       {qrModalLink && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -705,10 +705,10 @@ const LinkShortener: React.FC = () => {
                 </svg>
               </Button>
             </div>
-            
-            <QRCodeGenerator 
-              url={getShortUrl(qrModalLink.shortCode)} 
-              shortCode={qrModalLink.shortCode} 
+
+            <QRCodeGenerator
+              url={getShortUrl(qrModalLink.shortCode)}
+              shortCode={qrModalLink.shortCode}
             />
           </div>
         </div>

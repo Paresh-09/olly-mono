@@ -41,7 +41,7 @@ export const LinkedInAuditComponent = () => {
 
   const fetchAuditHistory = async () => {
     if (!isAuthenticated) return;
-    
+
     setIsHistoryLoading(true);
     try {
       const response = await fetch('/api/tools/audit/history/linkedin');
@@ -118,10 +118,10 @@ export const LinkedInAuditComponent = () => {
         if (data.status === 'COMPLETED') {
           setIsLoading(false);
           setAuditId(null);
-          
+
           // Redirect to the report page when complete
           router.push(`/tools/linkedin-audit/report/${id}`);
-          
+
           if (isAuthenticated) {
             fetchAuditHistory();
           }
@@ -156,17 +156,17 @@ export const LinkedInAuditComponent = () => {
       initiateAudit();
     }
   };
-  
+
   const handleLogin = () => {
     setShowAuthPopup(true);
   };
-  
+
   const handleAuthSuccess = () => {
     setShowAuthPopup(false);
     setIsAuthenticated(true);
     fetchAuditHistory();
   };
-  
+
   // Claim anonymous reports when logged in
   const handleClaimSuccess = () => {
     fetchAuditHistory();
@@ -186,13 +186,13 @@ export const LinkedInAuditComponent = () => {
       <div className="space-y-8">
         {/* Show claim reports option if user is logged in */}
         {isAuthenticated && (
-          <ClaimReports 
+          <ClaimReports
             isAuthenticated={isAuthenticated}
             onLogin={handleLogin}
             onSuccess={handleClaimSuccess}
           />
         )}
-        
+
         <Card className="p-6">
           <div className="space-y-4">
             <div className="space-y-2">
@@ -243,9 +243,9 @@ export const LinkedInAuditComponent = () => {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Audit History</h2>
           {isAuthenticated ? (
-            <AuditHistory 
-              audits={auditHistory} 
-              onRefresh={fetchAuditHistory} 
+            <AuditHistory
+              audits={auditHistory}
+              onRefresh={fetchAuditHistory}
               isLoading={isHistoryLoading}
               platform="linkedin"
               isAudit={true}

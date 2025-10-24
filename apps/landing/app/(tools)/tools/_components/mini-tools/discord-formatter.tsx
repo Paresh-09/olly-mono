@@ -127,7 +127,7 @@ export const DiscordFormatter = () => {
         title: "Copied to clipboard",
         description: "You can now paste this in Discord"
       });
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -170,8 +170,8 @@ export const DiscordFormatter = () => {
                 <div className="mb-4 overflow-x-auto">
                   <TabsList className="inline-flex w-max min-w-full bg-gray-100 border-gray-200">
                     {formatOptions.map(format => (
-                      <TabsTrigger 
-                        key={format.id} 
+                      <TabsTrigger
+                        key={format.id}
                         value={format.id}
                         className="whitespace-nowrap text-gray-700 data-[state=active]:bg-[#5865F2] data-[state=active]:text-white"
                       >
@@ -204,7 +204,7 @@ export const DiscordFormatter = () => {
               </div>
 
               {/* Copy Button */}
-              <Button 
+              <Button
                 onClick={() => copyToClipboard(applyFormatting(input, getCurrentFormat()))}
                 className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white"
               >

@@ -189,8 +189,8 @@ export function HowItWorks() {
                                     <div
                                         key={index}
                                         className={`h-2 w-8 rounded-full transition-all duration-300 cursor-pointer ${index === current
-                                                ? 'bg-white'
-                                                : 'bg-white/30'
+                                            ? 'bg-white'
+                                            : 'bg-white/30'
                                             }`}
                                         onClick={() => setCurrent(index)}
                                     />

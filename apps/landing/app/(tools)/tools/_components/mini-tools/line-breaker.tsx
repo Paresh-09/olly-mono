@@ -16,7 +16,7 @@ interface PreviewProps {
 
 const Preview: React.FC<PreviewProps> = ({ text }) => {
   if (!text.trim()) return null;
-  
+
   const lines = text
     .split('\n')
     .filter(line => line.trim() !== '')
@@ -35,7 +35,7 @@ const Preview: React.FC<PreviewProps> = ({ text }) => {
 export const LineBreaker = () => {
   const [input, setInput] = useState('')
   const [copied, setCopied] = useState(false)
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -68,16 +68,16 @@ export const LineBreaker = () => {
         .split('\n')
         .filter(line => line.trim() !== '')
         .join('\n\n');
-      
+
       await navigator.clipboard.writeText(formatted);
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
 
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      
+
       toast({
         title: "Formatted text copied!",
         description: "Your caption is ready to paste with proper line breaks"
@@ -131,11 +131,11 @@ export const LineBreaker = () => {
             Paste
           </Button>
         </div>
-        
+
         {input.trim() && <Preview text={input} />}
-        
-        <Button 
-          onClick={addLineBreaks} 
+
+        <Button
+          onClick={addLineBreaks}
           className="w-full gap-2"
           disabled={!input.trim() || (!isAuthenticated && remainingUses <= 0)}
         >

@@ -13,8 +13,8 @@ import { Separator } from '@repo/ui/components/ui/separator'
 import { useToast } from '@repo/ui/hooks/use-toast'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import AuthPopup from "../authentication"
-import { 
-  Loader2, Heart, Save, RefreshCw, Bookmark, 
+import {
+  Loader2, Heart, Save, RefreshCw, Bookmark,
   Sparkles, Star, Headphones, Radio, Mic,
   Copy, MicOff, Trash2, Music, RefreshCcw
 } from 'lucide-react'
@@ -70,39 +70,39 @@ export function PodcastNameGenerator() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [showAuthPopup, setShowAuthPopup] = useState<boolean>(false)
   const [dailyUsage, setDailyUsage] = useState<UsageTracking>({ count: 0, date: '' })
-  
+
   const DAILY_FREE_LIMIT = 3
-  
+
   // Define available podcast formats
   const podcastFormats: PodcastFormat[] = [
-    { 
-      value: 'interview', 
-      label: 'Interview', 
+    {
+      value: 'interview',
+      label: 'Interview',
       description: 'Hosts interview different guests each episode'
     },
-    { 
-      value: 'conversational', 
-      label: 'Conversational', 
+    {
+      value: 'conversational',
+      label: 'Conversational',
       description: 'Multiple hosts discuss topics in a casual, conversational manner'
     },
-    { 
-      value: 'solo', 
-      label: 'Solo', 
+    {
+      value: 'solo',
+      label: 'Solo',
       description: 'Single host sharing knowledge, stories, or thoughts'
     },
-    { 
-      value: 'documentary', 
-      label: 'Documentary', 
+    {
+      value: 'documentary',
+      label: 'Documentary',
       description: 'Narrative-driven storytelling with research and interviews'
     },
-    { 
-      value: 'panel', 
-      label: 'Panel', 
+    {
+      value: 'panel',
+      label: 'Panel',
       description: 'Group discussion with multiple regular contributors'
     },
-    { 
-      value: 'educational', 
-      label: 'Educational', 
+    {
+      value: 'educational',
+      label: 'Educational',
       description: 'Teaching-focused content aimed at learning'
     }
   ]
@@ -113,11 +113,11 @@ export function PodcastNameGenerator() {
     if (savedItems) {
       setSavedNames(JSON.parse(savedItems))
     }
-    
+
     checkAuthStatus()
     loadDailyUsage()
   }, [])
-  
+
   // Check user authentication status
   const checkAuthStatus = async () => {
     try {
@@ -128,12 +128,12 @@ export function PodcastNameGenerator() {
       console.error('Error checking auth status:', error)
     }
   }
-  
+
   // Load daily usage from localStorage
   const loadDailyUsage = () => {
     const today = new Date().toDateString()
     const savedUsage = localStorage.getItem('podcastNameGenerator_dailyUsage')
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage)
       if (usage.date === today) {
@@ -150,7 +150,7 @@ export function PodcastNameGenerator() {
       localStorage.setItem('podcastNameGenerator_dailyUsage', JSON.stringify(newUsage))
     }
   }
-  
+
   // Increment daily usage counter
   const incrementDailyUsage = () => {
     const today = new Date().toDateString()
@@ -161,7 +161,7 @@ export function PodcastNameGenerator() {
     setDailyUsage(newUsage)
     localStorage.setItem('podcastNameGenerator_dailyUsage', JSON.stringify(newUsage))
   }
-  
+
   // Check if user can generate (auth check or increment usage)
   const checkUsageLimit = (): boolean => {
     if (isAuthenticated) {
@@ -181,7 +181,7 @@ export function PodcastNameGenerator() {
 
     return true
   }
-  
+
   // Handle successful authentication
   const handleSuccessfulAuth = () => {
     setIsAuthenticated(true)
@@ -211,7 +211,7 @@ export function PodcastNameGenerator() {
       })
       return
     }
-    
+
     // Check usage limits for free users
     if (!checkUsageLimit()) {
       return
@@ -219,7 +219,7 @@ export function PodcastNameGenerator() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
       // Call API endpoint
       const response = await fetch('/api/tools/podcast-name-generator', {
@@ -235,20 +235,20 @@ export function PodcastNameGenerator() {
           additionalInfo
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate podcast names');
       }
-      
+
       setGeneratedNames(data.names);
-      
+
       // Increment usage for free users
       if (!isAuthenticated) {
         incrementDailyUsage();
       }
-      
+
       toast({
         title: "Names generated",
         description: "We've crafted some podcast name ideas for you to consider.",
@@ -294,7 +294,7 @@ export function PodcastNameGenerator() {
       setShowAuthPopup(true);
       return;
     }
-    
+
     const newId = Date.now().toString()
     const newSaved: SavedName = {
       id: newId,
@@ -304,11 +304,11 @@ export function PodcastNameGenerator() {
       format: format,
       date: new Date().toLocaleDateString()
     }
-    
+
     const updatedSaved = [...savedNames, newSaved]
     setSavedNames(updatedSaved)
     localStorage.setItem('savedPodcastNames', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Name saved",
       description: "Podcast name has been saved to your collection.",
@@ -318,11 +318,11 @@ export function PodcastNameGenerator() {
   // Delete a saved name
   const deleteSavedName = (id: string, e: React.MouseEvent): void => {
     e.stopPropagation() // Prevent triggering the parent click handler
-    
+
     const updatedSaved = savedNames.filter(item => item.id !== id)
     setSavedNames(updatedSaved)
     localStorage.setItem('savedPodcastNames', JSON.stringify(updatedSaved))
-    
+
     toast({
       title: "Name deleted",
       description: "The saved podcast name has been removed."
@@ -354,7 +354,7 @@ export function PodcastNameGenerator() {
           </AlertDescription>
         </Alert>
       )}
-    
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="bg-muted rounded-lg p-1 mb-6">
           <TabsList className="grid w-full grid-cols-2 bg-transparent">
@@ -370,7 +370,7 @@ export function PodcastNameGenerator() {
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         {/* Generator Tab */}
         <TabsContent value="generator" className="mt-0">
           <div className="grid gap-8 md:grid-cols-12">
@@ -385,7 +385,7 @@ export function PodcastNameGenerator() {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="theme" className="text-base">Theme/Niche</Label>
-                    <Input 
+                    <Input
                       id="theme"
                       placeholder="e.g., True Crime, Personal Finance, Comedy"
                       value={theme}
@@ -393,10 +393,10 @@ export function PodcastNameGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="topic" className="text-base">Specific Topic</Label>
-                    <Input 
+                    <Input
                       id="topic"
                       placeholder="e.g., Startup Stories, Cryptocurrency, Home Renovation"
                       value={topic}
@@ -404,10 +404,10 @@ export function PodcastNameGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="targetAudience" className="text-base">Target Audience</Label>
-                    <Input 
+                    <Input
                       id="targetAudience"
                       placeholder="e.g., Entrepreneurs, Parents, College Students"
                       value={targetAudience}
@@ -415,7 +415,7 @@ export function PodcastNameGenerator() {
                       className="mt-1.5"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="format" className="text-base">Podcast Format</Label>
                     <Select value={format} onValueChange={setFormat}>
@@ -432,10 +432,10 @@ export function PodcastNameGenerator() {
                     </Select>
                     <p className="text-xs text-muted-foreground mt-2">{getFormatDescription()}</p>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="additionalInfo" className="text-base">Additional Details (Optional)</Label>
-                    <Textarea 
+                    <Textarea
                       id="additionalInfo"
                       placeholder="Any specific tone, style, or focus you want for your podcast"
                       value={additionalInfo}
@@ -451,9 +451,9 @@ export function PodcastNameGenerator() {
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>
-                <Button 
-                  onClick={generateNames} 
-                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)} 
+                <Button
+                  onClick={generateNames}
+                  disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                   className="px-6"
                 >
                   {loading ? (
@@ -470,18 +470,18 @@ export function PodcastNameGenerator() {
                 </Button>
               </CardFooter>
             </Card>
-            
+
             <Card className="col-span-12 md:col-span-7">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-xl flex items-center">
                   <Radio className="mr-2 h-5 w-5 text-primary" />
                   Podcast Name Ideas
                 </CardTitle>
-                
+
                 {generatedNames.length > 0 && !loading && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={regenerateNames}
                     disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
                   >
@@ -501,9 +501,9 @@ export function PodcastNameGenerator() {
                   <div className="text-destructive text-center h-[400px] flex flex-col items-center justify-center p-6">
                     <p className="font-medium mb-2">Error generating podcast names</p>
                     <p className="text-sm">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-4"
                       onClick={resetForm}
                     >
@@ -527,18 +527,18 @@ export function PodcastNameGenerator() {
                             )}
                           </div>
                           <div className="flex flex-col gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="h-8 w-8 p-0"
                               onClick={() => copyToClipboard(item.name)}
                             >
                               <Copy className="h-4 w-4" />
                               <span className="sr-only">Copy</span>
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               className="h-8 w-8 p-0"
                               onClick={() => saveName(item)}
                               disabled={!isAuthenticated}
@@ -564,7 +564,7 @@ export function PodcastNameGenerator() {
             </Card>
           </div>
         </TabsContent>
-        
+
         {/* Saved Names Tab */}
         <TabsContent value="saved" className="mt-0">
           <Card>
@@ -574,7 +574,7 @@ export function PodcastNameGenerator() {
                 Saved Podcast Names
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               {!isAuthenticated ? (
                 <div className="text-center p-8">
@@ -583,7 +583,7 @@ export function PodcastNameGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     Please sign in to save and access your favorite podcast names.
                   </p>
-                  <Button 
+                  <Button
                     className="mt-4"
                     onClick={() => setShowAuthPopup(true)}
                   >
@@ -597,8 +597,8 @@ export function PodcastNameGenerator() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
                     When you find a name you like, click the bookmark icon to save it for future reference.
                   </p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={() => setActiveTab('generator')}
                   >
@@ -624,8 +624,8 @@ export function PodcastNameGenerator() {
                           <p className="text-sm mt-2">{item.description}</p>
                         </div>
                         <div className="flex gap-2">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
                             onClick={() => copyToClipboard(item.name)}
@@ -633,8 +633,8 @@ export function PodcastNameGenerator() {
                             <Copy className="h-4 w-4" />
                             <span className="sr-only">Copy</span>
                           </Button>
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
                             onClick={(e) => deleteSavedName(item.id, e)}
@@ -652,7 +652,7 @@ export function PodcastNameGenerator() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       <AuthPopup
         isOpen={showAuthPopup}
         onClose={() => setShowAuthPopup(false)}

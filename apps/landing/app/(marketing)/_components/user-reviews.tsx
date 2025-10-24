@@ -14,7 +14,7 @@ import Autoplay from 'embla-carousel-autoplay';
 
 export function UserReviews() {
 
-  const renderStars = (rating:number) => {
+  const renderStars = (rating: number) => {
     let stars = "";
     for (let i = 0; i < 5; i++) {
       stars += i < rating ? "★" : "☆";
@@ -26,9 +26,9 @@ export function UserReviews() {
     <div className="w-5/6 md:w-full">
       <h2 className="text-2xl md:text-4xl font-bold mb-4 text-center my-8">What our Users say</h2>
       <Carousel className="w-full max-w-sm md:max-w-md mx-auto" plugins={[
-          Autoplay({
-              delay:3500,
-          })
+        Autoplay({
+          delay: 3500,
+        })
       ]}>
         <CarouselContent>
           {UserReviewsData.map((review, index) => (

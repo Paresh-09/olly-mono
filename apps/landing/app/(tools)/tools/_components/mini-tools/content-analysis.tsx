@@ -73,7 +73,7 @@ export const ContentAnalyzerTool: React.FC<ContentAnalyzerProps> = ({
   const loadDailyUsage = () => {
     const today = new Date().toDateString();
     const savedUsage = localStorage.getItem(`contentAnalyzer_${toolType}_dailyUsage`);
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage);
       if (usage.date === today) {
@@ -153,7 +153,7 @@ export const ContentAnalyzerTool: React.FC<ContentAnalyzerProps> = ({
 
       const data = await response.json();
       setResult(data);
-      
+
       if (!isAuthenticated) {
         incrementDailyUsage();
       }
@@ -214,8 +214,8 @@ export const ContentAnalyzerTool: React.FC<ContentAnalyzerProps> = ({
           </select>
         )}
 
-        <Button 
-          onClick={analyzeContent} 
+        <Button
+          onClick={analyzeContent}
           className="w-full"
           disabled={loading || (!isAuthenticated && dailyUsage.count >= DAILY_FREE_LIMIT)}
         >
@@ -238,7 +238,7 @@ export const ContentAnalyzerTool: React.FC<ContentAnalyzerProps> = ({
                 <Progress value={result.score} />
               </div>
             )}
-            
+
             <div className="p-4 bg-gray-50 rounded-lg">
               <h3 className="font-medium mb-2">Analysis:</h3>
               <p className="whitespace-pre-wrap text-gray-600">{result.analysis}</p>

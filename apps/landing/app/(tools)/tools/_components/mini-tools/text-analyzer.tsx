@@ -75,7 +75,7 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, onCopy, copied }) =>
 export const TextAnalyzer = () => {
   const [text, setText] = useState('')
   const [copied, setCopied] = useState(false)
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -95,7 +95,7 @@ export const TextAnalyzer = () => {
     const sentences = trimmedText ? trimmedText.split(/[.!?]+/).filter(Boolean) : [];
     const paragraphs = trimmedText ? trimmedText.split(/\n\s*\n/).filter(Boolean) : [];
     const charactersNoSpaces = trimmedText.replace(/\s/g, '').length;
-    
+
     return {
       words: words.length,
       characters: input.length,
@@ -104,9 +104,9 @@ export const TextAnalyzer = () => {
       paragraphs: paragraphs.length,
       readingTime: Math.max(1, Math.ceil(words.length / 200)), // min 1 minute
       speakingTime: Math.max(1, Math.ceil(words.length / 130)), // min 1 minute
-      longestWord: words.reduce((longest, word) => 
+      longestWord: words.reduce((longest, word) =>
         word.length > longest.length ? word : longest, ''),
-      averageWordLength: words.length ? 
+      averageWordLength: words.length ?
         words.reduce((sum, word) => sum + word.length, 0) / words.length : 0
     }
   }, [])
@@ -133,7 +133,7 @@ export const TextAnalyzer = () => {
     try {
       const text = await file.text();
       setText(text);
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -156,11 +156,11 @@ export const TextAnalyzer = () => {
       const statsText = Object.entries(stats)
         .map(([key, value]) => `${key}: ${value}`)
         .join('\n');
-      
+
       await navigator.clipboard.writeText(statsText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      
+
       toast({
         title: "Copied!",
         description: "Statistics copied to clipboard"
@@ -226,7 +226,7 @@ export const TextAnalyzer = () => {
           onChange={(e) => setText(e.target.value)}
         />
 
-        <StatsDisplay 
+        <StatsDisplay
           stats={stats}
           onCopy={copyStats}
           copied={copied}

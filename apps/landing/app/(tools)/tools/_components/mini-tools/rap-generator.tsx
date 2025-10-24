@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -277,7 +277,7 @@ export const RapGenerator = () => {
             onChange={(e) => setThemeDetails(e.target.value)}
             rows={3}
           />
-          
+
           <Input
             placeholder="Key words or phrases to include (comma separated)"
             value={keywords}
@@ -285,8 +285,8 @@ export const RapGenerator = () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveTheme}
               disabled={!isAuthenticated}
             >
@@ -342,8 +342,8 @@ export const RapGenerator = () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generateRapVerses} 
+        <Button
+          onClick={generateRapVerses}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >
@@ -352,60 +352,60 @@ export const RapGenerator = () => {
 
         {/* Generated Verses */}
         {generatedVerses.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium">Generated Verses:</h3>
-          <div className="p-3 bg-secondary rounded-lg">
-            <pre className="whitespace-pre-wrap font-mono text-sm">
-              {generatedVerses.join('\n')}
-            </pre>
-            <div className="flex justify-end gap-2 mt-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => copyToClipboard(generatedVerses.join('\n'))}
-              >
-                Copy
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => saveVerse(generatedVerses.join('\n'))}
-                disabled={!isAuthenticated}
-              >
-                Save
-              </Button>
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Generated Verses:</h3>
+            <div className="p-3 bg-secondary rounded-lg">
+              <pre className="whitespace-pre-wrap font-mono text-sm">
+                {generatedVerses.join('\n')}
+              </pre>
+              <div className="flex justify-end gap-2 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(generatedVerses.join('\n'))}
+                >
+                  Copy
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => saveVerse(generatedVerses.join('\n'))}
+                  disabled={!isAuthenticated}
+                >
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Saved Verses */}
-      {isAuthenticated && savedVerses.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium">Your Saved Verses:</h3>
-          <div className="space-y-2">
-            {savedVerses.map((verse, index) => (
-              <div key={index} className="p-3 bg-secondary rounded-lg">
-                <pre className="whitespace-pre-wrap font-mono text-sm">{verse.text}</pre>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="flex gap-2">
-                    <Badge variant="outline">{verse.style}</Badge>
-                    <Badge variant="outline">{verse.theme}</Badge>
-                    <Badge variant="outline">Flow: {verse.flowLevel}%</Badge>
+        {/* Saved Verses */}
+        {isAuthenticated && savedVerses.length > 0 && (
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Your Saved Verses:</h3>
+            <div className="space-y-2">
+              {savedVerses.map((verse, index) => (
+                <div key={index} className="p-3 bg-secondary rounded-lg">
+                  <pre className="whitespace-pre-wrap font-mono text-sm">{verse.text}</pre>
+                  <div className="flex justify-between items-center mt-2">
+                    <div className="flex gap-2">
+                      <Badge variant="outline">{verse.style}</Badge>
+                      <Badge variant="outline">{verse.theme}</Badge>
+                      <Badge variant="outline">Flow: {verse.flowLevel}%</Badge>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(verse.text)}
+                    >
+                      Copy
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(verse.text)}
-                  >
-                    Copy
-                  </Button>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
 
       <AuthPopup

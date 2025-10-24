@@ -20,14 +20,13 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    // Skip type checking during build to avoid memory issues
-    ignoreBuildErrors: true,
-  },
   images: {
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // ONLY SAFE ADDITIONS - these are just performance hints
+    formats: ['image/webp', 'image/avif'], // Enable modern formats
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // Default sizes
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Default sizes
+
+    // Your existing remote patterns (keep these unchanged)
     remotePatterns: [
       {
         protocol: "https",
@@ -68,9 +67,11 @@ const nextConfig = {
     ],
   },
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+
   experimental: {
     mdxRs: true,
   },
+
   async headers() {
     return [
       {
@@ -92,6 +93,20 @@ const nextConfig = {
           },
         ],
       },
+      // Added configuration for .well-known directory
+      {
+        source: "/.well-known/:path*",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/json"
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600"
+          }
+        ]
+      }
     ];
   },
   async rewrites() {
@@ -105,4 +120,5 @@ const nextConfig = {
   },
 };
 
+// Apply bundle analyzer and MDX configuration and export
 export default withBundleAnalyzer(withMDX(nextConfig));

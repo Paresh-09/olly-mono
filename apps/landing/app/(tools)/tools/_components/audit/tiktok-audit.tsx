@@ -14,15 +14,15 @@ import { useRouter } from 'next/navigation';
 
 // Custom TikTok icon component
 const TikTokIcon = () => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
     className="h-6 w-6 text-white"
   >
@@ -59,7 +59,7 @@ export const TikTokAuditComponent = () => {
 
   const fetchAuditHistory = async () => {
     if (!isAuthenticated) return;
-    
+
     setIsHistoryLoading(true);
     try {
       const response = await fetch('/api/tools/audit/history/tiktok');
@@ -136,10 +136,10 @@ export const TikTokAuditComponent = () => {
         if (data.status === 'COMPLETED') {
           setIsLoading(false);
           setAuditId(null);
-          
+
           // Redirect to the report page when complete
           router.push(`/tools/tiktok-audit/report/${id}`);
-          
+
           if (isAuthenticated) {
             fetchAuditHistory();
           }
@@ -174,17 +174,17 @@ export const TikTokAuditComponent = () => {
       initiateAudit();
     }
   };
-  
+
   const handleLogin = () => {
     setShowAuthPopup(true);
   };
-  
+
   const handleAuthSuccess = () => {
     setShowAuthPopup(false);
     setIsAuthenticated(true);
     fetchAuditHistory();
   };
-  
+
   // Claim anonymous reports when logged in
   const handleClaimSuccess = () => {
     fetchAuditHistory();
@@ -204,13 +204,13 @@ export const TikTokAuditComponent = () => {
       <div className="space-y-6">
         {/* Show claim reports option if user is logged in */}
         {isAuthenticated && (
-          <ClaimReports 
+          <ClaimReports
             isAuthenticated={isAuthenticated}
             onLogin={handleLogin}
             onSuccess={handleClaimSuccess}
           />
         )}
-        
+
         <div className="space-y-4">
           <div className="flex gap-2">
             <Input
@@ -246,9 +246,9 @@ export const TikTokAuditComponent = () => {
         </div>
 
         {isAuthenticated ? (
-          <AuditHistory 
-            audits={auditHistory} 
-            onRefresh={fetchAuditHistory} 
+          <AuditHistory
+            audits={auditHistory}
+            onRefresh={fetchAuditHistory}
             isLoading={isHistoryLoading}
             platform="tiktok"
             isAudit={true}

@@ -32,16 +32,16 @@ export default function RedemptionFlow() {
         </p>
       </CardContent>
       <CardFooter className="flex flex-col space-y-3">
-        <Button 
-          className="w-full" 
+        <Button
+          className="w-full"
           onClick={() => router.push('/login')}
         >
           Login to Redeem
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
-        <Button 
-          variant="outline" 
-          className="w-full" 
+        <Button
+          variant="outline"
+          className="w-full"
           onClick={() => router.push('/signup')}
         >
           Create Account

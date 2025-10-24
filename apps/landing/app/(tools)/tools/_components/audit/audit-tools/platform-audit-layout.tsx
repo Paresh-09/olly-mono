@@ -14,12 +14,12 @@ interface PlatformLayoutProps {
   children: ReactNode;
 }
 
-export const PlatformAuditLayout = ({ 
-  title, 
-  description, 
-  icon, 
+export const PlatformAuditLayout = ({
+  title,
+  description,
+  icon,
   color,
-  children 
+  children
 }: PlatformLayoutProps) => {
   return (
     <div className="container py-8 space-y-6">
@@ -39,7 +39,7 @@ export const PlatformAuditLayout = ({
           </div>
         </div>
       </div>
-      
+
       <Card className="p-6 w-full max-w-4xl mx-auto">
         {children}
       </Card>

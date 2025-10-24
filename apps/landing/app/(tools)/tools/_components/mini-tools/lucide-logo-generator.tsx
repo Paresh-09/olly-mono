@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import { toast } from '@repo/ui/hooks/use-toast'
 import { Input } from '@repo/ui/components/ui/input'
 import { Label } from '@repo/ui/components/ui/label'
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -32,63 +32,63 @@ const LOGO_SIZES = [
 
 // Define gradient presets
 const GRADIENT_PRESETS = [
-  { 
-    id: "blue-purple", 
-    name: "Blue to Purple", 
+  {
+    id: "blue-purple",
+    name: "Blue to Purple",
     colors: ["#3B82F6", "#8B5CF6"],
     direction: "to right"
   },
-  { 
-    id: "green-blue", 
-    name: "Green to Blue", 
+  {
+    id: "green-blue",
+    name: "Green to Blue",
     colors: ["#10B981", "#3B82F6"],
     direction: "to right"
   },
-  { 
-    id: "orange-red", 
-    name: "Orange to Red", 
+  {
+    id: "orange-red",
+    name: "Orange to Red",
     colors: ["#F59E0B", "#EF4444"],
     direction: "to right"
   },
-  { 
-    id: "pink-purple", 
-    name: "Pink to Purple", 
+  {
+    id: "pink-purple",
+    name: "Pink to Purple",
     colors: ["#EC4899", "#8B5CF6"],
     direction: "to right"
   },
-  { 
-    id: "teal-lime", 
-    name: "Teal to Lime", 
+  {
+    id: "teal-lime",
+    name: "Teal to Lime",
     colors: ["#14B8A6", "#84CC16"],
     direction: "to right"
   },
-  { 
-    id: "blue-cyan", 
-    name: "Blue to Cyan", 
+  {
+    id: "blue-cyan",
+    name: "Blue to Cyan",
     colors: ["#2563EB", "#06B6D4"],
     direction: "to bottom right"
   },
-  { 
-    id: "purple-pink", 
-    name: "Purple to Pink", 
+  {
+    id: "purple-pink",
+    name: "Purple to Pink",
     colors: ["#8B5CF6", "#EC4899"],
     direction: "to bottom right"
   },
-  { 
-    id: "amber-orange", 
-    name: "Amber to Orange", 
+  {
+    id: "amber-orange",
+    name: "Amber to Orange",
     colors: ["#F59E0B", "#EA580C"],
     direction: "to bottom right"
   },
-  { 
-    id: "indigo-blue", 
-    name: "Indigo to Blue", 
+  {
+    id: "indigo-blue",
+    name: "Indigo to Blue",
     colors: ["#4F46E5", "#3B82F6"],
     direction: "to bottom"
   },
-  { 
-    id: "red-pink", 
-    name: "Red to Pink", 
+  {
+    id: "red-pink",
+    name: "Red to Pink",
     colors: ["#EF4444", "#EC4899"],
     direction: "to bottom"
   }
@@ -124,7 +124,7 @@ export const FreeAiLogoGenerator = () => {
     .filter(name => name !== 'createLucideIcon' && name !== 'default');
 
   // Filter icons based on search query
-  const filteredIcons = lucideIconNames.filter(name => 
+  const filteredIcons = lucideIconNames.filter(name =>
     name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -148,22 +148,22 @@ export const FreeAiLogoGenerator = () => {
   const renderPreview = () => {
     const canvas = previewCanvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
+
     const size = 256; // Preview size
     canvas.width = size;
     canvas.height = size;
-    
+
     // Clear canvas
     ctx.clearRect(0, 0, size, size);
-    
+
     // Draw shape with gradient
     const gradientObj = GRADIENT_PRESETS.find(g => g.id === selectedGradient);
     if (gradientObj) {
       let gradient;
-      
+
       switch (gradientObj.direction) {
         case "to right":
           gradient = ctx.createLinearGradient(0, 0, size, 0);
@@ -176,15 +176,15 @@ export const FreeAiLogoGenerator = () => {
           gradient = ctx.createLinearGradient(0, 0, size, size);
           break;
       }
-      
+
       gradient.addColorStop(0, gradientObj.colors[0]);
       gradient.addColorStop(1, gradientObj.colors[1]);
-      
+
       ctx.fillStyle = gradient;
-      
+
       const paddingValue = (padding / 100) * size;
       const shapeSizeWithPadding = size - (paddingValue * 2);
-      
+
       switch (selectedShape) {
         case "circle":
           ctx.beginPath();
@@ -210,13 +210,13 @@ export const FreeAiLogoGenerator = () => {
           ctx.fill();
           break;
       }
-      
+
       // Draw icon
       // Use a simple shape instead of trying to extract the icon's path
       const iconSizeValue = (iconSize / 100) * shapeSizeWithPadding;
       const iconX = (size - iconSizeValue) / 2;
       const iconY = (size - iconSizeValue) / 2;
-      
+
       // Draw a simple shape (circle)
       ctx.fillStyle = iconColor;
       ctx.beginPath();
@@ -233,7 +233,7 @@ export const FreeAiLogoGenerator = () => {
     try {
       const canvas = randomCanvasRef.current;
       if (!canvas) return;
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -242,34 +242,34 @@ export const FreeAiLogoGenerator = () => {
         Array.from({ length: 6 }).map(async (_, index) => {
           // Random icon
           const randomIcon = lucideIconNames[Math.floor(Math.random() * lucideIconNames.length)];
-          
+
           // Random gradient
           const randomGradient = GRADIENT_PRESETS[Math.floor(Math.random() * GRADIENT_PRESETS.length)];
-          
+
           // Random shape
           const randomShape = SHAPE_OPTIONS[Math.floor(Math.random() * SHAPE_OPTIONS.length)].id;
-          
+
           // Random icon size (50-70%)
           const randomIconSize = Math.floor(Math.random() * 21) + 50;
-          
+
           // Random padding (10-25%)
           const randomPadding = Math.floor(Math.random() * 16) + 10;
-          
+
           // Random icon color (white or light color)
-          const randomIconColor = Math.random() > 0.7 ? 
-            `hsl(${Math.floor(Math.random() * 360)}, 100%, 85%)` : 
+          const randomIconColor = Math.random() > 0.7 ?
+            `hsl(${Math.floor(Math.random() * 360)}, 100%, 85%)` :
             "#FFFFFF";
-          
+
           const size = 128; // Preview size for random logos
           canvas.width = size;
           canvas.height = size;
-          
+
           // Clear canvas
           ctx.clearRect(0, 0, size, size);
-          
+
           // Draw shape with gradient
           let gradient;
-          
+
           switch (randomGradient.direction) {
             case "to right":
               gradient = ctx.createLinearGradient(0, 0, size, 0);
@@ -282,15 +282,15 @@ export const FreeAiLogoGenerator = () => {
               gradient = ctx.createLinearGradient(0, 0, size, size);
               break;
           }
-          
+
           gradient.addColorStop(0, randomGradient.colors[0]);
           gradient.addColorStop(1, randomGradient.colors[1]);
-          
+
           ctx.fillStyle = gradient;
-          
+
           const paddingValue = (randomPadding / 100) * size;
           const shapeSizeWithPadding = size - (paddingValue * 2);
-          
+
           switch (randomShape) {
             case "circle":
               ctx.beginPath();
@@ -316,16 +316,16 @@ export const FreeAiLogoGenerator = () => {
               ctx.fill();
               break;
           }
-          
+
           // Draw a simple shape instead of trying to use the Lucide icon
           const iconSizeValue = (randomIconSize / 100) * shapeSizeWithPadding;
-          
+
           // Draw a simple shape (circle)
           ctx.fillStyle = randomIconColor;
           ctx.beginPath();
           ctx.arc(size / 2, size / 2, iconSizeValue / 3, 0, Math.PI * 2);
           ctx.fill();
-          
+
           return {
             icon: randomIcon,
             gradient: randomGradient.id,
@@ -359,7 +359,7 @@ export const FreeAiLogoGenerator = () => {
     try {
       const canvas = canvasRef.current;
       if (!canvas) return;
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -367,15 +367,15 @@ export const FreeAiLogoGenerator = () => {
         selectedSizes.map(async (size) => {
           canvas.width = size;
           canvas.height = size;
-          
+
           // Clear canvas
           ctx.clearRect(0, 0, size, size);
-          
+
           // Draw shape with gradient
           const gradientObj = GRADIENT_PRESETS.find(g => g.id === selectedGradient);
           if (gradientObj) {
             let gradient;
-            
+
             switch (gradientObj.direction) {
               case "to right":
                 gradient = ctx.createLinearGradient(0, 0, size, 0);
@@ -388,15 +388,15 @@ export const FreeAiLogoGenerator = () => {
                 gradient = ctx.createLinearGradient(0, 0, size, size);
                 break;
             }
-            
+
             gradient.addColorStop(0, gradientObj.colors[0]);
             gradient.addColorStop(1, gradientObj.colors[1]);
-            
+
             ctx.fillStyle = gradient;
-            
+
             const paddingValue = (padding / 100) * size;
             const shapeSizeWithPadding = size - (paddingValue * 2);
-            
+
             switch (selectedShape) {
               case "circle":
                 ctx.beginPath();
@@ -422,17 +422,17 @@ export const FreeAiLogoGenerator = () => {
                 ctx.fill();
                 break;
             }
-            
+
             // Draw a simple shape instead of trying to use the Lucide icon
             const iconSizeValue = (iconSize / 100) * shapeSizeWithPadding;
-            
+
             // Draw a simple shape (circle)
             ctx.fillStyle = iconColor;
             ctx.beginPath();
             ctx.arc(size / 2, size / 2, iconSizeValue / 3, 0, Math.PI * 2);
             ctx.fill();
           }
-          
+
           return {
             size,
             dataUrl: canvas.toDataURL('image/png')
@@ -470,33 +470,33 @@ export const FreeAiLogoGenerator = () => {
 
     try {
       const zip = new JSZip();
-      
+
       // Add each logo to the zip
       generatedLogos.forEach(logo => {
         const imgData = logo.dataUrl.split(',')[1];
-        zip.file(`logo-${logo.size}.png`, imgData, {base64: true});
+        zip.file(`logo-${logo.size}.png`, imgData, { base64: true });
       });
-      
+
       // Add a README file with information
       let readme = '# Lucide Logo Pack\n\n';
       readme += `This package contains logos generated with the Lucide Logo Generator:\n\n`;
       readme += `- Icon: ${selectedIcon}\n`;
       readme += `- Shape: ${selectedShape}\n`;
       readme += `- Gradient: ${GRADIENT_PRESETS.find(g => g.id === selectedGradient)?.name}\n\n`;
-      
+
       readme += 'Included sizes:\n\n';
-      LOGO_SIZES.filter(size => 
+      LOGO_SIZES.filter(size =>
         selectedSizes.includes(size.size)
       ).forEach(size => {
         readme += `- logo-${size.size}.png (${size.name}): ${size.description}\n`;
       });
-      
+
       zip.file('README.md', readme);
-      
+
       // Generate and download the zip file
-      const content = await zip.generateAsync({type: 'blob'});
+      const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, 'lucide-logos.zip');
-      
+
       toast({
         title: "Success",
         description: "Logos downloaded successfully"
@@ -533,7 +533,7 @@ export const FreeAiLogoGenerator = () => {
     <Card className="p-6">
       <canvas ref={canvasRef} style={{ display: 'none' }} />
       <canvas ref={randomCanvasRef} style={{ display: 'none' }} />
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="random">AI Suggestions</TabsTrigger>
@@ -541,29 +541,29 @@ export const FreeAiLogoGenerator = () => {
           <TabsTrigger value="preview">Preview</TabsTrigger>
           <TabsTrigger value="download" disabled={generatedLogos.length === 0}>Download</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="random" className="space-y-6 mt-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-medium">AI-Generated Logo Suggestions</h3>
-            <Button 
-              onClick={generateRandomLogos} 
+            <Button
+              onClick={generateRandomLogos}
               disabled={isGeneratingRandom}
               size="sm"
             >
               {isGeneratingRandom ? "Generating..." : "Regenerate"}
             </Button>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {randomLogos.map((logo, index) => (
               <div key={index} className="flex flex-col items-center border rounded-lg p-3 bg-secondary">
-                <img 
-                  src={logo.dataUrl} 
-                  alt={`Random logo ${index + 1}`} 
+                <img
+                  src={logo.dataUrl}
+                  alt={`Random logo ${index + 1}`}
                   className="w-24 h-24 mb-2"
                 />
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => applyRandomLogo(logo)}
                   className="w-full"
@@ -573,27 +573,27 @@ export const FreeAiLogoGenerator = () => {
               </div>
             ))}
           </div>
-          
+
           <Alert>
             <AlertDescription>
               Click "Customize" on any logo to edit it further, or click "Regenerate" to get new suggestions.
             </AlertDescription>
           </Alert>
         </TabsContent>
-        
+
         <TabsContent value="design" className="space-y-6 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Icon Selection */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Select Icon</h3>
-              
+
               <Input
                 placeholder="Search icons..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="mb-4"
               />
-              
+
               <div className="h-[300px] overflow-y-auto border rounded-md p-2">
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                   {filteredIcons.map(iconName => (
@@ -610,16 +610,16 @@ export const FreeAiLogoGenerator = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Logo Settings */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Logo Settings</h3>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Shape</Label>
-                  <RadioGroup 
-                    value={selectedShape} 
+                  <RadioGroup
+                    value={selectedShape}
                     onValueChange={setSelectedShape}
                     className="flex space-x-2"
                   >
@@ -631,7 +631,7 @@ export const FreeAiLogoGenerator = () => {
                     ))}
                   </RadioGroup>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Gradient</Label>
                   <Select value={selectedGradient} onValueChange={setSelectedGradient}>
@@ -642,10 +642,10 @@ export const FreeAiLogoGenerator = () => {
                       {GRADIENT_PRESETS.map(gradient => (
                         <SelectItem key={gradient.id} value={gradient.id}>
                           <div className="flex items-center">
-                            <div 
-                              className="w-4 h-4 mr-2 rounded-full" 
-                              style={{ 
-                                background: `linear-gradient(${gradient.direction}, ${gradient.colors[0]}, ${gradient.colors[1]})` 
+                            <div
+                              className="w-4 h-4 mr-2 rounded-full"
+                              style={{
+                                background: `linear-gradient(${gradient.direction}, ${gradient.colors[0]}, ${gradient.colors[1]})`
                               }}
                             />
                             {gradient.name}
@@ -655,7 +655,7 @@ export const FreeAiLogoGenerator = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Icon Color</Label>
                   <div className="flex space-x-2">
@@ -673,7 +673,7 @@ export const FreeAiLogoGenerator = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Icon Size: {iconSize}%</Label>
                   <Slider
@@ -684,7 +684,7 @@ export const FreeAiLogoGenerator = () => {
                     step={5}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Padding: {padding}%</Label>
                   <Slider
@@ -698,46 +698,46 @@ export const FreeAiLogoGenerator = () => {
               </div>
             </div>
           </div>
-          
-          <Button 
+
+          <Button
             onClick={() => setActiveTab("preview")}
             className="w-full"
           >
             Continue to Preview
           </Button>
         </TabsContent>
-        
+
         <TabsContent value="preview" className="space-y-6 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Preview</h3>
               <div className="flex justify-center items-center border rounded-lg p-4 bg-secondary">
-                <canvas 
-                  ref={previewCanvasRef} 
-                  width="256" 
-                  height="256" 
+                <canvas
+                  ref={previewCanvasRef}
+                  width="256"
+                  height="256"
                   className="max-w-full"
                 />
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Export Settings</h3>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between mb-2">
                   <Label>Select Sizes</Label>
                   <div className="space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => toggleAllSizes(true)}
                     >
                       Select All
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => toggleAllSizes(false)}
                     >
                       Clear All
@@ -761,9 +761,9 @@ export const FreeAiLogoGenerator = () => {
                   ))}
                 </div>
               </div>
-              
-              <Button 
-                onClick={generateLogos} 
+
+              <Button
+                onClick={generateLogos}
                 disabled={isGenerating || selectedSizes.length === 0}
                 className="w-full"
               >
@@ -772,7 +772,7 @@ export const FreeAiLogoGenerator = () => {
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="download" className="space-y-4 mt-4">
           {generatedLogos.length > 0 && (
             <>
@@ -782,15 +782,15 @@ export const FreeAiLogoGenerator = () => {
                   Download All (.zip)
                 </Button>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {generatedLogos.map(logo => {
                   const sizeInfo = LOGO_SIZES.find(s => s.size === logo.size);
                   return (
                     <div key={logo.size} className="flex flex-col items-center border rounded-lg p-3 bg-secondary">
-                      <img 
-                        src={logo.dataUrl} 
-                        alt={`${logo.size}x${logo.size}`} 
+                      <img
+                        src={logo.dataUrl}
+                        alt={`${logo.size}x${logo.size}`}
                         className="mb-2"
                         style={{
                           width: logo.size > 128 ? 128 : logo.size,
@@ -800,8 +800,8 @@ export const FreeAiLogoGenerator = () => {
                       />
                       <p className="text-xs font-medium mb-1">{logo.size}x{logo.size}</p>
                       <p className="text-xs text-center text-muted-foreground mb-2">{sizeInfo?.description}</p>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => downloadLogo(logo.dataUrl, logo.size)}
                         className="w-full"
@@ -812,7 +812,7 @@ export const FreeAiLogoGenerator = () => {
                   );
                 })}
               </div>
-              
+
               <Alert className="mt-6">
                 <AlertDescription>
                   A zip file containing all logos and a README with details will be downloaded when you click "Download All".

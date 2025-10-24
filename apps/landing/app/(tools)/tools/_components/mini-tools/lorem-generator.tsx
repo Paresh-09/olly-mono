@@ -46,7 +46,7 @@ export const LoremGenerator = () => {
   const [count, setCount] = useState<number>(GENERATION_TYPES[type].default);
   const [result, setResult] = useState('')
   const [copied, setCopied] = useState(false)
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -88,7 +88,7 @@ export const LoremGenerator = () => {
 
     try {
       let generated = '';
-      
+
       if (type === 'words') {
         generated = getRandomWords(count).join(' ');
       } else {
@@ -97,9 +97,9 @@ export const LoremGenerator = () => {
           .map(() => generateParagraph())
           .join('\n\n');
       }
-      
+
       setResult(generated);
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -122,7 +122,7 @@ export const LoremGenerator = () => {
       await navigator.clipboard.writeText(result);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      
+
       toast({
         title: "Copied!",
         description: "Text copied to clipboard"
@@ -139,7 +139,7 @@ export const LoremGenerator = () => {
   const handleCountChange = (value: string) => {
     const numValue = parseInt(value);
     const limits = GENERATION_TYPES[type];
-    
+
     if (isNaN(numValue) || numValue < limits.min) {
       setCount(limits.min);
     } else if (numValue > limits.max) {
@@ -177,7 +177,7 @@ export const LoremGenerator = () => {
               className="w-full"
             />
           </div>
-          
+
           <div className="flex-1">
             <label className="block text-sm font-medium mb-1">Type</label>
             <Select
@@ -189,11 +189,11 @@ export const LoremGenerator = () => {
               ))}
             </Select>
           </div>
-          
+
           <div className="flex-1">
             <label className="block text-sm font-medium mb-1">&nbsp;</label>
-            <Button 
-              onClick={generateText} 
+            <Button
+              onClick={generateText}
               className="w-full gap-2"
               disabled={!isAuthenticated && remainingUses <= 0}
             >

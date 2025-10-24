@@ -5,7 +5,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -274,7 +274,7 @@ export const PunGenerator = () => {
             onChange={(e) => setTopicDetails(e.target.value)}
             rows={3}
           />
-          
+
           <Input
             placeholder="Key words or phrases to include (comma separated)"
             value={keywords}
@@ -282,8 +282,8 @@ export const PunGenerator = () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveTopic}
               disabled={!isAuthenticated}
             >
@@ -324,8 +324,8 @@ export const PunGenerator = () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generatePuns} 
+        <Button
+          onClick={generatePuns}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >

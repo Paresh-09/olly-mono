@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -106,7 +106,7 @@ export const LinkedInHeadlineGenerator = () => {
     }
   }, [savedHeadlines, savedProfiles, isAuthenticated]);
 
-const generateLinkedInHeadlines = async () => {
+  const generateLinkedInHeadlines = async () => {
     if (!checkUsageLimit()) {
       return;
     }
@@ -152,7 +152,7 @@ const generateLinkedInHeadlines = async () => {
     } finally {
       setIsGenerating(false);
     }
-};
+  };
 
   const saveHeadline = (headline: string) => {
     if (!isAuthenticated) {
@@ -278,7 +278,7 @@ const generateLinkedInHeadlines = async () => {
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
           />
-          
+
           <Textarea
             placeholder="Describe your experience, skills, and achievements"
             value={experienceDetails}
@@ -287,8 +287,8 @@ const generateLinkedInHeadlines = async () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveProfile}
               disabled={!isAuthenticated}
             >
@@ -329,8 +329,8 @@ const generateLinkedInHeadlines = async () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generateLinkedInHeadlines} 
+        <Button
+          onClick={generateLinkedInHeadlines}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >

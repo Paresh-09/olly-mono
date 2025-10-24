@@ -6,11 +6,11 @@ import { Button } from '@repo/ui/components/ui/button'
 import { Label } from '@repo/ui/components/ui/label'
 import { Textarea } from '@repo/ui/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs'
-import { 
-  transformToAllStyles, 
-  getAvailableStyles, 
-  FavoriteStyle, 
-  StyleResult 
+import {
+  transformToAllStyles,
+  getAvailableStyles,
+  FavoriteStyle,
+  StyleResult
 } from '@/lib/tools/fancy-text-tranformer'
 import { CopyButton } from './copy-btn'
 
@@ -87,20 +87,20 @@ export const FancyTextGenerator: FC = () => {
     if (inputText) {
       const results = transformToAllStyles(inputText)
       setOutputResults(results)
-      
+
       // Group styles by category
       const categories: StyleCategoryGroups = {
-        'Mathematical': results.filter(r => 
+        'Mathematical': results.filter(r =>
           ['serif', 'serifBold', 'sansSerif', 'sansSerifBold', 'italic', 'monospace', 'doubleStruck'].includes(r.key)
         ),
-        'Decorative': results.filter(r => 
+        'Decorative': results.filter(r =>
           ['script', 'boldScript', 'fraktur', 'circled', 'bubbles'].includes(r.key)
         ),
-        'Aesthetic': results.filter(r => 
+        'Aesthetic': results.filter(r =>
           ['vaporwave', 'smallCaps'].includes(r.key)
         )
       }
-      
+
       setStyleCategories(categories)
     } else {
       setOutputResults([])
@@ -119,16 +119,16 @@ export const FancyTextGenerator: FC = () => {
 
   const toggleFavorite = (result: StyleResult) => {
     const exists = favorites.some(fav => fav.key === result.key)
-    
+
     if (exists) {
       // Remove from favorites
       setFavorites(favorites.filter(fav => fav.key !== result.key))
     } else {
       // Add to favorites with current text
-      setFavorites([...favorites, { 
-        key: result.key, 
+      setFavorites([...favorites, {
+        key: result.key,
         name: result.name,
-        text: result.text 
+        text: result.text
       }])
     }
   }
@@ -188,7 +188,7 @@ export const FancyTextGenerator: FC = () => {
               <TabsContent value="all" className="space-y-4">
                 <div className="grid gap-4">
                   {outputResults.map((result) => (
-                    <StyleCard 
+                    <StyleCard
                       key={result.key}
                       result={result}
                       isFavorite={isFavorite(result.key)}
@@ -201,7 +201,7 @@ export const FancyTextGenerator: FC = () => {
               <TabsContent value="mathematical" className="space-y-4">
                 <div className="grid gap-4">
                   {styleCategories['Mathematical']?.map((result) => (
-                    <StyleCard 
+                    <StyleCard
                       key={result.key}
                       result={result}
                       isFavorite={isFavorite(result.key)}
@@ -214,7 +214,7 @@ export const FancyTextGenerator: FC = () => {
               <TabsContent value="decorative" className="space-y-4">
                 <div className="grid gap-4">
                   {styleCategories['Decorative']?.map((result) => (
-                    <StyleCard 
+                    <StyleCard
                       key={result.key}
                       result={result}
                       isFavorite={isFavorite(result.key)}
@@ -227,7 +227,7 @@ export const FancyTextGenerator: FC = () => {
               <TabsContent value="aesthetic" className="space-y-4">
                 <div className="grid gap-4">
                   {styleCategories['Aesthetic']?.map((result) => (
-                    <StyleCard 
+                    <StyleCard
                       key={result.key}
                       result={result}
                       isFavorite={isFavorite(result.key)}

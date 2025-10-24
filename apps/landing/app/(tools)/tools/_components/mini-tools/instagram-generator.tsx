@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -250,7 +250,7 @@ export const InstagramGenerator = () => {
           <TabsTrigger value="profile">Profile Description</TabsTrigger>
           <TabsTrigger value="caption">Caption Generator</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="profile" className="space-y-6 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Select value={selectedNiche} onValueChange={setSelectedNiche}>
@@ -289,8 +289,8 @@ export const InstagramGenerator = () => {
             />
 
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={saveProfile}
                 disabled={!isAuthenticated}
               >
@@ -316,7 +316,7 @@ export const InstagramGenerator = () => {
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="caption" className="space-y-6 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Select value={selectedNiche} onValueChange={setSelectedNiche}>
@@ -369,8 +369,8 @@ export const InstagramGenerator = () => {
       </div>
 
       {/* Generate Button */}
-      <Button 
-        onClick={generateInstagramContent} 
+      <Button
+        onClick={generateInstagramContent}
         disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
         className="w-full"
       >

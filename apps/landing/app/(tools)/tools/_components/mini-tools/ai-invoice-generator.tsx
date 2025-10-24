@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input';
 import { Textarea } from '@repo/ui/components/ui/textarea';
 import { Label } from '@repo/ui/components/ui/label';
 import { Card } from '@repo/ui/components/ui/card';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -20,25 +20,25 @@ import { Switch } from '@repo/ui/components/ui/switch';
 import { Separator } from '@repo/ui/components/ui/separator';
 import { Pacifico, Dancing_Script, Great_Vibes, Alex_Brush } from 'next/font/google';
 
-const dancingScript = Dancing_Script({ 
+const dancingScript = Dancing_Script({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-dancing-script'
 });
 
-const pacifico = Pacifico({ 
+const pacifico = Pacifico({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-pacifico'
 });
 
-const greatVibes = Great_Vibes({ 
+const greatVibes = Great_Vibes({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-great-vibes'
 });
 
-const alexBrush = Alex_Brush({ 
+const alexBrush = Alex_Brush({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-alex-brush'
@@ -221,13 +221,13 @@ export function AIInvoiceGenerator() {
   const [businessWebsite, setBusinessWebsite] = useState(storedSettings.businessWebsite);
   const [businessLogo, setBusinessLogo] = useState<string | null>(storedSettings.businessLogo);
   const [taxRegNumber, setTaxRegNumber] = useState(storedSettings.taxRegNumber);
-  
+
   // Client information
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   const [clientPhone, setClientPhone] = useState('');
-  
+
   // Invoice details
   const [invoiceNumber, setInvoiceNumber] = useState(`INV-${new Date().getFullYear()}-001`);
   const [invoiceDate, setInvoiceDate] = useState(new Date().toISOString().split('T')[0]);
@@ -245,7 +245,7 @@ export function AIInvoiceGenerator() {
   const [notes, setNotes] = useState('');
   const [paymentTerms, setPaymentTerms] = useState(storedSettings.paymentTerms);
   const [paymentInstructions, setPaymentInstructions] = useState(storedSettings.paymentInstructions);
-  
+
   // Bank details
   const [bankName, setBankName] = useState(storedSettings.bankName);
   const [bankAccountName, setBankAccountName] = useState(storedSettings.bankAccountName);
@@ -253,21 +253,21 @@ export function AIInvoiceGenerator() {
   const [bankRoutingNumber, setBankRoutingNumber] = useState(storedSettings.bankRoutingNumber);
   const [bankIBAN, setBankIBAN] = useState(storedSettings.bankIBAN);
   const [bankSwiftCode, setBankSwiftCode] = useState(storedSettings.bankSwiftCode);
-  
+
   // Line items
   const [items, setItems] = useState<LineItem[]>([
     { id: 1, description: '', quantity: 1, unitPrice: 0, discount: 0, amount: 0 }
   ]);
-  
+
   // Design options
   const [template, setTemplate] = useState(storedSettings.template);
   const [primaryColor, setPrimaryColor] = useState(storedSettings.primaryColor);
   const [accentColor, setAccentColor] = useState(storedSettings.accentColor);
   const [showLogo, setShowLogo] = useState(storedSettings.showLogo);
-  
+
   // Tax name
   const [taxName, setTaxName] = useState('Tax');
-  
+
   // Utility functions
   const loadScript = (src: string): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -297,12 +297,12 @@ export function AIInvoiceGenerator() {
     }, 500),
     [setStoredSettings]
   );
-  
+
   // Calculate line item amount
   const calculateItemAmount = useCallback((quantity: number, unitPrice: number, discount = 0): number => {
     return (quantity * unitPrice) * (1 - discount / 100);
   }, []);
-  
+
   // Update line item
   const updateItem = useCallback((id: number, field: keyof LineItem, value: string | number) => {
     setItems(prevItems => {
@@ -323,13 +323,13 @@ export function AIInvoiceGenerator() {
       });
     });
   }, [calculateItemAmount]);
-  
+
   // Add new line item
   const addItem = () => {
     const newId = Math.max(0, ...items.map(item => item.id)) + 1;
     setItems([...items, { id: newId, description: '', quantity: 1, unitPrice: 0, discount: 0, amount: 0 }]);
   };
-  
+
   // Remove line item
   const removeItem = (id: number) => {
     if (items.length > 1) {
@@ -342,52 +342,52 @@ export function AIInvoiceGenerator() {
       });
     }
   };
-  
+
   // Calculate subtotal
   const calculateSubtotal = (): number => {
     return items.reduce((sum, item) => sum + item.amount, 0);
   };
-  
+
   // Calculate tax amount
   const calculateTaxAmount = (subtotal: number): number => {
     const rate = isCustomTaxRate ? customTaxRate : taxRate;
     return subtotal * (rate / 100);
   };
-  
+
   // Calculate total
   const calculateTotal = (): number => {
     const subtotal = calculateSubtotal();
     const taxAmount = calculateTaxAmount(subtotal);
     return subtotal + taxAmount;
   };
-  
+
   // Format currency
   const getCurrencySymbol = (currencyId: string): string => {
     const currency = CURRENCIES.find(c => c.id === currencyId);
     return currency ? currency.symbol : '$';
   };
-  
+
   // Handle logo upload
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
-      
+
       reader.onloadend = () => {
         setBusinessLogo(reader.result as string);
       };
-      
+
       reader.readAsDataURL(file);
     }
   };
-  
+
   // Trigger file input click
   const triggerFileInput = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-  
+
   // Update tax rate when tax type changes
   useEffect(() => {
     if (!isCustomTaxRate && taxType !== 'custom') {
@@ -395,13 +395,13 @@ export function AIInvoiceGenerator() {
       setTaxRate(selectedTax ? selectedTax.value : 0);
     }
   }, [taxType, taxCountry, isCustomTaxRate]);
-  
+
   // Update tax presets when country changes
   useEffect(() => {
     // Reset to first tax type when country changes
     setTaxType(TAX_PRESETS[taxCountry][0].id);
   }, [taxCountry]);
-  
+
   // Get template class
   const getTemplateClass = () => {
     switch (template) {
@@ -417,11 +417,11 @@ export function AIInvoiceGenerator() {
         return 'border-t-4';
     }
   };
-  
+
   // Print invoice
   const printInvoice = () => {
     if (!invoiceRef.current) return;
-    
+
     try {
       // Get styles from the current document
       const styles = Array.from(document.styleSheets)
@@ -437,10 +437,10 @@ export function AIInvoiceGenerator() {
         })
         .filter(Boolean)
         .join('\n');
-      
+
       // Create the invoice content
       const invoiceContent = invoiceRef.current.outerHTML;
-      
+
       // Create an iframe (this has better print behavior than a new window)
       const iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
@@ -449,15 +449,15 @@ export function AIInvoiceGenerator() {
       iframe.style.width = '0';
       iframe.style.height = '0';
       iframe.style.border = '0';
-      
+
       // Add the iframe to the document and access its document
       document.body.appendChild(iframe);
-      
+
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!iframeDoc) {
         throw new Error("Could not access iframe document");
       }
-      
+
       // Write the content to the iframe
       iframeDoc.open();
       iframeDoc.write(`
@@ -522,20 +522,20 @@ export function AIInvoiceGenerator() {
         </html>
       `);
       iframeDoc.close();
-      
+
       // Wait a bit for styles to apply
       setTimeout(() => {
         // Print and then remove the iframe
         if (iframe.contentWindow) {
           iframe.contentWindow.print();
         }
-        
+
         // Remove the iframe after printing
         setTimeout(() => {
           document.body.removeChild(iframe);
         }, 1000);
       }, 500);
-      
+
     } catch (error) {
       console.error('Print error:', error);
       toast({
@@ -551,31 +551,31 @@ export function AIInvoiceGenerator() {
     setIsDrawing(true);
     const canvas = signatureCanvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
+
     const rect = canvas.getBoundingClientRect();
     const x = ('touches' in e) ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
     const y = ('touches' in e) ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
-    
+
     ctx.beginPath();
     ctx.moveTo(x, y);
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
-    
+
     const canvas = signatureCanvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
+
     const rect = canvas.getBoundingClientRect();
     const x = ('touches' in e) ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
     const y = ('touches' in e) ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
-    
+
     ctx.lineTo(x, y);
     ctx.stroke();
   };
@@ -590,10 +590,10 @@ export function AIInvoiceGenerator() {
   const clearSignature = () => {
     const canvas = signatureCanvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setSignature({ type: null, value: null });
   };
@@ -608,23 +608,23 @@ export function AIInvoiceGenerator() {
       });
       return;
     }
-    
+
     toast({
       title: "Generating PDF",
       description: "Please wait while we prepare your invoice PDF..."
     });
-    
+
     try {
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-      
+
       const html2canvas = window.html2canvas;
       const jspdf = window.jspdf;
-      
+
       if (!html2canvas || !jspdf) {
         throw new Error("Required libraries could not be loaded");
       }
-      
+
       const element = invoiceRef.current.cloneNode(true) as HTMLElement;
       const container = document.createElement('div');
       container.style.position = 'fixed';
@@ -633,7 +633,7 @@ export function AIInvoiceGenerator() {
       container.style.width = '8.5in';
       document.body.appendChild(container);
       container.appendChild(element);
-      
+
       const canvas = await html2canvas(element, {
         scale: 1.5, // Reduced from 2 to optimize size
         useCORS: true,
@@ -648,28 +648,28 @@ export function AIInvoiceGenerator() {
           }
         }
       });
-      
+
       const imgData = canvas.toDataURL('image/jpeg', 0.85); // Use JPEG with 85% quality
-      
+
       const pdf = new jspdf.jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'letter',
         compress: true
       });
-      
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const ratio = canvas.width / canvas.height;
       const imgWidth = pdfWidth;
       const imgHeight = imgWidth / ratio;
-      
+
       pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-      
+
       pdf.save(`Invoice_${invoiceNumber.replace(/\s+/g, '-')}.pdf`);
-      
+
       document.body.removeChild(container);
-      
+
       toast({
         title: "PDF Downloaded",
         description: "Your invoice has been downloaded as a PDF."
@@ -746,12 +746,12 @@ export function AIInvoiceGenerator() {
           <TabsTrigger value="design">Design</TabsTrigger>
           <TabsTrigger value="preview">Preview & Export</TabsTrigger>
         </TabsList>
-        
+
         {/* Business Information Tab */}
         <TabsContent value="business" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Business Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="logo">Business Logo</Label>
@@ -763,8 +763,8 @@ export function AIInvoiceGenerator() {
                     accept="image/png,image/jpeg,image/svg+xml"
                     onChange={handleLogoUpload}
                   />
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={triggerFileInput}
                     className="flex items-center"
                   >
@@ -773,16 +773,16 @@ export function AIInvoiceGenerator() {
                   </Button>
                   {businessLogo && (
                     <div className="ml-4 w-16 h-16">
-                      <img 
-                        src={businessLogo} 
-                        alt="Business Logo" 
+                      <img
+                        src={businessLogo}
+                        alt="Business Logo"
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
                   )}
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="businessName">Business Name</Label>
                 <Input
@@ -793,7 +793,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="businessAddress">Address</Label>
                 <Textarea
@@ -804,7 +804,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="businessPhone">Phone</Label>
@@ -816,7 +816,7 @@ export function AIInvoiceGenerator() {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="businessEmail">Email</Label>
                   <Input
@@ -827,7 +827,7 @@ export function AIInvoiceGenerator() {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="businessWebsite">Website</Label>
                   <Input
@@ -839,7 +839,7 @@ export function AIInvoiceGenerator() {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="taxRegNumber">Tax/Registration Number</Label>
                 <Input
@@ -864,7 +864,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankAccountName">Account Holder Name</Label>
                     <Input
@@ -875,7 +875,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankAccountNumber">Account Number</Label>
                     <Input
@@ -886,7 +886,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankRoutingNumber">Routing Number</Label>
                     <Input
@@ -897,7 +897,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankIBAN">IBAN</Label>
                     <Input
@@ -908,7 +908,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankSwiftCode">SWIFT/BIC Code</Label>
                     <Input
@@ -924,7 +924,7 @@ export function AIInvoiceGenerator() {
 
               <div>
                 <h3 className="text-lg font-medium mb-3">Invoice Details</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="invoiceNumber">Invoice Number</Label>
@@ -936,7 +936,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="invoiceDate">Invoice Date</Label>
                     <Input
@@ -947,7 +947,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="dueDate">Due Date</Label>
                     <Input
@@ -963,12 +963,12 @@ export function AIInvoiceGenerator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Client Information Tab */}
         <TabsContent value="client" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Client Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="clientName">Client Name</Label>
@@ -980,7 +980,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="clientAddress">Client Address</Label>
                 <Textarea
@@ -991,7 +991,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="clientEmail">Client Email</Label>
@@ -1003,7 +1003,7 @@ export function AIInvoiceGenerator() {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="clientPhone">Client Phone</Label>
                   <Input
@@ -1017,10 +1017,10 @@ export function AIInvoiceGenerator() {
               </div>
             </div>
           </Card>
-          
+
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="paymentTerms">Payment Terms</Label>
@@ -1032,7 +1032,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="paymentInstructions">Payment Instructions</Label>
                 <Textarea
@@ -1043,7 +1043,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="notes">Notes</Label>
                 <Textarea
@@ -1054,7 +1054,7 @@ export function AIInvoiceGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <h3 className="text-lg font-medium mb-3">Bank Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1068,7 +1068,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankAccountName">Account Holder Name</Label>
                     <Input
@@ -1079,7 +1079,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankAccountNumber">Account Number</Label>
                     <Input
@@ -1090,7 +1090,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankRoutingNumber">Routing Number</Label>
                     <Input
@@ -1101,7 +1101,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankIBAN">IBAN</Label>
                     <Input
@@ -1112,7 +1112,7 @@ export function AIInvoiceGenerator() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="bankSwiftCode">SWIFT/BIC Code</Label>
                     <Input
@@ -1128,12 +1128,12 @@ export function AIInvoiceGenerator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Line Items Tab */}
         <TabsContent value="items" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Invoice Items</h2>
-            
+
             <div className="space-y-4">
               <div className="mb-3">
                 <Label htmlFor="currency">Currency</Label>
@@ -1153,7 +1153,7 @@ export function AIInvoiceGenerator() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="grid grid-cols-12 gap-2 font-medium text-sm">
                   <div className="col-span-5">Description</div>
@@ -1162,7 +1162,7 @@ export function AIInvoiceGenerator() {
                   <div className="col-span-2">Discount %</div>
                   <div className="col-span-1">Actions</div>
                 </div>
-                
+
                 {items.map((item) => (
                   <div key={item.id} className="grid grid-cols-12 gap-2 items-center">
                     <div className="col-span-5">
@@ -1199,8 +1199,8 @@ export function AIInvoiceGenerator() {
                       />
                     </div>
                     <div className="col-span-1">
-                      <Button 
-                        variant="ghost" 
+                      <Button
+                        variant="ghost"
                         size="icon"
                         onClick={() => removeItem(item.id)}
                       >
@@ -1209,7 +1209,7 @@ export function AIInvoiceGenerator() {
                     </div>
                   </div>
                 ))}
-                
+
                 <Button
                   variant="outline"
                   className="mt-2"
@@ -1222,7 +1222,7 @@ export function AIInvoiceGenerator() {
 
               <div className="space-y-4 mt-8 border-t pt-4">
                 <h3 className="text-lg font-medium mb-3">Tax Settings</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="taxCountry">Tax Region</Label>
@@ -1241,7 +1241,7 @@ export function AIInvoiceGenerator() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="taxName">Tax Name</Label>
                     <Input
@@ -1253,7 +1253,7 @@ export function AIInvoiceGenerator() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="customTaxRate"
@@ -1262,7 +1262,7 @@ export function AIInvoiceGenerator() {
                   />
                   <Label htmlFor="customTaxRate">Use custom tax rate</Label>
                 </div>
-                
+
                 {isCustomTaxRate && (
                   <div>
                     <Label htmlFor="customTaxRate">Custom Tax Rate (%)</Label>
@@ -1281,12 +1281,12 @@ export function AIInvoiceGenerator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Design Tab */}
         <TabsContent value="design" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Design Options</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="template">Template Style</Label>
@@ -1315,7 +1315,7 @@ export function AIInvoiceGenerator() {
                     className="h-10 mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="accentColor">Accent Color</Label>
                   <Input
@@ -1456,8 +1456,8 @@ export function AIInvoiceGenerator() {
               </div>
             </div>
 
-            <div 
-              ref={invoiceRef} 
+            <div
+              ref={invoiceRef}
               className={`bg-white p-8 rounded-lg shadow-lg ${getTemplateClass()}`}
               style={{ borderColor: primaryColor }}
             >
@@ -1465,9 +1465,9 @@ export function AIInvoiceGenerator() {
               <div className="flex justify-between items-start mb-8">
                 <div>
                   {showLogo && businessLogo && (
-                    <img 
-                      src={businessLogo} 
-                      alt="Business Logo" 
+                    <img
+                      src={businessLogo}
+                      alt="Business Logo"
                       className="max-w-[200px] max-h-[100px] mb-4"
                     />
                   )}
@@ -1482,7 +1482,7 @@ export function AIInvoiceGenerator() {
                     {taxRegNumber && <p>Tax/Reg No: {taxRegNumber}</p>}
                   </div>
                 </div>
-                
+
                 <div className="text-right">
                   <h2 className="text-3xl font-bold mb-4" style={{ color: accentColor }}>
                     INVOICE
@@ -1574,7 +1574,7 @@ export function AIInvoiceGenerator() {
                     <p>{paymentInstructions}</p>
                   </div>
                 )}
-                
+
                 {/* Bank Details */}
                 {(bankName || bankAccountName || bankAccountNumber || bankRoutingNumber || bankIBAN || bankSwiftCode) && (
                   <div>

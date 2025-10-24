@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -286,7 +286,7 @@ export const TwitterBioGenerator = () => {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
-          
+
           <Textarea
             placeholder="Describe yourself, your interests, expertise, and what you want to highlight"
             value={profileDetails}
@@ -295,8 +295,8 @@ export const TwitterBioGenerator = () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveProfile}
               disabled={!isAuthenticated}
             >
@@ -338,8 +338,8 @@ export const TwitterBioGenerator = () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generateTwitterBios} 
+        <Button
+          onClick={generateTwitterBios}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >

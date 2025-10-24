@@ -162,7 +162,7 @@ export function BarkToTextConverter() {
               onChange={handleFileUpload}
             />
           </div>
-          
+
           {audioUrl && (
             <div className="w-full">
               <audio controls src={audioUrl} className="w-full" />

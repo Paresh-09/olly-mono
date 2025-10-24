@@ -16,7 +16,7 @@ interface ClaimReportsProps {
 export const ClaimReports = ({ isAuthenticated, onLogin, onSuccess }: ClaimReportsProps) => {
   const [anonymousReports, setAnonymousReports] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Load anonymous reports from localStorage
   useEffect(() => {
     if (isAuthenticated) {
@@ -26,15 +26,15 @@ export const ClaimReports = ({ isAuthenticated, onLogin, onSuccess }: ClaimRepor
       }
     }
   }, [isAuthenticated]);
-  
+
   // Skip if there are no reports to claim
   if (!isAuthenticated || anonymousReports.length === 0) {
     return null;
   }
-  
+
   const handleClaimReports = async () => {
     if (anonymousReports.length === 0) return;
-    
+
     setIsLoading(true);
     try {
       const response = await fetch('/api/tools/audit/claim', {
@@ -42,23 +42,23 @@ export const ClaimReports = ({ isAuthenticated, onLogin, onSuccess }: ClaimRepor
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reportIds: anonymousReports }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to claim reports');
       }
-      
+
       // Clear the localStorage entry once claimed
       localStorage.removeItem('anonymousReports');
       setAnonymousReports([]);
-      
+
       // Show appropriate message with counts
       toast({
         title: "Reports Processed",
         description: data.message || `Successfully claimed ${data.claimedCount} reports.`,
       });
-      
+
       if (onSuccess) {
         onSuccess();
       }
@@ -72,7 +72,7 @@ export const ClaimReports = ({ isAuthenticated, onLogin, onSuccess }: ClaimRepor
       setIsLoading(false);
     }
   };
-  
+
   return (
     <Card className="p-4 border-yellow-200 bg-yellow-50">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -86,8 +86,8 @@ export const ClaimReports = ({ isAuthenticated, onLogin, onSuccess }: ClaimRepor
           <Badge variant="outline" className="mr-2">
             {anonymousReports.length} unclaimed
           </Badge>
-          <Button 
-            onClick={handleClaimReports} 
+          <Button
+            onClick={handleClaimReports}
             disabled={isLoading}
           >
             {isLoading ? 'Claiming...' : 'Claim All Reports'}

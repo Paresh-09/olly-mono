@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@repo/ui/components/ui/button";
 import { ChevronDown, ChevronUp, Loader, ThumbsUp } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/ui/table';
 import { Badge } from '@repo/ui/components/ui/badge';
 import { toast } from "@repo/ui/hooks/use-toast";
 
@@ -90,8 +91,8 @@ export default function ProductRoadmap() {
         throw new Error('Failed to upvote feature');
       }
 
-      setItems(prevItems => 
-        prevItems.map(item => 
+      setItems(prevItems =>
+        prevItems.map(item =>
           item.id === id ? { ...item, votes: item.votes + 1 } : item
         ).sort((a, b) => b.votes - a.votes)
       );
@@ -139,7 +140,7 @@ export default function ProductRoadmap() {
               <h2 className="text-2xl font-semibold mb-4">Active Development</h2>
               <div className="space-y-4">
                 {activeItems.map((item) => (
-                  <div 
+                  <div
                     key={item.id}
                     className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 transition-colors"
                   >
@@ -160,8 +161,8 @@ export default function ProductRoadmap() {
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                           {item.votes} votes
                         </div>
-                        <Button 
-                          onClick={() => handleUpvote(item.id)} 
+                        <Button
+                          onClick={() => handleUpvote(item.id)}
                           variant="outline"
                           size="sm"
                           className={`${upvotedFeatures.includes(item.id) ? 'bg-gray-100 cursor-not-allowed dark:bg-gray-700' : 'hover:bg-blue-50 dark:hover:bg-blue-900'}`}
@@ -184,9 +185,9 @@ export default function ProductRoadmap() {
 
           {/* Completed Items Section */}
           <div>
-            <Button 
-              onClick={() => setShowCompleted(!showCompleted)} 
-              variant="outline" 
+            <Button
+              onClick={() => setShowCompleted(!showCompleted)}
+              variant="outline"
               className="w-full flex items-center justify-center py-3 mb-4"
             >
               {showCompleted ? <ChevronUp size={16} className="mr-2" /> : <ChevronDown size={16} className="mr-2" />}
@@ -198,7 +199,7 @@ export default function ProductRoadmap() {
                 <h2 className="text-2xl font-semibold mb-4">Completed Features</h2>
                 <div className="space-y-4">
                   {completedItems.map((item) => (
-                    <div 
+                    <div
                       key={item.id}
                       className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900"
                     >
@@ -213,10 +214,10 @@ export default function ProductRoadmap() {
                           <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
                           {item.implementationDate && (
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              Implemented on {new Date(item.implementationDate).toLocaleDateString('en-US', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
+                              Implemented on {new Date(item.implementationDate).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
                               })}
                             </p>
                           )}

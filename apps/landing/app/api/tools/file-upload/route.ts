@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
     
     // Collect all files from form data
     for (const [key, value] of Array.from(formData.entries())) {
-      if (value instanceof File && key.startsWith('file')) {
-        files.push(value);
+      if (typeof value !== 'string' && value && typeof value === 'object' && 'name' in value && 'size' in value && key.startsWith('file')) {
+        files.push(value as File);
       }
     }
 

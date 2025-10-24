@@ -8,6 +8,7 @@ import { Button } from '@repo/ui/components/ui/button';
 import { Input } from '@repo/ui/components/ui/input';
 import { Label } from '@repo/ui/components/ui/label';
 import { useToast } from '@repo/ui/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui/components/ui/dialog';
 import Image from 'next/image';
 import { Check, Copy, Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';

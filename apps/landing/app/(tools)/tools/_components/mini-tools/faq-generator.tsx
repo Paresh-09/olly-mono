@@ -23,7 +23,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Separator } from "@repo/ui/components/ui/separator";
 import { Switch } from "@repo/ui/components/ui/switch";
-import { useToast } from "@repo/ui/hooks/use-toast";import { Alert, AlertDescription } from "@repo/ui/components/ui/alert";
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { Alert, AlertDescription } from "@repo/ui/components/ui/alert";
 import {
   Accordion,
   AccordionContent,

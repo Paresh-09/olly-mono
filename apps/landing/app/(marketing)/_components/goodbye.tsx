@@ -41,11 +41,11 @@ export default function GoodByeFeedback() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          userId, 
+        body: JSON.stringify({
+          userId,
           mainReason: reason,
           specificReason: subReason,
-          additionalFeedback: otherReason 
+          additionalFeedback: otherReason
         }),
       })
         .then(() => {
@@ -94,10 +94,10 @@ export default function GoodByeFeedback() {
         <div className="space-y-2">
           <p className="text-sm text-blue-800">{help.message}</p>
           {help.link && (
-            <a 
+            <a
               href={help.link}
               target="_blank"
-              rel="noopener noreferrer" 
+              rel="noopener noreferrer"
               className="text-sm text-blue-600 hover:text-blue-800 underline"
             >
               Learn more →
@@ -247,8 +247,8 @@ export default function GoodByeFeedback() {
                 ← Back
               </Button>
               <div className="space-x-3">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => window.location.href = 'https://olly.social/contact'}
                 >
                   Contact Support

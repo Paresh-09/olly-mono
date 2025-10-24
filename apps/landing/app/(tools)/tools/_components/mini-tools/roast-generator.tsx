@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -286,7 +286,7 @@ export const RoastGenerator = () => {
             onChange={(e) => setContextDetails(e.target.value)}
             rows={3}
           />
-          
+
           <Input
             placeholder="Target name (optional)"
             value={targetName}
@@ -294,8 +294,8 @@ export const RoastGenerator = () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveContext}
               disabled={!isAuthenticated}
             >
@@ -351,8 +351,8 @@ export const RoastGenerator = () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generateRoasts} 
+        <Button
+          onClick={generateRoasts}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >

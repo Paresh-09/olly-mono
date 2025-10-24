@@ -26,38 +26,38 @@ export default function JoinWorkshopForm() {
   const [accessCode, setAccessCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+
   const handleJoinWorkshop = async () => {
     if (!workshopId.trim()) {
       toast.error('Please enter a workshop ID')
       return
     }
-    
+
     try {
       setLoading(true)
       setError(null)
-      
+
       // First, check if the workshop exists
       const response = await axios.get(`/api/workshops/join?workshopId=${workshopId.trim()}${accessCode ? `&accessCode=${accessCode.trim()}` : ''}`)
       const info = response.data
-      
+
       // If we need an access code but it wasn't provided
       if (!info.canJoin && info.needsAccessCode && !accessCode) {
         setError('This workshop requires an access code')
         setLoading(false)
         return
       }
-      
+
       // If any other reason we can't join
       if (!info.canJoin) {
         setError(info.message || 'Unable to join workshop')
         setLoading(false)
         return
       }
-      
+
       // All good, navigate to participant page with both params
       router.push(`/tools/workshop-group-organizer/participant?workshopId=${workshopId.trim()}${accessCode ? `&accessCode=${accessCode.trim()}` : ''}`)
-      
+
     } catch (err: any) {
       console.error('Error checking workshop:', err)
       setError(err.response?.data?.error || 'Workshop not found')
@@ -65,7 +65,7 @@ export default function JoinWorkshopForm() {
       setLoading(false)
     }
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -89,7 +89,7 @@ export default function JoinWorkshopForm() {
             }}
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="access-code">Access Code (if required)</Label>
           <Input
@@ -104,7 +104,7 @@ export default function JoinWorkshopForm() {
             }}
           />
         </div>
-        
+
         {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -113,8 +113,8 @@ export default function JoinWorkshopForm() {
         )}
       </CardContent>
       <CardFooter>
-        <Button 
-          onClick={handleJoinWorkshop} 
+        <Button
+          onClick={handleJoinWorkshop}
           className="w-full"
           disabled={loading || !workshopId.trim()}
         >

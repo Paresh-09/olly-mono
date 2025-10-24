@@ -1,36 +1,37 @@
-"use client";
+import React from 'react';
+import { Button } from '@repo/ui/components/ui/button';
+import { getGoogleOauthConsentUrl } from '@/lib/actions';
+import { RiGoogleFill } from '@remixicon/react';
+import { useToast } from "@repo/ui/hooks/use-toast";
 
-import { Button } from "@repo/ui/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
+const GoogleOAuthButton = () => {
+    const { toast } = useToast();
 
-interface GoogleOAuthButtonProps {
-  children?: React.ReactNode;
-  variant?: "default" | "outline" | "ghost";
-  size?: "sm" | "default" | "lg";
-  className?: string;
-}
+    const handleClick = async () => {
+        // Get current path from window.location
+        const currentPath = window.location.pathname + window.location.search;
+        const res = await getGoogleOauthConsentUrl(currentPath);
+        if (res.url) {
+            window.location.href = res.url;
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: res.error || "An error occurred",
+            });
+        }
+    };
 
-export default function GoogleOAuthButton({ 
-  children = "Continue with Google", 
-  variant = "outline",
-  size = "default",
-  className 
-}: GoogleOAuthButtonProps) {
-  const handleGoogleAuth = () => {
-    // Redirect to main app for authentication
-    window.location.href = "https://www.olly.social/login";
-  };
+    return (
+        <Button 
+            onClick={handleClick} 
+            className="w-full flex items-center justify-center space-x-2 py-2"
+            variant="default"
+        >
+            <RiGoogleFill className="w-5 h-5" />
+            <span>Continue with Google</span>
+        </Button>
+    );
+};
 
-  return (
-    <Button
-      type="button"
-      variant={variant}
-      size={size}
-      className={className}
-      onClick={handleGoogleAuth}
-    >
-      <FcGoogle className="mr-2 h-4 w-4" />
-      {children}
-    </Button>
-  );
-}
+export default GoogleOAuthButton;

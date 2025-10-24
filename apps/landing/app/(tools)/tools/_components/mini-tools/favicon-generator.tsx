@@ -7,7 +7,7 @@ import { Button } from '@repo/ui/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs"
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import { toast } from '@repo/ui/hooks/use-toast'
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -100,14 +100,14 @@ export const FaviconGenerator = () => {
     try {
       const img = new Image();
       img.src = originalImage;
-      
+
       await new Promise((resolve) => {
         img.onload = resolve;
       });
 
       const canvas = canvasRef.current;
       if (!canvas) return;
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -115,7 +115,7 @@ export const FaviconGenerator = () => {
         selectedSizes.map(async (size) => {
           canvas.width = size;
           canvas.height = size;
-          
+
           // Fill background if not transparent
           if (backgroundColor !== 'transparent') {
             ctx.fillStyle = backgroundColor;
@@ -123,14 +123,14 @@ export const FaviconGenerator = () => {
           } else {
             ctx.clearRect(0, 0, size, size);
           }
-          
+
           // Draw image centered and scaled to fit
           const scale = Math.min(size / img.width, size / img.height);
           const x = (size - img.width * scale) / 2;
           const y = (size - img.height * scale) / 2;
-          
+
           ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-          
+
           return {
             size,
             dataUrl: canvas.toDataURL('image/png')
@@ -170,7 +170,7 @@ export const FaviconGenerator = () => {
       // We'll use the 16x16 and 32x32 sizes for the ICO file
       const sizes = [16, 32];
       const icoFavicons = generatedFavicons.filter(favicon => sizes.includes(favicon.size));
-      
+
       if (icoFavicons.length === 0) {
         toast({
           title: "Error",
@@ -182,7 +182,7 @@ export const FaviconGenerator = () => {
 
       // Create a FormData object to send to the server
       const formData = new FormData();
-      
+
       // Add each favicon to the FormData
       icoFavicons.forEach(favicon => {
         // Convert data URL to Blob
@@ -190,12 +190,12 @@ export const FaviconGenerator = () => {
         const mimeType = favicon.dataUrl.split(',')[0].split(':')[1].split(';')[0];
         const arrayBuffer = new ArrayBuffer(byteString.length);
         const intArray = new Uint8Array(arrayBuffer);
-        
+
         for (let i = 0; i < byteString.length; i++) {
           intArray[i] = byteString.charCodeAt(i);
         }
-        
-        const blob = new Blob([arrayBuffer], {type: mimeType});
+
+        const blob = new Blob([arrayBuffer], { type: mimeType });
         formData.append(`favicon-${favicon.size}`, blob, `favicon-${favicon.size}.png`);
       });
 
@@ -203,19 +203,19 @@ export const FaviconGenerator = () => {
       // For simplicity, we'll just combine the PNG files into a zip
       // In a real implementation, you would use a library like png2ico
       const zip = new JSZip();
-      
+
       icoFavicons.forEach(favicon => {
         const imgData = favicon.dataUrl.split(',')[1];
-        zip.file(`favicon-${favicon.size}.png`, imgData, {base64: true});
+        zip.file(`favicon-${favicon.size}.png`, imgData, { base64: true });
       });
-      
+
       // Add a note about ICO conversion
       zip.file('README.txt', 'For true ICO conversion, please use an online converter like https://convertico.com/ or a desktop tool like ImageMagick.');
-      
+
       // Generate and download the zip file
-      const content = await zip.generateAsync({type: 'blob'});
+      const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, 'favicon-ico-files.zip');
-      
+
       toast({
         title: "Success",
         description: "Favicon PNG files for ICO conversion downloaded successfully"
@@ -236,13 +236,13 @@ export const FaviconGenerator = () => {
 
     try {
       const zip = new JSZip();
-      
+
       // Add each favicon to the zip
       generatedFavicons.forEach(favicon => {
         const imgData = favicon.dataUrl.split(',')[1];
-        zip.file(`favicon-${favicon.size}x${favicon.size}.png`, imgData, {base64: true});
+        zip.file(`favicon-${favicon.size}x${favicon.size}.png`, imgData, { base64: true });
       });
-      
+
       // Generate HTML code for favicon links
       let htmlCode = '<!-- Favicon links for your HTML head section -->\n';
       htmlCode += '<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">\n';
@@ -261,7 +261,7 @@ export const FaviconGenerator = () => {
       htmlCode += '<link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">\n';
       htmlCode += '<meta name="msapplication-TileImage" content="favicon-144x144.png">\n';
       htmlCode += '<meta name="msapplication-TileColor" content="#ffffff">\n';
-      
+
       // Add manifest.json example
       let manifestJson = '{\n';
       manifestJson += '  "icons": [\n';
@@ -269,15 +269,15 @@ export const FaviconGenerator = () => {
       manifestJson += '    { "src": "favicon-512x512.png", "sizes": "512x512", "type": "image/png" }\n';
       manifestJson += '  ]\n';
       manifestJson += '}\n';
-      
+
       // Add the HTML and manifest files to the zip
       zip.file('favicon-html-code.txt', htmlCode);
       zip.file('manifest-icons-example.json', manifestJson);
-      
+
       // Generate and download the zip file
-      const content = await zip.generateAsync({type: 'blob'});
+      const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, 'favicons.zip');
-      
+
       toast({
         title: "Success",
         description: "Favicons downloaded successfully"
@@ -313,14 +313,14 @@ export const FaviconGenerator = () => {
   return (
     <Card className="p-6">
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="upload">Upload</TabsTrigger>
           <TabsTrigger value="generate" disabled={!originalImage}>Generate</TabsTrigger>
           <TabsTrigger value="download" disabled={generatedFavicons.length === 0}>Download</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="upload" className="space-y-4 mt-4">
           <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 text-center">
             <input
@@ -330,7 +330,7 @@ export const FaviconGenerator = () => {
               accept="image/*"
               className="hidden"
             />
-            <Button 
+            <Button
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
               className="mb-4"
@@ -341,21 +341,21 @@ export const FaviconGenerator = () => {
               Upload a square image (PNG, JPG, SVG) for best results
             </p>
           </div>
-          
+
           {originalImage && (
             <div className="flex flex-col items-center mt-4">
               <p className="text-sm font-medium mb-2">Preview:</p>
               <div className="border rounded-lg p-2 bg-secondary">
-                <img 
-                  src={originalImage} 
-                  alt="Original" 
+                <img
+                  src={originalImage}
+                  alt="Original"
                   className="max-w-[200px] max-h-[200px] object-contain"
                 />
               </div>
             </div>
           )}
         </TabsContent>
-        
+
         <TabsContent value="generate" className="space-y-4 mt-4">
           {originalImage && (
             <>
@@ -363,19 +363,19 @@ export const FaviconGenerator = () => {
                 <div className="w-full md:w-1/2">
                   <p className="text-sm font-medium mb-2">Original Image:</p>
                   <div className="border rounded-lg p-2 bg-secondary flex items-center justify-center">
-                    <img 
-                      src={originalImage} 
-                      alt="Original" 
+                    <img
+                      src={originalImage}
+                      alt="Original"
                       className="max-w-full max-h-[200px] object-contain"
                     />
                   </div>
                 </div>
-                
+
                 <div className="w-full md:w-1/2 space-y-4">
                   <div>
                     <p className="text-sm font-medium mb-2">Background Color:</p>
-                    <Select 
-                      value={backgroundColor} 
+                    <Select
+                      value={backgroundColor}
                       onValueChange={setBackgroundColor}
                     >
                       <SelectTrigger>
@@ -385,12 +385,12 @@ export const FaviconGenerator = () => {
                         {BACKGROUND_COLORS.map(color => (
                           <SelectItem key={color.value} value={color.value}>
                             <div className="flex items-center">
-                              <div 
-                                className="w-4 h-4 mr-2 rounded-full border" 
-                                style={{ 
+                              <div
+                                className="w-4 h-4 mr-2 rounded-full border"
+                                style={{
                                   backgroundColor: color.value,
-                                  backgroundImage: color.value === 'transparent' ? 
-                                    'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)' : 
+                                  backgroundImage: color.value === 'transparent' ?
+                                    'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)' :
                                     'none',
                                   backgroundSize: '6px 6px',
                                   backgroundPosition: '0 0, 3px 3px'
@@ -403,21 +403,21 @@ export const FaviconGenerator = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div>
                     <div className="flex justify-between mb-2">
                       <p className="text-sm font-medium">Select Sizes:</p>
                       <div className="space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => toggleAllSizes(true)}
                         >
                           Select All
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => toggleAllSizes(false)}
                         >
                           Clear All
@@ -440,9 +440,9 @@ export const FaviconGenerator = () => {
                   </div>
                 </div>
               </div>
-              
-              <Button 
-                onClick={generateFavicons} 
+
+              <Button
+                onClick={generateFavicons}
                 disabled={isGenerating || selectedSizes.length === 0}
                 className="w-full"
               >
@@ -451,7 +451,7 @@ export const FaviconGenerator = () => {
             </>
           )}
         </TabsContent>
-        
+
         <TabsContent value="download" className="space-y-4 mt-4">
           {generatedFavicons.length > 0 && (
             <>
@@ -466,13 +466,13 @@ export const FaviconGenerator = () => {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {generatedFavicons.map(favicon => (
                   <div key={favicon.size} className="flex flex-col items-center border rounded-lg p-3 bg-secondary">
-                    <img 
-                      src={favicon.dataUrl} 
-                      alt={`${favicon.size}x${favicon.size}`} 
+                    <img
+                      src={favicon.dataUrl}
+                      alt={`${favicon.size}x${favicon.size}`}
                       className="mb-2"
                       style={{
                         width: favicon.size > 64 ? 64 : favicon.size,
@@ -481,8 +481,8 @@ export const FaviconGenerator = () => {
                       }}
                     />
                     <p className="text-xs font-medium mb-1">{favicon.size}x{favicon.size}</p>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => downloadFavicon(favicon.dataUrl, favicon.size)}
                       className="w-full"
@@ -492,7 +492,7 @@ export const FaviconGenerator = () => {
                   </div>
                 ))}
               </div>
-              
+
               <Alert className="mt-6">
                 <AlertDescription>
                   A zip file containing all favicons, HTML code snippets, and a manifest.json example will be downloaded when you click "Download All".

@@ -100,11 +100,11 @@ export const CalendarView = ({
     return timeBlocks.filter(block => {
       // Check if the block occurs on this day
       const isOnThisDay = isSameDay(block.startTime, day);
-      
+
       // Check if it's a recurring block that occurs on this day of the week
-      const isRecurringOnThisDay = block.isRecurring && 
+      const isRecurringOnThisDay = block.isRecurring &&
         block.recurringDays?.includes(day.getDay());
-        
+
       return isOnThisDay || isRecurringOnThisDay;
     });
   };
@@ -114,13 +114,13 @@ export const CalendarView = ({
     return timeBlocks.filter(block => {
       const blockStart = new Date(block.startTime);
       const blockEnd = new Date(block.endTime);
-      
+
       // For recurring blocks, adjust the date to match the current day
       if (block.isRecurring && block.recurringDays?.includes(time.getDay())) {
         blockStart.setFullYear(time.getFullYear(), time.getMonth(), time.getDate());
         blockEnd.setFullYear(time.getFullYear(), time.getMonth(), time.getDate());
       }
-      
+
       return isWithinInterval(time, { start: blockStart, end: blockEnd });
     });
   };
@@ -140,7 +140,7 @@ export const CalendarView = ({
           {format(selectedDate, 'EEEE, MMMM d, yyyy')}
           {isToday(selectedDate) && <Badge className="ml-2">Today</Badge>}
         </div>
-        
+
         <div className="relative border rounded-lg overflow-y-auto" style={{ height: '600px' }}>
           {/* Time labels */}
           <div className="absolute left-0 top-0 bottom-0 w-16 bg-gray-50 border-r z-10">
@@ -148,21 +148,21 @@ export const CalendarView = ({
               const hour = i + workHours.start;
               return (
                 <div key={hour} className="h-16 flex items-center justify-center text-sm text-gray-500 border-b">
-                  {hour === 0 ? '12am' : 
-                   hour < 12 ? `${hour}am` : 
-                   hour === 12 ? '12pm' : 
-                   `${hour - 12}pm`}
+                  {hour === 0 ? '12am' :
+                    hour < 12 ? `${hour}am` :
+                      hour === 12 ? '12pm' :
+                        `${hour - 12}pm`}
                 </div>
               );
             })}
           </div>
-          
+
           {/* Time grid */}
           <div className="ml-16 relative">
             {/* Hour markers */}
             {Array.from({ length: workHours.end - workHours.start + 1 }, (_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="h-16 border-b flex items-center"
                 onClick={() => {
                   const clickTime = new Date(selectedDate);
@@ -173,17 +173,17 @@ export const CalendarView = ({
                 <div className="h-full w-full cursor-pointer hover:bg-gray-50"></div>
               </div>
             ))}
-            
+
             {/* Time blocks */}
             <div className="absolute top-0 left-0 right-0">
               {getBlocksForDay(selectedDate).map(block => {
                 const startHour = getHours(block.startTime);
                 const startMinute = getMinutes(block.startTime);
                 const topPosition = ((startHour - workHours.start) * 60 + startMinute) / 15 * 16;
-                
-                const project = block.projectId ? 
+
+                const project = block.projectId ?
                   projects.find(p => p.id === block.projectId) : undefined;
-                
+
                 return (
                   <div
                     key={block.id}
@@ -220,8 +220,8 @@ export const CalendarView = ({
       <div>
         <div className="grid grid-cols-7 text-center py-2 border-b">
           {weekDays.map((day, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`py-2 ${isToday(day) ? 'bg-blue-50 font-bold' : ''}`}
             >
               <div className="text-sm">{format(day, 'EEE')}</div>
@@ -229,12 +229,12 @@ export const CalendarView = ({
             </div>
           ))}
         </div>
-        
+
         <div className="border rounded-lg overflow-y-auto mt-4" style={{ height: '600px' }}>
           <div className="grid grid-cols-7 h-full">
             {weekDays.map((day, dayIndex) => (
-              <div 
-                key={dayIndex} 
+              <div
+                key={dayIndex}
                 className={`border-r last:border-r-0 ${isToday(day) ? 'bg-blue-50' : ''}`}
               >
                 {/* Time slots */}
@@ -242,7 +242,7 @@ export const CalendarView = ({
                   {Array.from({ length: workHours.end - workHours.start }, (_, hourIndex) => {
                     const hour = hourIndex + workHours.start;
                     return (
-                      <div 
+                      <div
                         key={hour}
                         className="h-16 border-b last:border-b-0"
                         onClick={() => {
@@ -257,14 +257,14 @@ export const CalendarView = ({
                       </div>
                     );
                   })}
-                  
+
                   {/* Blocks for this day */}
                   <div className="absolute top-0 left-0 right-0">
                     {getBlocksForDay(day).map(block => {
                       const startHour = getHours(block.startTime);
                       const startMinute = getMinutes(block.startTime);
                       const topPosition = ((startHour - workHours.start) * 60 + startMinute) / 15 * 16;
-                      
+
                       return (
                         <div
                           key={`${day.toISOString()}-${block.id}`}
@@ -300,7 +300,7 @@ export const CalendarView = ({
         <div className="text-center py-2 font-medium">
           {format(selectedDate, 'MMMM yyyy')}
         </div>
-        
+
         <div className="border rounded-lg overflow-hidden mt-4" style={{ minHeight: '600px' }}>
           {/* Weekday headers */}
           <div className="grid grid-cols-7 text-center font-medium bg-gray-50 border-b">
@@ -308,17 +308,17 @@ export const CalendarView = ({
               <div key={day} className="py-2">{day}</div>
             ))}
           </div>
-          
+
           {/* Calendar grid */}
           <div className="grid grid-cols-7 h-full auto-rows-fr">
             {calendarWeeks.map((week, weekIndex) => (
               week.map((day: Date, dayIndex: number) => {
                 const dayBlocks = getBlocksForDay(day);
                 const isCurrentMonth = isSameMonth(day, selectedDate);
-                
+
                 return (
-                  <div 
-                    key={`${weekIndex}-${dayIndex}`} 
+                  <div
+                    key={`${weekIndex}-${dayIndex}`}
                     className={`border-r border-b last:border-r-0 p-1 min-h-[100px] 
                       ${isToday(day) ? 'bg-blue-50' : ''} 
                       ${!isCurrentMonth ? 'text-gray-400 bg-gray-50/50' : ''}
@@ -333,7 +333,7 @@ export const CalendarView = ({
                     <div className="font-medium text-right mb-1">
                       {getDate(day)}
                     </div>
-                    
+
                     {/* Day's blocks (up to 3, then +N more) */}
                     <div className="space-y-1">
                       {dayBlocks.slice(0, 3).map(block => (
@@ -348,7 +348,7 @@ export const CalendarView = ({
                           {format(block.startTime, 'h:mm')} {block.title}
                         </div>
                       ))}
-                      
+
                       {dayBlocks.length > 3 && (
                         <div className="text-xs font-medium text-blue-600">
                           +{dayBlocks.length - 3} more
@@ -368,9 +368,9 @@ export const CalendarView = ({
   return (
     <Card className="shadow-sm border-muted overflow-hidden w-full">
       <div className="p-4">
-        {selectedView === 'day' ? renderDayView() : 
-         selectedView === 'week' ? renderWeekView() : 
-         renderMonthView()}
+        {selectedView === 'day' ? renderDayView() :
+          selectedView === 'week' ? renderWeekView() :
+            renderMonthView()}
       </div>
     </Card>
   );

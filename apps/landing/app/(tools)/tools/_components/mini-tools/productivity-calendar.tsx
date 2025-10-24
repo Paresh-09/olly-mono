@@ -130,7 +130,7 @@ export const ProductivityCalendar = () => {
       const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (storedData) {
         const parsedData = JSON.parse(storedData);
-        
+
         // Parse date strings back to Date objects
         if (parsedData.timeBlocks) {
           const parsedTimeBlocks = parsedData.timeBlocks.map((block: any) => ({
@@ -140,7 +140,7 @@ export const ProductivityCalendar = () => {
           }));
           setTimeBlocks(parsedTimeBlocks);
         }
-        
+
         if (parsedData.projects) {
           const parsedProjects = parsedData.projects.map((project: any) => ({
             ...project,
@@ -148,7 +148,7 @@ export const ProductivityCalendar = () => {
           }));
           setProjects(parsedProjects);
         }
-        
+
         if (parsedData.settings) {
           setSettings(parsedData.settings);
         }
@@ -184,7 +184,7 @@ export const ProductivityCalendar = () => {
       // Calculate end time based on start time and duration
       const startTime = new Date(newBlockStart);
       const endTime = addHours(startTime, newBlockDuration / 60);
-      
+
       const newBlock: TimeBlock = {
         id: `block-${Date.now()}`,
         title: newBlockTitle,
@@ -197,9 +197,9 @@ export const ProductivityCalendar = () => {
         notes: newBlockNotes,
         completed: false,
       };
-      
+
       setTimeBlocks([...timeBlocks, newBlock]);
-      
+
       // Reset form
       setNewBlockTitle('');
       setNewBlockStart(new Date());
@@ -209,13 +209,13 @@ export const ProductivityCalendar = () => {
       setNewBlockIsRecurring(false);
       setNewBlockRecurringDays([]);
       setNewBlockNotes('');
-      
+
       setNewBlockDialogOpen(false);
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
-      
+
       toast({
         title: "Time Block Added",
         description: "Your new time block has been created successfully."
@@ -232,10 +232,10 @@ export const ProductivityCalendar = () => {
 
   // Function to update an existing time block
   const updateTimeBlock = (blockId: string, updatedData: Partial<TimeBlock>) => {
-    setTimeBlocks(timeBlocks.map(block => 
+    setTimeBlocks(timeBlocks.map(block =>
       block.id === blockId ? { ...block, ...updatedData } : block
     ));
-    
+
     toast({
       title: "Time Block Updated",
       description: "Your time block has been updated successfully."
@@ -245,7 +245,7 @@ export const ProductivityCalendar = () => {
   // Function to delete a time block
   const deleteTimeBlock = (blockId: string) => {
     setTimeBlocks(timeBlocks.filter(block => block.id !== blockId));
-    
+
     toast({
       title: "Time Block Deleted",
       description: "Your time block has been deleted."
@@ -279,7 +279,7 @@ export const ProductivityCalendar = () => {
 
     try {
       const isEditing = !!projects.find(p => p.id === project.id);
-      
+
       if (isEditing) {
         // Update existing project
         setProjects(projects.map(p => p.id === project.id ? project : p));
@@ -287,14 +287,14 @@ export const ProductivityCalendar = () => {
         // Add new project
         setProjects([...projects, project]);
       }
-      
+
       // Reset form by clearing the editing project
       setEditingProject(null);
-      
+
       if (!isAuthenticated && !isEditing) {
         incrementUsage();
       }
-      
+
       toast({
         title: isEditing ? "Project Updated" : "Project Added",
         description: `Your project has been ${isEditing ? 'updated' : 'created'} successfully.`
@@ -312,14 +312,14 @@ export const ProductivityCalendar = () => {
   // Function to delete a project
   const deleteProject = (projectId: string) => {
     setProjects(projects.filter(project => project.id !== projectId));
-    
+
     // Remove project associations from time blocks
-    setTimeBlocks(timeBlocks.map(block => 
-      block.projectId === projectId 
-        ? { ...block, projectId: undefined } 
+    setTimeBlocks(timeBlocks.map(block =>
+      block.projectId === projectId
+        ? { ...block, projectId: undefined }
         : block
     ));
-    
+
     toast({
       title: "Project Deleted",
       description: "Your project has been deleted."
@@ -344,24 +344,24 @@ export const ProductivityCalendar = () => {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="calendar" className="space-y-6">
             <div className="flex justify-between items-center mb-4">
               <div className="flex space-x-2">
-                <Button 
-                  variant={selectedView === 'day' ? 'default' : 'outline'} 
+                <Button
+                  variant={selectedView === 'day' ? 'default' : 'outline'}
                   onClick={() => setSelectedView('day')}
                 >
                   Day
                 </Button>
-                <Button 
-                  variant={selectedView === 'week' ? 'default' : 'outline'} 
+                <Button
+                  variant={selectedView === 'week' ? 'default' : 'outline'}
                   onClick={() => setSelectedView('week')}
                 >
                   Week
                 </Button>
-                <Button 
-                  variant={selectedView === 'month' ? 'default' : 'outline'} 
+                <Button
+                  variant={selectedView === 'month' ? 'default' : 'outline'}
                   onClick={() => setSelectedView('month')}
                 >
                   Month
@@ -401,8 +401,8 @@ export const ProductivityCalendar = () => {
                 </Button>
               </div>
             </div>
-            
-            <CalendarView 
+
+            <CalendarView
               timeBlocks={timeBlocks}
               projects={projects}
               selectedDate={selectedDate}
@@ -412,7 +412,7 @@ export const ProductivityCalendar = () => {
               workHours={settings.workHours}
             />
           </TabsContent>
-          
+
           <TabsContent value="projects" className="space-y-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold">Active Projects</h3>
@@ -424,7 +424,7 @@ export const ProductivityCalendar = () => {
                 Add Project
               </Button>
             </div>
-            
+
             <div className="space-y-4">
               {projects.length === 0 ? (
                 <p className="text-center text-gray-500 py-8">
@@ -436,10 +436,10 @@ export const ProductivityCalendar = () => {
                     // Calculate project progress
                     const progress = project.completedHours / project.estimatedHours * 100;
                     const progressCapped = Math.min(100, Math.max(0, progress));
-                    
+
                     // Get time blocks for this project
                     const projectBlocks = timeBlocks.filter(block => block.projectId === project.id);
-                    
+
                     return (
                       <Card key={project.id} className={`border-l-4 ${TIME_BLOCK_COLORS[project.colorKey]}`}>
                         <div className="p-4">
@@ -447,16 +447,16 @@ export const ProductivityCalendar = () => {
                             <div>
                               <h4 className="font-semibold text-lg">{project.name}</h4>
                               <Badge className="mt-1" variant={
-                                project.priority === 'high' ? 'destructive' : 
-                                project.priority === 'medium' ? 'default' : 
-                                'outline'
+                                project.priority === 'high' ? 'destructive' :
+                                  project.priority === 'medium' ? 'default' :
+                                    'outline'
                               }>
                                 {project.priority.charAt(0).toUpperCase() + project.priority.slice(1)} Priority
                               </Badge>
                             </div>
                             <div className="flex space-x-2">
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="sm"
                                 onClick={() => {
                                   setEditingProject(project);
@@ -474,19 +474,19 @@ export const ProductivityCalendar = () => {
                               </Button>
                             </div>
                           </div>
-                          
+
                           {project.deadline && (
                             <div className="mt-2 text-sm">
                               <span className="text-gray-500">Deadline:</span>{' '}
                               <span className={isAfter(new Date(), project.deadline) ? 'text-red-600 font-medium' : ''}>
                                 {format(project.deadline, 'MMMM d, yyyy')}
                               </span>
-                              {isAfter(new Date(), project.deadline) && 
+                              {isAfter(new Date(), project.deadline) &&
                                 <span className="text-red-600 ml-1">(Overdue)</span>
                               }
                             </div>
                           )}
-                          
+
                           <div className="mt-4">
                             <div className="flex justify-between text-sm mb-1">
                               <span>Progress</span>
@@ -497,7 +497,7 @@ export const ProductivityCalendar = () => {
                               {project.completedHours} of {project.estimatedHours} estimated hours
                             </div>
                           </div>
-                          
+
                           <div className="mt-3 flex justify-between">
                             <span className="text-sm text-gray-500">
                               {projectBlocks.length} time {projectBlocks.length === 1 ? 'block' : 'blocks'}
@@ -530,7 +530,7 @@ export const ProductivityCalendar = () => {
               )}
             </div>
           </TabsContent>
-          
+
           <TabsContent value="analytics" className="space-y-6">
             <h3 className="text-xl font-semibold mb-4">Productivity Analytics</h3>
             <div className="grid md:grid-cols-2 gap-6">
@@ -544,10 +544,10 @@ export const ProductivityCalendar = () => {
               </Card>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="settings" className="space-y-6">
             <h3 className="text-xl font-semibold mb-4">Calendar Settings</h3>
-            
+
             <Card className="p-6">
               <div className="space-y-6">
                 <div>
@@ -607,7 +607,7 @@ export const ProductivityCalendar = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-3">Working Days</h4>
                   <div className="flex flex-wrap gap-2">
@@ -630,7 +630,7 @@ export const ProductivityCalendar = () => {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-3">Default Time Block Duration</h4>
                   <div className="max-w-xs">
@@ -679,7 +679,7 @@ export const ProductivityCalendar = () => {
                 onChange={(e) => setNewBlockTitle(e.target.value)}
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Start Time</Label>
@@ -713,7 +713,7 @@ export const ProductivityCalendar = () => {
                               ))}
                             </SelectContent>
                           </Select>
-                          
+
                           <Select
                             value={String(Math.floor(newBlockStart.getMinutes() / 15) * 15)}
                             onValueChange={(value) => {
@@ -733,7 +733,7 @@ export const ProductivityCalendar = () => {
                             </SelectContent>
                           </Select>
                         </div>
-                        
+
                         <Calendar
                           mode="single"
                           selected={newBlockStart}
@@ -745,7 +745,7 @@ export const ProductivityCalendar = () => {
                   </PopoverContent>
                 </Popover>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="block-duration">Duration (minutes)</Label>
                 <Select
@@ -768,7 +768,7 @@ export const ProductivityCalendar = () => {
                 </Select>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label>Color</Label>
               <div className="flex flex-wrap gap-2">
@@ -783,7 +783,7 @@ export const ProductivityCalendar = () => {
                 ))}
               </div>
             </div>
-            
+
             {projects.length > 0 && (
               <div className="space-y-2">
                 <Label>Associated Project</Label>
@@ -805,7 +805,7 @@ export const ProductivityCalendar = () => {
                 </Select>
               </div>
             )}
-            
+
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -815,7 +815,7 @@ export const ProductivityCalendar = () => {
                 />
                 <Label htmlFor="recurring">Recurring Time Block</Label>
               </div>
-              
+
               {newBlockIsRecurring && (
                 <div className="pt-2">
                   <Label className="mb-1 block">Repeat on</Label>
@@ -841,7 +841,7 @@ export const ProductivityCalendar = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="block-notes">Notes (optional)</Label>
               <Input
@@ -854,8 +854,8 @@ export const ProductivityCalendar = () => {
           </div>
           <DialogFooter>
             {editingBlock && (
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 onClick={() => {
                   deleteTimeBlock(editingBlock.id);
                   setNewBlockDialogOpen(false);
@@ -868,13 +868,13 @@ export const ProductivityCalendar = () => {
             <Button variant="outline" onClick={() => setNewBlockDialogOpen(false)}>
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={() => {
                 if (editingBlock) {
                   // Update existing block
                   const startTime = new Date(newBlockStart);
                   const endTime = addHours(startTime, newBlockDuration / 60);
-                  
+
                   updateTimeBlock(editingBlock.id, {
                     title: newBlockTitle,
                     startTime,
@@ -885,7 +885,7 @@ export const ProductivityCalendar = () => {
                     recurringDays: newBlockIsRecurring ? newBlockRecurringDays : undefined,
                     notes: newBlockNotes,
                   });
-                  
+
                   setNewBlockDialogOpen(false);
                 } else {
                   // Add new block
@@ -899,7 +899,7 @@ export const ProductivityCalendar = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Dialog for adding/editing projects */}
       <ProjectDialog
         open={newProjectDialogOpen}
@@ -909,7 +909,7 @@ export const ProductivityCalendar = () => {
         isAuthenticated={isAuthenticated}
         remainingUses={remainingUses}
       />
-      
+
       <AuthPopup
         isOpen={showAuthPopup}
         onClose={() => setShowAuthPopup(false)}

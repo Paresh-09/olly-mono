@@ -43,7 +43,7 @@ export const PasswordGenerator = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [copied, setCopied] = useState(false)
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -95,7 +95,7 @@ export const PasswordGenerator = () => {
       // Keep generating until we get a valid password or reach max attempts
       do {
         generated = Array.from(
-          { length }, 
+          { length },
           () => chars.charAt(Math.floor(Math.random() * chars.length))
         ).join('');
         attempts++;
@@ -111,7 +111,7 @@ export const PasswordGenerator = () => {
       }
 
       setPassword(generated);
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -134,7 +134,7 @@ export const PasswordGenerator = () => {
       await navigator.clipboard.writeText(password);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      
+
       toast({
         title: "Copied!",
         description: "Password copied to clipboard"
@@ -163,7 +163,7 @@ export const PasswordGenerator = () => {
     setOptions(prev => {
       const newOptions = { ...prev, [option]: !prev[option] };
       const hasOneEnabled = Object.values(newOptions).some(Boolean);
-      
+
       if (!hasOneEnabled) {
         toast({
           title: "Error",
@@ -172,7 +172,7 @@ export const PasswordGenerator = () => {
         });
         return prev;
       }
-      
+
       return newOptions;
     });
   };
@@ -215,8 +215,8 @@ export const PasswordGenerator = () => {
           ))}
         </div>
 
-        <Button 
-          onClick={generatePassword} 
+        <Button
+          onClick={generatePassword}
           className="w-full gap-2"
           disabled={!isAuthenticated && remainingUses <= 0}
         >

@@ -19,12 +19,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@repo/ui/components/ui/alert-dialog'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 import { AlertCircle, Copy, Edit, Link, Plus, Trash2 } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/ui/alert'
@@ -54,7 +54,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
   const [loading, setLoading] = useState(true)
   const [groups, setGroups] = useState<Group[]>([])
   const [error, setError] = useState<string | null>(null)
-  
+
   // Form states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -62,11 +62,11 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
   const [groupName, setGroupName] = useState('')
   const [groupColor, setGroupColor] = useState('#3B82F6')
   const [groupMaxSize, setGroupMaxSize] = useState(8)
-  
+
   useEffect(() => {
     fetchGroups()
   }, [workshopId])
-  
+
   const fetchGroups = async () => {
     try {
       setLoading(true)
@@ -79,20 +79,20 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
       setLoading(false)
     }
   }
-  
+
   const handleAddGroup = async () => {
     try {
       if (!groupName.trim()) {
         toast.error('Group name is required')
         return
       }
-      
+
       const response = await axios.post(`/api/workshops/${workshopId}/groups`, {
         name: groupName.trim(),
         color: groupColor,
         maxSize: groupMaxSize
       })
-      
+
       setGroups([...groups, response.data.group])
       setIsAddDialogOpen(false)
       resetForm()
@@ -102,7 +102,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
       toast.error(err.response?.data?.error || 'Failed to add group')
     }
   }
-  
+
   const handleEditGroup = async () => {
     try {
       if (!currentGroup) return
@@ -110,13 +110,13 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
         toast.error('Group name is required')
         return
       }
-      
+
       const response = await axios.patch(`/api/workshops/${workshopId}/groups/${currentGroup.id}`, {
         name: groupName.trim(),
         color: groupColor,
         maxSize: groupMaxSize
       })
-      
+
       setGroups(groups.map(g => g.id === currentGroup.id ? response.data.group : g))
       setIsEditDialogOpen(false)
       resetForm()
@@ -126,7 +126,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
       toast.error(err.response?.data?.error || 'Failed to update group')
     }
   }
-  
+
   const handleDeleteGroup = async (groupId: string) => {
     try {
       await axios.delete(`/api/workshops/${workshopId}/groups/${groupId}`)
@@ -137,7 +137,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
       toast.error(err.response?.data?.error || 'Failed to delete group')
     }
   }
-  
+
   const openEditDialog = (group: Group) => {
     setCurrentGroup(group)
     setGroupName(group.name)
@@ -145,20 +145,20 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
     setGroupMaxSize(group.maxSize)
     setIsEditDialogOpen(true)
   }
-  
+
   const resetForm = () => {
     setGroupName('')
     setGroupColor('#3B82F6')
     setGroupMaxSize(8)
     setCurrentGroup(null)
   }
-  
+
   const copyGroupJoinLink = (groupId: string) => {
     const url = `${window.location.origin}/tools/workshop-group-organizer/${workshopId}?group=${groupId}`
     navigator.clipboard.writeText(url)
     toast.success('Group join link copied to clipboard')
   }
-  
+
   if (loading) {
     return (
       <div className="space-y-4">
@@ -174,7 +174,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
       </div>
     )
   }
-  
+
   if (error) {
     return (
       <Alert variant="destructive">
@@ -184,7 +184,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
       </Alert>
     )
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -228,8 +228,8 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
                     {GROUP_COLORS.map(color => (
                       <SelectItem key={color.value} value={color.value}>
                         <div className="flex items-center gap-2">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
+                          <div
+                            className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: color.value }}
                           />
                           <span>{color.label}</span>
@@ -256,7 +256,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
           </DialogContent>
         </Dialog>
       </div>
-      
+
       {groups.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-10 text-center">
@@ -319,7 +319,7 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
           ))}
         </div>
       )}
-      
+
       {/* Edit Group Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
@@ -349,8 +349,8 @@ export default function ManageGroupsTab({ workshopId }: { workshopId: string }) 
                   {GROUP_COLORS.map(color => (
                     <SelectItem key={color.value} value={color.value}>
                       <div className="flex items-center gap-2">
-                        <div 
-                          className="w-3 h-3 rounded-full" 
+                        <div
+                          className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: color.value }}
                         />
                         <span>{color.label}</span>

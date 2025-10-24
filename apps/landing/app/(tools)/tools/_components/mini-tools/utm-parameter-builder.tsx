@@ -1,34 +1,34 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from '@repo/ui/components/ui/card'
 import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Label } from '@repo/ui/components/ui/label'
 import { ClipboardCopy, RefreshCw, Check } from 'lucide-react'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 import { Alert, AlertDescription } from '@repo/ui/components/ui/alert'
 
 // Common UTM source and medium options
 const commonSources = [
-  'google', 'facebook', 'instagram', 'twitter', 'linkedin', 
+  'google', 'facebook', 'instagram', 'twitter', 'linkedin',
   'pinterest', 'email', 'newsletter', 'youtube', 'tiktok', 'bing'
 ]
 
 const commonMediums = [
-  'cpc', 'organic', 'social', 'email', 'referral', 'display', 
+  'cpc', 'organic', 'social', 'email', 'referral', 'display',
   'paid-social', 'paid-search', 'banner', 'affiliate'
 ]
 
@@ -49,7 +49,7 @@ export default function UTMParameterBuilder() {
     // Reset states
     setError('')
     setCopied(false)
-    
+
     // Validate URL
     if (!url) {
       setError('Please enter a valid URL')
@@ -72,40 +72,40 @@ export default function UTMParameterBuilder() {
 
     // Clean up the base URL
     let baseUrl = url.trim()
-    
+
     // Start building UTM parameters
     const params = new URLSearchParams()
-    
+
     // Add UTM source (prioritize custom value if entered)
     const finalSource = customSource || source
     if (finalSource) {
       params.append('utm_source', finalSource.trim().toLowerCase())
     }
-    
+
     // Add UTM medium (prioritize custom value if entered)
     const finalMedium = customMedium || medium
     if (finalMedium) {
       params.append('utm_medium', finalMedium.trim().toLowerCase())
     }
-    
+
     // Add optional parameters if they exist
     if (campaign) {
       params.append('utm_campaign', campaign.trim().toLowerCase())
     }
-    
+
     if (term) {
       params.append('utm_term', term.trim())
     }
-    
+
     if (content) {
       params.append('utm_content', content.trim().toLowerCase())
     }
-    
+
     // Combine the URL and parameters
     const queryString = params.toString()
     const separator = baseUrl.includes('?') ? '&' : '?'
     const finalUrl = `${baseUrl}${separator}${queryString}`
-    
+
     setGeneratedUrl(finalUrl)
   }
 
@@ -114,7 +114,7 @@ export default function UTMParameterBuilder() {
       try {
         await navigator.clipboard.writeText(generatedUrl)
         setCopied(true)
-        
+
         // Reset copied status after 2 seconds
         setTimeout(() => {
           setCopied(false)
@@ -288,9 +288,9 @@ export default function UTMParameterBuilder() {
           <Button className="w-full" onClick={generateUrl}>
             Generate UTM URL
           </Button>
-          <Button 
-            variant="outline" 
-            className="w-full" 
+          <Button
+            variant="outline"
+            className="w-full"
             onClick={resetForm}
           >
             <RefreshCw className="mr-2 h-4 w-4" />

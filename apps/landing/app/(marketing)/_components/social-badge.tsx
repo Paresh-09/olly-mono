@@ -4,9 +4,9 @@ import React from 'react'
 const SocialBadge = () => {
   return (
     <div>
-        <Badge className='text-red'>
-          Twitter
-        </Badge>
+      <Badge className='text-red'>
+        Twitter
+      </Badge>
     </div>
   )
 }

@@ -9,7 +9,8 @@ import { Label } from "@repo/ui/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
 import { ActionResult, Form } from "@/lib/form";
 import { initiateSetPassword } from "@/lib/actions";
-import { useToast } from "@repo/ui/hooks/use-toast";import { Alert, AlertDescription } from "@repo/ui/components/ui/alert";
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { Alert, AlertDescription } from "@repo/ui/components/ui/alert";
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -71,9 +72,9 @@ export default function SetPasswordForm() {
               <Input id="email" name="email" type="email" placeholder="Your email" />
             </div>
           </div>
-          <Button 
-            className={`w-full mt-6 relative ${isLoading ? 'text-transparent hover:text-transparent' : ''}`} 
-            type="submit" 
+          <Button
+            className={`w-full mt-6 relative ${isLoading ? 'text-transparent hover:text-transparent' : ''}`}
+            type="submit"
             disabled={isLoading}
           >
             <span className={isLoading ? 'invisible' : 'visible'}>Send Password Setup Instructions</span>

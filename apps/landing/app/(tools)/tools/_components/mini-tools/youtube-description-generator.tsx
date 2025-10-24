@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -283,7 +283,7 @@ export const YouTubeDescriptionGenerator = () => {
             value={channelName}
             onChange={(e) => setChannelName(e.target.value)}
           />
-          
+
           <Textarea
             placeholder="Describe your channel content, target audience, and goals"
             value={channelDetails}
@@ -292,8 +292,8 @@ export const YouTubeDescriptionGenerator = () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveChannel}
               disabled={!isAuthenticated}
             >
@@ -334,8 +334,8 @@ export const YouTubeDescriptionGenerator = () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generateYouTubeDescriptions} 
+        <Button
+          onClick={generateYouTubeDescriptions}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >

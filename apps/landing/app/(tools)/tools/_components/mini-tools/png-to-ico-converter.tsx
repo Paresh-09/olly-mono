@@ -48,7 +48,7 @@ export const PngToIcoConverter = () => {
     reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
       setOriginalImage(dataUrl);
-      
+
       // Auto-convert if an image is uploaded
       convertToIco(dataUrl);
     };
@@ -90,14 +90,14 @@ export const PngToIcoConverter = () => {
     try {
       const img = new Image();
       img.src = imageUrl;
-      
+
       await new Promise((resolve) => {
         img.onload = resolve;
       });
 
       const canvas = canvasRef.current;
       if (!canvas) return;
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -105,17 +105,17 @@ export const PngToIcoConverter = () => {
         selectedSizes.map(async (size) => {
           canvas.width = size;
           canvas.height = size;
-          
+
           // Clear canvas
           ctx.clearRect(0, 0, size, size);
-          
+
           // Draw image centered and scaled to fit
           const scale = Math.min(size / img.width, size / img.height);
           const x = (size - img.width * scale) / 2;
           const y = (size - img.height * scale) / 2;
-          
+
           ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-          
+
           return {
             size,
             dataUrl: canvas.toDataURL('image/png')
@@ -154,12 +154,12 @@ export const PngToIcoConverter = () => {
       // For simplicity, we'll just combine the PNG files into a zip
       // In a real implementation, you would use a library like png2ico
       const zip = new JSZip();
-      
+
       generatedImages.forEach(image => {
         const imgData = image.dataUrl.split(',')[1];
-        zip.file(`icon-${image.size}.png`, imgData, {base64: true});
+        zip.file(`icon-${image.size}.png`, imgData, { base64: true });
       });
-      
+
       // Add a note about ICO conversion
       let readme = '# PNG to ICO Conversion\n\n';
       readme += 'This package contains PNG files in various sizes for ICO conversion.\n\n';
@@ -167,20 +167,20 @@ export const PngToIcoConverter = () => {
       readme += '1. Online converters like https://convertico.com/ or https://www.icoconverter.com/\n';
       readme += '2. Desktop tools like ImageMagick or GIMP\n';
       readme += '3. Command-line tools like png2ico\n\n';
-      
+
       readme += 'Included sizes:\n\n';
-      ICO_SIZES.filter(size => 
+      ICO_SIZES.filter(size =>
         selectedSizes.includes(size.size)
       ).forEach(size => {
         readme += `- icon-${size.size}.png (${size.name}): ${size.description}\n`;
       });
-      
+
       zip.file('README.md', readme);
-      
+
       // Generate and download the zip file
-      const content = await zip.generateAsync({type: 'blob'});
+      const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, 'ico-files.zip');
-      
+
       toast({
         title: "Success",
         description: "ICO package downloaded successfully"
@@ -198,12 +198,12 @@ export const PngToIcoConverter = () => {
   return (
     <Card className="p-6">
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      
+
       <div className="space-y-6">
         {/* Upload Section */}
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Upload Image</h3>
-          
+
           <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 text-center">
             <input
               type="file"
@@ -212,7 +212,7 @@ export const PngToIcoConverter = () => {
               accept="image/*"
               className="hidden"
             />
-            <Button 
+            <Button
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
               className="mb-4"
@@ -223,30 +223,30 @@ export const PngToIcoConverter = () => {
               Upload a PNG, JPG, or other image file to convert to ICO format
             </p>
           </div>
-          
+
           {originalImage && (
             <div className="flex flex-col items-center mt-4">
               <p className="text-sm font-medium mb-2">Original Image:</p>
               <div className="border rounded-lg p-2 bg-secondary">
-                <img 
-                  src={originalImage} 
-                  alt="Original" 
+                <img
+                  src={originalImage}
+                  alt="Original"
                   className="max-w-[200px] max-h-[200px] object-contain"
                 />
               </div>
             </div>
           )}
         </div>
-        
+
         {/* Size Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Select Sizes</h3>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {ICO_SIZES.map(size => (
               <div key={size.size} className="flex items-start space-x-2">
-                <Checkbox 
-                  id={`size-${size.size}`} 
+                <Checkbox
+                  id={`size-${size.size}`}
                   checked={selectedSizes.includes(size.size)}
                   onCheckedChange={() => toggleSizeSelection(size.size)}
                 />
@@ -261,16 +261,16 @@ export const PngToIcoConverter = () => {
               </div>
             ))}
           </div>
-          
-          <Button 
-            onClick={() => convertToIco()} 
+
+          <Button
+            onClick={() => convertToIco()}
             disabled={isConverting || !originalImage || selectedSizes.length === 0}
             className="w-full"
           >
             {isConverting ? "Converting..." : "Convert to ICO"}
           </Button>
         </div>
-        
+
         {/* Results */}
         {generatedImages.length > 0 && (
           <div className="space-y-4">
@@ -280,15 +280,15 @@ export const PngToIcoConverter = () => {
                 Download ICO Package
               </Button>
             </div>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {generatedImages.map(image => {
                 const sizeInfo = ICO_SIZES.find(s => s.size === image.size);
                 return (
                   <div key={image.size} className="flex flex-col items-center border rounded-lg p-3 bg-secondary">
-                    <img 
-                      src={image.dataUrl} 
-                      alt={`${image.size}x${image.size}`} 
+                    <img
+                      src={image.dataUrl}
+                      alt={`${image.size}x${image.size}`}
                       className="mb-2"
                       style={{
                         width: image.size > 64 ? 64 : image.size,
@@ -298,8 +298,8 @@ export const PngToIcoConverter = () => {
                     />
                     <p className="text-xs font-medium mb-1">{image.size}x{image.size}</p>
                     <p className="text-xs text-center text-muted-foreground mb-2">{sizeInfo?.description}</p>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => downloadImage(image.dataUrl, image.size)}
                       className="w-full"
@@ -310,7 +310,7 @@ export const PngToIcoConverter = () => {
                 );
               })}
             </div>
-            
+
             <Alert>
               <AlertDescription>
                 Due to browser limitations, we can't create true ICO files directly. The download package contains PNG files in ICO sizes with instructions for final conversion.

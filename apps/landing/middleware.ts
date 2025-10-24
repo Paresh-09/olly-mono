@@ -1,20 +1,34 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-  // Allow all routes for landing pages
-  return NextResponse.next();
+export async function middleware(request: NextRequest) {
+  // Skip auth check for login and signup endpoints
+  if (request.nextUrl.pathname.startsWith('/api/v2/mobile/auth/')) {
+    return NextResponse.next()
+  }
+
+
+  const authHeader = request.headers.get('Authorization')
+
+  if (!authHeader?.startsWith('Bearer ')) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
+  // Pass the token to the API route for validation
+  const requestHeaders = new Headers(request.headers)
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  })
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
-};
+    '/api/v2/mobile/:path*',
+  ]
+}

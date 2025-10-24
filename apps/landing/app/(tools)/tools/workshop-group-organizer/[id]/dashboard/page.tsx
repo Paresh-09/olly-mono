@@ -77,22 +77,22 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
   useEffect(() => {
     // Check if participant data is stored
     const storedParticipant = localStorage.getItem(`workshop_participant_${params.id}`)
-    
+
     if (!storedParticipant) {
       // Redirect to join page if not joined
       router.push(`/tools/workshop-group-organizer/${params.id}`)
       return
     }
-    
+
     setParticipant(JSON.parse(storedParticipant))
-    
+
     // Fetch workshop and group data
     fetchData()
-    
+
     // Set up auto-refresh every 30 seconds
     const interval = setInterval(fetchData, 30000)
     setRefreshInterval(interval)
-    
+
     return () => {
       if (refreshInterval) {
         clearInterval(refreshInterval)
@@ -103,50 +103,50 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
   const fetchData = async () => {
     try {
       setLoading(true)
-      
+
       // Get stored participant data
       const storedParticipant = localStorage.getItem(`workshop_participant_${params.id}`)
       if (!storedParticipant) {
         setError('Participant information not found')
         return
       }
-      
+
       // Get stored access code if available
       const storedAccessCode = localStorage.getItem(`workshop_access_${params.id}`)
-      
+
       const participantData = JSON.parse(storedParticipant)
-      
+
       // Fetch workshop data with access code if available
       const workshopUrl = `/api/workshops/join?workshopId=${params.id}${storedAccessCode ? `&accessCode=${storedAccessCode}` : ''}`
-      
+
       const workshopResponse = await axios.get(workshopUrl)
-      
-     
-      
+
+
+
       if (!workshopResponse.data.canJoin) {
         setError('Workshop not available or requires access code')
         return
       }
-      
+
       setWorkshop(workshopResponse.data)
-      
+
       // Fetch group details
       const groupUrl = `/api/workshops/${params.id}/groups/${participantData.group.id}${storedAccessCode ? `?accessCode=${storedAccessCode}` : ''}`
       const groupResponse = await axios.get(groupUrl)
       setGroup(groupResponse.data.group)
-      
+
       // Fetch tasks
       const tasksUrl = `/api/workshops/${params.id}/tasks${storedAccessCode ? `?accessCode=${storedAccessCode}` : ''}`
       const tasksResponse = await axios.get(tasksUrl)
-      
+
       // Combine tasks with completion status
       const tasksWithStatus = tasksResponse.data.tasks.map((task: any) => ({
         ...task,
         isCompleted: groupResponse.data.group.completedTasks.some((ct: any) => ct.taskId === task.id)
       }))
-      
+
       setTasks(tasksWithStatus)
-      
+
     } catch (err: any) {
       console.error('Error fetching data:', err)
       setError(err.response?.data?.error || 'Failed to load workshop data')
@@ -157,12 +157,12 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
 
   const toggleTaskCompletion = async (taskId: string, isCompleted: boolean) => {
     if (!group) return
-    
+
     try {
       // Get stored access code if available
       const storedAccessCode = localStorage.getItem(`workshop_access_${params.id}`)
       const accessCodeParam = storedAccessCode ? `?accessCode=${storedAccessCode}` : ''
-      
+
       if (isCompleted) {
         // Mark task as completed
         await axios.post(`/api/workshops/${params.id}/tasks/${taskId}/completion${accessCodeParam}`, {
@@ -174,10 +174,10 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
         await axios.delete(`/api/workshops/${params.id}/tasks/${taskId}/completion/${group.id}${accessCodeParam}`)
         toast.success('Task marked as incomplete')
       }
-      
+
       // Update local state
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
+      setTasks(prevTasks =>
+        prevTasks.map(task =>
           task.id === taskId ? { ...task, isCompleted } : task
         )
       )
@@ -196,21 +196,21 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
   // Add function to handle access code validation
   const handleAccessCodeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!accessCode.trim()) {
       toast.error('Please enter an access code')
       return
     }
-    
+
     try {
       setValidatingCode(true)
-      
+
       // Store access code in localStorage
       localStorage.setItem(`workshop_access_${params.id}`, accessCode.trim())
-      
+
       // Fetch workshop data with the new access code
       const response = await axios.get(`/api/workshops/join?workshopId=${params.id}&accessCode=${accessCode.trim()}`)
-      
+
       if (response.data.canJoin) {
         setError(null)
         // Refresh data
@@ -248,16 +248,16 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
   }
 
   if (error) {
-    const isAccessCodeError = error.toLowerCase().includes('access code') || 
-                             error.toLowerCase().includes('requires access');
-    
+    const isAccessCodeError = error.toLowerCase().includes('access code') ||
+      error.toLowerCase().includes('requires access');
+
     return (
       <div className="container max-w-4xl mx-auto px-4 py-8">
         <Alert variant="destructive" className="mb-4">
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
-        
+
         {isAccessCodeError ? (
           <Card className="mb-4">
             <CardHeader>
@@ -280,8 +280,8 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
                     onChange={(e) => setAccessCode(e.target.value)}
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={validatingCode || !accessCode.trim()}
                 >
                   {validatingCode ? 'Validating...' : 'Validate Access Code'}
@@ -298,7 +298,7 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
             Try Again
           </Button>
         )}
-        
+
         <Button
           variant="outline"
           onClick={() => router.push(`/tools/workshop-group-organizer/${params.id}`)}
@@ -329,7 +329,7 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
           Workshop Page
         </Button>
       </div>
-      
+
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader className="pb-2">
@@ -352,19 +352,19 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
                   </div>
                   <Progress value={calculateTaskProgress()} className="h-2" />
                 </div>
-                
+
                 <div className="space-y-3 pt-2">
                   {tasks.map(task => (
                     <Card key={task.id} className="overflow-hidden">
                       <div className="flex items-center p-4">
-                        <Checkbox 
+                        <Checkbox
                           id={`task-${task.id}`}
-                          className="mr-4" 
+                          className="mr-4"
                           checked={task.isCompleted}
                           onCheckedChange={(checked) => toggleTaskCompletion(task.id, checked === true)}
                         />
                         <div className="flex-1">
-                          <label 
+                          <label
                             htmlFor={`task-${task.id}`}
                             className={`font-medium cursor-pointer ${task.isCompleted ? 'line-through text-muted-foreground' : ''}`}
                           >
@@ -394,15 +394,15 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
             )}
           </CardContent>
         </Card>
-        
+
         <div className="space-y-6">
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardTitle>Your Group</CardTitle>
                 {group && (
-                  <div 
-                    className="w-3 h-3 rounded-full" 
+                  <div
+                    className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: group.color }}
                   />
                 )}
@@ -445,7 +445,7 @@ export default function ParticipantDashboard(props: { params: Promise<{ id: stri
               )}
             </CardContent>
           </Card>
-          
+
           {tasks.length > 0 && (
             <Card>
               <CardHeader className="pb-2">

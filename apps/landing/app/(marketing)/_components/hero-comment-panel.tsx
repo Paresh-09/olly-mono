@@ -26,9 +26,9 @@ const HeroCommentPanel = () => {
       <div className="px-4 pb-3">
         <p className="text-gray-900 text-sm leading-relaxed">
           🚀 Excited to introduce Olly.Social - your AI companion for LinkedIn growth!
-          <br/><br/>
+          <br /><br />
           As founders, we know maintaining LinkedIn presence while running a business is tough. That's why we built Olly - to help you engage authentically and grow your network.
-          <br/><br/>
+          <br /><br />
           Try commenting below to experience AI-powered engagement! 👇
         </p>
       </div>

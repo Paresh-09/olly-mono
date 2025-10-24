@@ -7,7 +7,7 @@ import { Textarea } from '@repo/ui/components/ui/textarea';
 import { Label } from '@repo/ui/components/ui/label';
 import { Card } from '@repo/ui/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -96,7 +96,7 @@ Warm regards,
 
 export function AILetterGenerator() {
   const { toast } = useToast();
-  
+
   // Form state
   const [letterType, setLetterType] = useState('inquiry');
   const [purpose, setPurpose] = useState('');
@@ -107,34 +107,34 @@ export function AILetterGenerator() {
   const [yourCompany, setYourCompany] = useState('');
   const [yourPosition, setYourPosition] = useState('');
   const [additionalDetails, setAdditionalDetails] = useState('');
-  
+
   // Style options
   const [language, setLanguage] = useState('en');
   const [formalityLevel, setFormalityLevel] = useState(75);
   const [length, setLength] = useState(50);
   const [includeBulletPoints, setIncludeBulletPoints] = useState(true);
-  
+
   // Generated letter
   const [generatedLetter, setGeneratedLetter] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  
+
   // Generate letter
   const generateLetter = async () => {
     setIsGenerating(true);
-    
+
     try {
       // In a real implementation, this would call an API endpoint
       // that would use AI to generate the letter content
-      
+
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // For this demo, we'll create a mock response
       const formality = formalityLevel > 75 ? "formal" : formalityLevel > 40 ? "neutral" : "casual";
       const letterLength = length > 75 ? "detailed" : length > 40 ? "standard" : "brief";
-      
+
       // Get template and personalize it
       let template = SAMPLE_LETTERS[letterType] || SAMPLE_LETTERS.inquiry;
-      
+
       // Replace placeholders
       template = template.replace(/\[Recipient\]/g, recipientName || 'Recipient');
       template = template.replace(/\[Hiring Manager\]/g, recipientName || 'Hiring Manager');
@@ -142,14 +142,14 @@ export function AILetterGenerator() {
       template = template.replace(/\[Your Name\]/g, yourName || 'Your Name');
       template = template.replace(/\[Your Position\]/g, yourPosition || 'Your Position');
       template = template.replace(/\[Company Name\]/g, recipientCompany || 'Company Name');
-      
+
       // Add purpose if provided
       if (purpose) {
         template = template.replace(/\[specific product\/service\]/g, purpose);
         template = template.replace(/\[specific need\]/g, purpose);
         template = template.replace(/\[Job Title\]/g, purpose);
       }
-      
+
       // Add additional details if provided
       if (additionalDetails) {
         const details = additionalDetails.split('\n').filter(d => d.trim());
@@ -160,9 +160,9 @@ export function AILetterGenerator() {
           template = template.replace(/• \[Relevant experience 1\]\n• \[Relevant experience 2\]\n• \[Relevant experience 3\]/g, bulletPointsSection);
         }
       }
-      
+
       setGeneratedLetter(template);
-      
+
       toast({
         title: 'Letter Generated!',
         description: 'Your professional letter has been created successfully.',
@@ -178,7 +178,7 @@ export function AILetterGenerator() {
       setIsGenerating(false);
     }
   };
-  
+
   // Reset form
   const resetForm = () => {
     setPurpose('');
@@ -194,7 +194,7 @@ export function AILetterGenerator() {
     setIncludeBulletPoints(true);
     setGeneratedLetter('');
   };
-  
+
   // Copy letter to clipboard
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedLetter)
@@ -213,14 +213,14 @@ export function AILetterGenerator() {
         });
       });
   };
-  
+
   // Export to letterhead creator
   const exportToLetterhead = () => {
     // In a real implementation, this would:
     // 1. Save the letter content to localStorage or a state manager
     // 2. Redirect to the letterhead creator
     // 3. The letterhead creator would then load this content
-    
+
     // For this demo, we'll just show a toast
     toast({
       title: 'Ready to Export',
@@ -235,12 +235,12 @@ export function AILetterGenerator() {
           <TabsTrigger value="input">Letter Details</TabsTrigger>
           <TabsTrigger value="output" disabled={!generatedLetter}>Generated Letter</TabsTrigger>
         </TabsList>
-        
+
         {/* Input Form */}
         <TabsContent value="input" className="space-y-4">
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Letter Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="letterType">Letter Type</Label>
@@ -260,7 +260,7 @@ export function AILetterGenerator() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="purpose">Letter Purpose</Label>
                 <Input
@@ -271,11 +271,11 @@ export function AILetterGenerator() {
                   className="mt-1"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 <div>
                   <h3 className="text-md font-medium mb-2">Recipient Information</h3>
-                  
+
                   <div className="space-y-3">
                     <div>
                       <Label htmlFor="recipientName">Name</Label>
@@ -287,7 +287,7 @@ export function AILetterGenerator() {
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="recipientCompany">Company</Label>
                       <Input
@@ -298,7 +298,7 @@ export function AILetterGenerator() {
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="recipientPosition">Position</Label>
                       <Input
@@ -311,10 +311,10 @@ export function AILetterGenerator() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-md font-medium mb-2">Your Information</h3>
-                  
+
                   <div className="space-y-3">
                     <div>
                       <Label htmlFor="yourName">Name</Label>
@@ -326,7 +326,7 @@ export function AILetterGenerator() {
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="yourCompany">Company</Label>
                       <Input
@@ -337,7 +337,7 @@ export function AILetterGenerator() {
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="yourPosition">Position</Label>
                       <Input
@@ -351,7 +351,7 @@ export function AILetterGenerator() {
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="additionalDetails">Additional Details</Label>
                 <Textarea
@@ -365,10 +365,10 @@ export function AILetterGenerator() {
               </div>
             </div>
           </Card>
-          
+
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Letter Style</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <Label htmlFor="language">Language</Label>
@@ -388,7 +388,7 @@ export function AILetterGenerator() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <div className="flex justify-between mb-2">
                   <Label htmlFor="formality">Formality Level</Label>
@@ -396,17 +396,17 @@ export function AILetterGenerator() {
                     {formalityLevel < 33 ? 'Casual' : formalityLevel < 66 ? 'Neutral' : 'Formal'}
                   </span>
                 </div>
-                <Slider 
+                <Slider
                   id="formality"
-                  min={0} 
-                  max={100} 
+                  min={0}
+                  max={100}
                   step={1}
-                  value={[formalityLevel]} 
+                  value={[formalityLevel]}
                   onValueChange={(values) => setFormalityLevel(values[0])}
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <div className="flex justify-between mb-2">
                   <Label htmlFor="length">Letter Length</Label>
@@ -414,19 +414,19 @@ export function AILetterGenerator() {
                     {length < 33 ? 'Brief' : length < 66 ? 'Standard' : 'Detailed'}
                   </span>
                 </div>
-                <Slider 
+                <Slider
                   id="length"
-                  min={0} 
-                  max={100} 
+                  min={0}
+                  max={100}
                   step={1}
-                  value={[length]} 
+                  value={[length]}
                   onValueChange={(values) => setLength(values[0])}
                   className="mt-1"
                 />
               </div>
-              
+
               <div className="flex items-center space-x-2">
-                <Switch 
+                <Switch
                   id="bulletPoints"
                   checked={includeBulletPoints}
                   onCheckedChange={setIncludeBulletPoints}
@@ -434,18 +434,18 @@ export function AILetterGenerator() {
                 <Label htmlFor="bulletPoints">Include bullet points for key information</Label>
               </div>
             </div>
-            
+
             <div className="flex justify-between mt-8">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={resetForm}
                 disabled={isGenerating}
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Reset Form
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={generateLetter}
                 disabled={isGenerating}
                 className="min-w-[150px]"
@@ -462,24 +462,24 @@ export function AILetterGenerator() {
             </div>
           </Card>
         </TabsContent>
-        
+
         {/* Output Content */}
         <TabsContent value="output" className="space-y-4">
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Generated Letter</h2>
-              
+
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={copyToClipboard}>
                   <Copy className="mr-2 h-4 w-4" />
                   Copy
                 </Button>
-                
+
                 <Button variant="outline" size="sm" onClick={exportToLetterhead}>
                   <ArrowRight className="mr-2 h-4 w-4" />
                   Export to Letterhead
                 </Button>
-                
+
                 <Link href="/tools/letterhead-creator">
                   <Button variant="default" size="sm">
                     <Sparkles className="mr-2 h-4 w-4" />
@@ -488,17 +488,17 @@ export function AILetterGenerator() {
                 </Link>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 p-6 rounded-md whitespace-pre-line min-h-[400px] border">
               {generatedLetter}
             </div>
-            
+
             <div className="mt-6 flex justify-between">
               <Button variant="outline" onClick={() => generateLetter()}>
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Regenerate
               </Button>
-              
+
               <Button onClick={() => {
                 const inputTab = document.querySelector('[data-value="input"]') as HTMLElement;
                 if (inputTab) inputTab.click();

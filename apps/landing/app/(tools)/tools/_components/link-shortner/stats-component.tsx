@@ -17,55 +17,55 @@ interface StatsCardProps {
 const StatsCard: React.FC<StatsCardProps> = ({ links }) => {
   const totalClicks = links.reduce((sum, link) => sum + link.clicks, 0);
   const totalLinks = links.length;
-  
 
-  const mostClickedLink = links.length > 0 
+
+  const mostClickedLink = links.length > 0
     ? links.reduce((prev, current) => (prev.clicks > current.clicks) ? prev : current)
     : null;
-    
- 
-  const newestLink = links.length > 0 
+
+
+  const newestLink = links.length > 0
     ? links.reduce((prev, current) => {
-        const prevDate = new Date(prev.createdAt);
-        const currentDate = new Date(current.createdAt);
-        return currentDate > prevDate ? current : prev;
-      })
+      const prevDate = new Date(prev.createdAt);
+      const currentDate = new Date(current.createdAt);
+      return currentDate > prevDate ? current : prev;
+    })
     : null;
-  
+
 
   const getRelativeTime = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) {
       return 'just now';
     }
-    
+
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     if (diffInMinutes < 60) {
       return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
     }
-    
+
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) {
       return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
     }
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays < 30) {
       return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
     }
-    
+
     const diffInMonths = Math.floor(diffInDays / 30);
     if (diffInMonths < 12) {
       return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
     }
-    
+
     const diffInYears = Math.floor(diffInMonths / 12);
     return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
   };
-  
+
   const truncateUrl = (url: string, maxLength = 25) => {
     if (!url || url.length <= maxLength) return url;
     return url.substring(0, maxLength) + '...';
@@ -88,7 +88,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ links }) => {
           </div>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">Total Clicks</CardTitle>
@@ -104,7 +104,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ links }) => {
           </div>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">Most Clicked Link</CardTitle>
@@ -122,7 +122,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ links }) => {
           )}
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">Latest Link</CardTitle>

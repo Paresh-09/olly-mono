@@ -8,12 +8,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@repo/ui/components/ui/button'
 import { Input } from '@repo/ui/components/ui/input'
 import { Label } from '@repo/ui/components/ui/label'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 import {
   Dialog,
@@ -74,16 +74,16 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
     const fetchWorkshop = async () => {
       try {
         setLoading(true)
-        
+
         // Try with existing access code from localStorage if available
         const storedAccessCode = localStorage.getItem(`workshop_access_${params.id}`)
-        
+
         if (storedAccessCode) {
           // Try using the stored access code
           setAccessCode(storedAccessCode)
-          
+
           const response = await axios.get(`/api/workshops/join?workshopId=${params.id}&accessCode=${storedAccessCode}`)
-          
+
           if (response.data.canJoin) {
             setWorkshop(response.data)
             setNeedsAccessCode(false)
@@ -91,11 +91,11 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
             return
           }
         }
-        
+
         // If no stored code or it was invalid, try without an access code
         const response = await axios.get(`/api/workshops/join?workshopId=${params.id}`)
-        
-        
+
+
         if (response.data.needsAccessCode) {
           setNeedsAccessCode(true)
           setWorkshop({
@@ -109,7 +109,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
           setWorkshop(response.data)
           setNeedsAccessCode(false)
         }
-        
+
         setLoading(false)
       } catch (err: any) {
         console.error('Error fetching workshop:', err)
@@ -117,30 +117,30 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
         setLoading(false)
       }
     }
-    
+
     fetchWorkshop()
   }, [params.id])
 
   const handleSubmitAccessCode = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!accessCode.trim()) {
       toast.error('Please enter an access code')
       return
     }
-    
+
     try {
       setLoading(true)
       setError(null)
-      
+
       const trimmedCode = accessCode.trim()
-      
+
       const response = await axios.get(`/api/workshops/join?workshopId=${params.id}&accessCode=${trimmedCode}`)
-      
+
       if (response.data.canJoin) {
         // Save the valid access code to localStorage
         localStorage.setItem(`workshop_access_${params.id}`, trimmedCode)
-        
+
         // Update the workshop data from the response
         setWorkshop({
           id: response.data.id,
@@ -150,7 +150,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
           isActive: true,
           groups: response.data.groups
         })
-        
+
         setNeedsAccessCode(false)
         toast.success('Access code verified successfully')
       } else {
@@ -173,7 +173,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
       toast.error('Please enter your name')
       return
     }
-    
+
     if (needsAccessCode && !accessCode.trim()) {
       toast.error('This workshop requires an access code')
       return
@@ -186,7 +186,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
         joinBtn.innerHTML = '<span class="spinner"></span> Joining...'
         joinBtn.setAttribute('disabled', 'true')
       }
-      
+
       // Always include the access code in the payload when it exists
       interface JoinPayload {
         workshopId: string;
@@ -196,7 +196,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
         preferredGroupId?: string;
         [key: string]: string | undefined; // Index signature to allow dynamic access
       }
-      
+
       const payload: JoinPayload = {
         workshopId: params.id,
         name: userName.trim(),
@@ -214,18 +214,18 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
 
       // Log the payload for debugging
       const response = await axios.post('/api/workshops/join', payload)
-      
+
       toast.success('Successfully joined the workshop!')
-      
+
       // Store participant data for future reference
       localStorage.setItem(`workshop_participant_${params.id}`, JSON.stringify(response.data.participant))
-      
+
       // Redirect to participant dashboard for this workshop
       router.push(`/tools/workshop-group-organizer/${params.id}/dashboard`)
     } catch (err: any) {
       console.error('Error joining workshop:', err)
       let errorMessage = 'Failed to join workshop'
-      
+
       if (err.response) {
         if (err.response.status === 401) {
           errorMessage = 'Invalid access code'
@@ -233,9 +233,9 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
           errorMessage = err.response.data.error
         }
       }
-      
+
       toast.error(errorMessage)
-      
+
       // Reset the button
       const joinBtn = document.getElementById('join-workshop-btn')
       if (joinBtn) {
@@ -316,14 +316,14 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
                   </Button>
                 </div>
               </div>
-              
+
               {error && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              
+
               <div className="text-center text-sm text-muted-foreground pt-2">
                 Contact the workshop organizer for the access code
               </div>
@@ -346,9 +346,9 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
               )}
             </div>
             <Badge variant="outline" className="sm:self-start px-2 py-1 text-xs">
-              {workshop?.joinMode === 'CHOICE' ? 'Choose Your Group' : 
-               workshop?.joinMode === 'RANDOM' ? 'Random Assignment' : 
-               'Instructor Assigned'}
+              {workshop?.joinMode === 'CHOICE' ? 'Choose Your Group' :
+                workshop?.joinMode === 'RANDOM' ? 'Random Assignment' :
+                  'Instructor Assigned'}
             </Badge>
           </div>
         </CardHeader>
@@ -375,17 +375,17 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
           )}
 
           <div className="flex flex-col sm:flex-row gap-3 pt-3">
-            <Button 
+            <Button
               className="flex-1"
-              onClick={openJoinDialog} 
+              onClick={openJoinDialog}
               size="lg"
             >
               <UserPlus className="mr-2 h-4 w-4" />
               Join This Workshop
             </Button>
-            
-            <Button 
-              variant="outline" 
+
+            <Button
+              variant="outline"
               className="flex-1"
               onClick={copyJoinLink}
               size="lg"
@@ -416,7 +416,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
                 onChange={(e) => setUserName(e.target.value)}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email (optional)</Label>
               <Input
@@ -427,7 +427,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
                 onChange={(e) => setUserEmail(e.target.value)}
               />
             </div>
-            
+
             {needsAccessCode && (
               <div className="space-y-2">
                 <Label htmlFor="dialog-access-code">
@@ -444,7 +444,7 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
                 </p>
               </div>
             )}
-            
+
             {workshop?.joinMode === 'CHOICE' && workshop.groups && (
               <div className="space-y-2">
                 <Label htmlFor="group">Preferred Group</Label>
@@ -454,18 +454,18 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
                   </SelectTrigger>
                   <SelectContent>
                     {workshop.groups.map(group => (
-                      <SelectItem 
-                        key={group.id} 
+                      <SelectItem
+                        key={group.id}
                         value={group.id}
                         disabled={group.participantCount >= group.maxSize}
                       >
                         <div className="flex items-center gap-2">
-                          <div 
-                            className="w-2 h-2 rounded-full" 
+                          <div
+                            className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: group.color }}
                           />
                           <span>
-                            {group.name} 
+                            {group.name}
                             {group.participantCount >= group.maxSize ? " (Full)" : ""}
                           </span>
                         </div>
@@ -477,9 +477,9 @@ export default function WorkshopPage(props: { params: Promise<{ id: string }> })
             )}
           </div>
           <DialogFooter>
-            <Button 
+            <Button
               id="join-workshop-btn"
-              onClick={handleJoinWorkshop} 
+              onClick={handleJoinWorkshop}
               disabled={!userName.trim() || (needsAccessCode && !accessCode.trim())}
             >
               Join Workshop

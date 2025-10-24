@@ -80,11 +80,11 @@ export const HashtagGenerator = () => {
 
     try {
       await navigator.clipboard.writeText(tags.join(' '));
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
-      
+
       toast({
         title: "Hashtags copied!",
         description: "You can now paste them into your post"
@@ -111,15 +111,15 @@ export const HashtagGenerator = () => {
     }
 
     const formattedTag = newTag.startsWith('#') ? newTag : `#${newTag}`;
-    
-    setGroups(groups.map(group => 
+
+    setGroups(groups.map(group =>
       group.name === selectedGroup
         ? {
-            ...group,
-            tags: group.tags.includes(formattedTag)
-              ? group.tags
-              : [...group.tags, formattedTag]
-          }
+          ...group,
+          tags: group.tags.includes(formattedTag)
+            ? group.tags
+            : [...group.tags, formattedTag]
+        }
         : group
     ));
     setNewTag('');
@@ -136,7 +136,7 @@ export const HashtagGenerator = () => {
       return;
     }
 
-    setGroups(groups.map(group => 
+    setGroups(groups.map(group =>
       group.name === selectedGroup
         ? { ...group, tags: group.tags.filter(tag => tag !== tagToRemove) }
         : group
@@ -266,8 +266,8 @@ export const HashtagGenerator = () => {
           <h3 className="text-lg font-medium mb-2">Current Group Hashtags:</h3>
           <div className="flex flex-wrap gap-2 mb-4">
             {getCurrentGroup()?.tags.map(tag => (
-              <Badge 
-                key={tag} 
+              <Badge
+                key={tag}
                 variant="secondary"
                 className="group"
               >
@@ -283,7 +283,7 @@ export const HashtagGenerator = () => {
               </Badge>
             ))}
           </div>
-          <Button 
+          <Button
             onClick={() => copyToClipboard(getCurrentGroup()?.tags || [])}
             className="w-full"
             disabled={!getCurrentGroup()?.tags.length || (!isAuthenticated && remainingUses <= 0)}

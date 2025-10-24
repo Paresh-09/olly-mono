@@ -86,9 +86,9 @@ export default function PlatformGrowthSection() {
 
                         {/* CTA with Pricing */}
                         <div className="space-y-3">
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-2xl font-bold text-gray-900">Plans start at $9.99</span>
-                                <span className="text-gray-800">/month</span>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-2xl font-bold text-gray-900">Plans start at $49.99</span>
+                                <span className="text-gray-800">/ user</span>
                             </div>
                             <button
                                 className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors duration-200 h-9 px-4 py-2 text-white"

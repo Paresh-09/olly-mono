@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from 'react';
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
 } from '@repo/ui/components/ui/tabs';
 import { Card } from '@repo/ui/components/ui/card';
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
+import {
+  PieChart,
+  Pie,
+  Cell,
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -34,7 +34,7 @@ import {
 } from 'recharts';
 import { Button } from '@repo/ui/components/ui/button';
 import { Download, Share2, Lock, LogIn } from 'lucide-react';
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -53,26 +53,26 @@ interface AuditResultsProps {
   onClaimReport?: () => void;
 }
 
-export const AuditResults = ({ 
-  result, 
-  platform, 
+export const AuditResults = ({
+  result,
+  platform,
   isAuthenticated,
   onLogin,
   onClaimReport
 }: AuditResultsProps) => {
   const [activeTab, setActiveTab] = useState('overview');
   const router = useRouter();
-  
+
   // Extract data from the audit result
   const { profile, audit, isAnonymous } = result;
-  
+
   // Format percentage for display
   const formatPercent = (value: number) => `${value.toFixed(1)}%`;
-  
+
   // Format large numbers with K, M, B suffixes
   const formatNumber = (num: number): string => {
     if (num === undefined || num === null) return '0';
-    
+
     if (num >= 1000000000) {
       return (num / 1000000000).toFixed(1) + 'B';
     } else if (num >= 1000000) {
@@ -83,18 +83,18 @@ export const AuditResults = ({
       return num.toString();
     }
   };
-  
+
   // Define colors for charts
   const scoreColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'];
   const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EC4899'];
-  
+
   // Scores data for pie chart
   const scoresData = [
     { name: 'Engagement', value: audit.engagementScore },
     { name: 'Profile', value: audit.profileOptimizationScore },
     { name: 'Content', value: audit.contentQualityScore },
   ];
-  
+
   // Prepare radar chart data
   const radarData = [
     { subject: 'Engagement', A: audit.engagementScore, fullMark: 100 },
@@ -105,7 +105,7 @@ export const AuditResults = ({
     { subject: 'Growth', A: audit.keyMetrics.growthScore || 70, fullMark: 100 },
     { subject: 'Audience', A: audit.keyMetrics.audienceScore || 75, fullMark: 100 },
   ];
-  
+
   // Calculate average engagement by content type if data exists
   let engagementByContentData = [];
   if (audit.keyMetrics.contentTypePerformance) {
@@ -115,7 +115,7 @@ export const AuditResults = ({
       average: audit.keyMetrics.avgEngagementRate || 50 // Use average or fallback
     }));
   }
-  
+
   // Create combined growth data if it exists
   let growthData = [];
   if (audit.keyMetrics.viewsData && audit.keyMetrics.subscriberGrowthData) {
@@ -127,20 +127,20 @@ export const AuditResults = ({
   } else if (audit.keyMetrics.viewsData) {
     growthData = audit.keyMetrics.viewsData;
   }
-  
+
   // Store report ID locally for anonymous users
   if (!isAuthenticated && isAnonymous && profile.id) {
     // Check if we already have stored reports
     const storedReports = localStorage.getItem('anonymousReports');
     let reportsArray = storedReports ? JSON.parse(storedReports) : [];
-    
+
     // Add this report if not already stored
     if (!reportsArray.includes(profile.id)) {
       reportsArray.push(profile.id);
       localStorage.setItem('anonymousReports', JSON.stringify(reportsArray));
     }
   }
-  
+
   const handleDownloadReport = async () => {
     if (!isAuthenticated) {
       toast({
@@ -150,16 +150,16 @@ export const AuditResults = ({
       onLogin();
       return;
     }
-    
+
     // Show loading toast
     toast({
       title: "Preparing PDF",
       description: "Please wait while we generate your report...",
     });
-    
+
     try {
       alert("Feature coming soon");
-      
+
       toast({
         title: "Report Downloaded",
         description: "Your audit report has been downloaded as a PDF file.",
@@ -173,7 +173,7 @@ export const AuditResults = ({
       });
     }
   };
-  
+
   const handleShareReport = () => {
     if (!isAuthenticated) {
       toast({
@@ -183,10 +183,10 @@ export const AuditResults = ({
       onLogin();
       return;
     }
-    
+
     // Generate a shareable URL
     const shareableUrl = window.location.href;
-    
+
     // Check if the Web Share API is available
     if (navigator.share) {
       navigator.share({
@@ -194,27 +194,27 @@ export const AuditResults = ({
         text: `Check out this ${platform} audit report with an overall score of ${audit.overallScore}/100!`,
         url: shareableUrl,
       })
-      .then(() => {
-        toast({
-          title: "Report Shared",
-          description: "Your audit report has been shared successfully.",
+        .then(() => {
+          toast({
+            title: "Report Shared",
+            description: "Your audit report has been shared successfully.",
+          });
+        })
+        .catch((error) => {
+          console.error('Error sharing:', error);
+          // Fallback to clipboard copy if sharing fails
+          copyToClipboard();
         });
-      })
-      .catch((error) => {
-        console.error('Error sharing:', error);
-        // Fallback to clipboard copy if sharing fails
-        copyToClipboard();
-      });
     } else {
       // Fallback for browsers that don't support the Web Share API
       copyToClipboard();
     }
   };
-  
+
   // Helper function to copy URL to clipboard
   const copyToClipboard = () => {
     const shareableUrl = window.location.href;
-    
+
     navigator.clipboard.writeText(shareableUrl)
       .then(() => {
         toast({
@@ -231,7 +231,7 @@ export const AuditResults = ({
         });
       });
   };
-  
+
   // For anonymous users, claiming the report
   const handleClaimReport = () => {
     if (isAuthenticated && isAnonymous && onClaimReport) {
@@ -240,7 +240,7 @@ export const AuditResults = ({
       onLogin();
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -249,16 +249,16 @@ export const AuditResults = ({
           <p className="text-muted-foreground">{profile.profileUrl}</p>
         </div>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={handleDownloadReport}
           >
             {!isAuthenticated ? <Lock className="mr-2 h-4 w-4" /> : <Download className="mr-2 h-4 w-4" />}
             Download Report
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={handleShareReport}
           >
@@ -267,7 +267,7 @@ export const AuditResults = ({
           </Button>
         </div>
       </div>
-      
+
       {/* Show claim banner for authenticated users viewing anonymous reports */}
       {isAuthenticated && isAnonymous && onClaimReport && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex justify-between items-center">
@@ -280,7 +280,7 @@ export const AuditResults = ({
           </Button>
         </div>
       )}
-      
+
       {/* Show login banner for anonymous users */}
       {!isAuthenticated && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex justify-between items-center">
@@ -294,7 +294,7 @@ export const AuditResults = ({
           </Button>
         </div>
       )}
-      
+
       {/* Overall score card */}
       <Card className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -316,7 +316,7 @@ export const AuditResults = ({
           </div>
         </div>
       </Card>
-      
+
       {/* Main content tabs */}
       <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-5 mb-4">
@@ -326,13 +326,13 @@ export const AuditResults = ({
           <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
         </TabsList>
-        
+
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-4">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Summary</h3>
             <p className="text-muted-foreground">{audit.summary}</p>
-            
+
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h4 className="text-md font-semibold mb-2">Strengths</h4>
@@ -365,7 +365,7 @@ export const AuditResults = ({
                 </ul>
               </div>
             </div>
-            
+
             <div className="mt-6">
               <h4 className="text-md font-semibold mb-2">Performance at a glance</h4>
               <div className="h-64">
@@ -392,7 +392,7 @@ export const AuditResults = ({
                 </ResponsiveContainer>
               </div>
             </div>
-            
+
             {/* Radar Chart - Overall Performance Metrics */}
             {isAuthenticated && (
               <div className="mt-8">
@@ -412,7 +412,7 @@ export const AuditResults = ({
             )}
           </Card>
         </TabsContent>
-        
+
         {/* Insights Tab - Limited for anonymous users */}
         <TabsContent value="insights" className="space-y-4">
           <Card className="p-6">
@@ -427,13 +427,13 @@ export const AuditResults = ({
               <>
                 <h3 className="text-lg font-semibold mb-4">Profile Analysis</h3>
                 <p className="text-muted-foreground mb-6">{audit.profileAnalysis}</p>
-                
+
                 <h3 className="text-lg font-semibold mb-4">Content Analysis</h3>
                 <p className="text-muted-foreground mb-6">{audit.contentAnalysis}</p>
-                
+
                 <h3 className="text-lg font-semibold mb-4">Engagement Analysis</h3>
                 <p className="text-muted-foreground">{audit.engagementAnalysis}</p>
-                
+
                 {audit.audienceAnalysis && (
                   <>
                     <h3 className="text-lg font-semibold mb-4 mt-6">Audience Analysis</h3>
@@ -444,7 +444,7 @@ export const AuditResults = ({
             )}
           </Card>
         </TabsContent>
-        
+
         {/* Metrics Tab - Limited for anonymous users */}
         <TabsContent value="metrics" className="space-y-4">
           <Card className="p-6">
@@ -458,43 +458,43 @@ export const AuditResults = ({
             ) : (
               <>
                 <h3 className="text-lg font-semibold mb-4">Key Metrics</h3>
-                
+
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                   {audit.keyMetrics.subscriberCount !== undefined && (
                     <div className="p-4 bg-gray-50 rounded-lg">
-                      <h4 className="text-sm font-medium text-muted-foreground">${platform=='youtube'?"Subscribers":"Followers"}</h4>
+                      <h4 className="text-sm font-medium text-muted-foreground">${platform == 'youtube' ? "Subscribers" : "Followers"}</h4>
                       <div className="text-2xl font-bold">{formatNumber(audit.keyMetrics.subscriberCount)}</div>
                     </div>
                   )}
-                  
+
                   {audit.keyMetrics.totalViews !== undefined && (
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-muted-foreground">Total Views</h4>
                       <div className="text-2xl font-bold">{formatNumber(audit.keyMetrics.totalViews)}</div>
                     </div>
                   )}
-                  
+
                   {audit.keyMetrics.engagementRate !== undefined && (
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-muted-foreground">Engagement Rate</h4>
                       <div className="text-2xl font-bold">{formatPercent(audit.keyMetrics.engagementRate)}</div>
                     </div>
                   )}
-                  
+
                   {audit.keyMetrics.videoCount !== undefined && (
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-muted-foreground">Video Count</h4>
                       <div className="text-2xl font-bold">{formatNumber(audit.keyMetrics.videoCount)}</div>
                     </div>
                   )}
-                  
+
                   {audit.keyMetrics.avgViewsPerVideo !== undefined && (
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-muted-foreground">Avg. Views per Video</h4>
                       <div className="text-2xl font-bold">{formatNumber(audit.keyMetrics.avgViewsPerVideo)}</div>
                     </div>
                   )}
-                  
+
                   {audit.keyMetrics.growthRate !== undefined && (
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-muted-foreground">Growth Rate</h4>
@@ -502,7 +502,7 @@ export const AuditResults = ({
                     </div>
                   )}
                 </div>
-                
+
                 {/* Engagement data line chart */}
                 {audit.keyMetrics.engagementData && (
                   <div className="mb-8">
@@ -515,11 +515,11 @@ export const AuditResults = ({
                           <YAxis unit="%" />
                           <Tooltip formatter={(value) => [`${value}%`, 'Engagement Rate']} />
                           <Legend />
-                          <Line 
-                            type="monotone" 
-                            dataKey="value" 
-                            name="Engagement Rate" 
-                            stroke="#3B82F6" 
+                          <Line
+                            type="monotone"
+                            dataKey="value"
+                            name="Engagement Rate"
+                            stroke="#3B82F6"
                             strokeWidth={2}
                             dot={{ fill: '#3B82F6', r: 4 }}
                           />
@@ -528,7 +528,7 @@ export const AuditResults = ({
                     </div>
                   </div>
                 )}
-                
+
                 {/* Views data area chart */}
                 {audit.keyMetrics.viewsData && (
                   <div className="mb-8">
@@ -539,13 +539,13 @@ export const AuditResults = ({
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="name" />
                           <YAxis tickFormatter={(value) => formatNumber(value)} />
-                          <Tooltip formatter={(value:any) => [formatNumber(value), 'Views']} />
+                          <Tooltip formatter={(value: any) => [formatNumber(value), 'Views']} />
                           <Legend />
-                          <Area 
-                            type="monotone" 
-                            dataKey="value" 
-                            name="Views" 
-                            stroke="#10B981" 
+                          <Area
+                            type="monotone"
+                            dataKey="value"
+                            name="Views"
+                            stroke="#10B981"
                             fill="#10B981"
                             fillOpacity={0.3}
                           />
@@ -554,7 +554,7 @@ export const AuditResults = ({
                     </div>
                   </div>
                 )}
-                
+
                 {/* Content type performance bar chart */}
                 {audit.keyMetrics.contentTypePerformance && (
                   <div>
@@ -567,9 +567,9 @@ export const AuditResults = ({
                           <YAxis unit="%" />
                           <Tooltip formatter={(value) => [`${value}%`, 'Performance']} />
                           <Legend />
-                          <Bar 
-                            dataKey="value" 
-                            name="Performance" 
+                          <Bar
+                            dataKey="value"
+                            name="Performance"
                             fill="#EC4899"
                           />
                         </BarChart>
@@ -581,7 +581,7 @@ export const AuditResults = ({
             )}
           </Card>
         </TabsContent>
-        
+
         {/* Performance Tab - New tab with additional graphs */}
         <TabsContent value="performance" className="space-y-4">
           <Card className="p-6">
@@ -595,7 +595,7 @@ export const AuditResults = ({
             ) : (
               <>
                 <h3 className="text-lg font-semibold mb-4">Advanced Performance Analysis</h3>
-                
+
                 {/* Combined growth chart - subscribers and views */}
                 {growthData.length > 0 && (
                   <div className="mb-8">
@@ -607,7 +607,7 @@ export const AuditResults = ({
                           <XAxis dataKey="name" />
                           <YAxis yAxisId="left" tickFormatter={(value) => formatNumber(value)} />
                           <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => formatNumber(value)} />
-                          <Tooltip formatter={(value:any) => [formatNumber(value), '']} />
+                          <Tooltip formatter={(value: any) => [formatNumber(value), '']} />
                           <Legend />
                           <Bar yAxisId="left" dataKey="views" name="Views" fill="#10B981" />
                           <Line yAxisId="right" type="monotone" dataKey="subscribers" name="Subscribers" stroke="#3B82F6" />
@@ -616,7 +616,7 @@ export const AuditResults = ({
                     </div>
                   </div>
                 )}
-                
+
                 {/* Engagement by content type comparison */}
                 {engagementByContentData.length > 0 && (
                   <div className="mb-8">
@@ -636,7 +636,7 @@ export const AuditResults = ({
                     </div>
                   </div>
                 )}
-                
+
                 {/* Performance metrics table */}
                 <div className="mt-8">
                   <h4 className="text-md font-semibold mb-4">Detailed Performance Metrics</h4>
@@ -655,9 +655,9 @@ export const AuditResults = ({
                         <TableCell>{formatPercent(audit.keyMetrics.engagementRate || 0)}</TableCell>
                         <TableCell>{formatPercent(audit.keyMetrics.benchmarkEngagementRate || 2.5)}</TableCell>
                         <TableCell>
-                          <span className={(audit.keyMetrics.engagementRate || 0) > (audit.keyMetrics.benchmarkEngagementRate || 2.5) ? 
+                          <span className={(audit.keyMetrics.engagementRate || 0) > (audit.keyMetrics.benchmarkEngagementRate || 2.5) ?
                             "text-green-500 font-medium" : "text-amber-500 font-medium"}>
-                            {(audit.keyMetrics.engagementRate || 0) > (audit.keyMetrics.benchmarkEngagementRate || 2.5) ? 
+                            {(audit.keyMetrics.engagementRate || 0) > (audit.keyMetrics.benchmarkEngagementRate || 2.5) ?
                               "Above Average" : "Below Average"}
                           </span>
                         </TableCell>
@@ -667,22 +667,22 @@ export const AuditResults = ({
                         <TableCell>{formatPercent(audit.keyMetrics.growthRate || 0)}</TableCell>
                         <TableCell>{formatPercent(audit.keyMetrics.benchmarkGrowthRate || 5)}</TableCell>
                         <TableCell>
-                          <span className={(audit.keyMetrics.growthRate || 0) > (audit.keyMetrics.benchmarkGrowthRate || 5) ? 
+                          <span className={(audit.keyMetrics.growthRate || 0) > (audit.keyMetrics.benchmarkGrowthRate || 5) ?
                             "text-green-500 font-medium" : "text-amber-500 font-medium"}>
-                            {(audit.keyMetrics.growthRate || 0) > (audit.keyMetrics.benchmarkGrowthRate || 5) ? 
+                            {(audit.keyMetrics.growthRate || 0) > (audit.keyMetrics.benchmarkGrowthRate || 5) ?
                               "Above Average" : "Below Average"}
                           </span>
                         </TableCell>
                       </TableRow>
-                   
+
                       <TableRow>
                         <TableCell>Avg. Views/Video</TableCell>
                         <TableCell>{formatNumber(audit.keyMetrics.avgViewsPerVideo || 0)}</TableCell>
                         <TableCell>{formatNumber(audit.keyMetrics.benchmarkAvgViews || 1000)}</TableCell>
                         <TableCell>
-                          <span className={(audit.keyMetrics.avgViewsPerVideo || 0) > (audit.keyMetrics.benchmarkAvgViews || 1000) ? 
+                          <span className={(audit.keyMetrics.avgViewsPerVideo || 0) > (audit.keyMetrics.benchmarkAvgViews || 1000) ?
                             "text-green-500 font-medium" : "text-amber-500 font-medium"}>
-                            {(audit.keyMetrics.avgViewsPerVideo || 0) > (audit.keyMetrics.benchmarkAvgViews || 1000) ? 
+                            {(audit.keyMetrics.avgViewsPerVideo || 0) > (audit.keyMetrics.benchmarkAvgViews || 1000) ?
                               "Above Average" : "Below Average"}
                           </span>
                         </TableCell>
@@ -692,9 +692,9 @@ export const AuditResults = ({
                         <TableCell>{formatPercent(audit.keyMetrics.audienceQualityScore || 0)}</TableCell>
                         <TableCell>{formatPercent(audit.keyMetrics.benchmarkAudienceQuality || 60)}</TableCell>
                         <TableCell>
-                          <span className={(audit.keyMetrics.audienceQualityScore || 0) > (audit.keyMetrics.benchmarkAudienceQuality || 60) ? 
+                          <span className={(audit.keyMetrics.audienceQualityScore || 0) > (audit.keyMetrics.benchmarkAudienceQuality || 60) ?
                             "text-green-500 font-medium" : "text-amber-500 font-medium"}>
-                            {(audit.keyMetrics.audienceQualityScore || 0) > (audit.keyMetrics.benchmarkAudienceQuality || 60) ? 
+                            {(audit.keyMetrics.audienceQualityScore || 0) > (audit.keyMetrics.benchmarkAudienceQuality || 60) ?
                               "Above Average" : "Below Average"}
                           </span>
                         </TableCell>
@@ -706,21 +706,21 @@ export const AuditResults = ({
             )}
           </Card>
         </TabsContent>
-        
+
         {/* Recommendations Tab - Limited for anonymous users */}
         <TabsContent value="recommendations" className="space-y-4">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Recommended Actions</h3>
             <div className="space-y-4">
               {audit.recommendations.slice(0, isAuthenticated ? audit.recommendations.length : 2).map((recommendation: string, index: number) => (
-                <div 
-                  key={`rec-${index}`} 
+                <div
+                  key={`rec-${index}`}
                   className="p-4 border rounded-lg"
                 >
                   <p className="text-sm">{recommendation}</p>
                 </div>
               ))}
-              
+
               {!isAuthenticated && audit.recommendations.length > 2 && (
                 <div className="p-4 border border-dashed rounded-lg text-center">
                   <p className="text-sm text-muted-foreground mb-2">
@@ -730,7 +730,7 @@ export const AuditResults = ({
                 </div>
               )}
             </div>
-            
+
             {isAuthenticated && (
               <div className="mt-8">
                 <h4 className="text-md font-semibold mb-4">Priority Action Items</h4>

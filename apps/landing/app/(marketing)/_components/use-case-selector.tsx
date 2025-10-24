@@ -92,8 +92,8 @@ export const UseCaseSelector = () => {
               key={useCase.id}
               className={`
                 relative p-2.5 rounded-lg cursor-pointer transition-all mb-1
-                ${hoveredCase === useCase.id 
-                  ? 'bg-white/80 backdrop-blur-sm shadow-sm' 
+                ${hoveredCase === useCase.id
+                  ? 'bg-white/80 backdrop-blur-sm shadow-sm'
                   : 'hover:bg-white/50 hover:backdrop-blur-sm'
                 }
               `}
@@ -137,7 +137,7 @@ export const UseCaseSelector = () => {
           </AnimatePresence>
 
           {/* CTA Button */}
-          <Button 
+          <Button
             size="lg"
             variant="default"
           >

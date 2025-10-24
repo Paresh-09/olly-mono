@@ -62,7 +62,7 @@ export const TextConverter = () => {
   const [text, setText] = useState('')
   const [copied, setCopied] = useState(false)
   const [lastConversion, setLastConversion] = useState<ConversionType | null>(null)
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -92,7 +92,7 @@ export const TextConverter = () => {
 
     try {
       let converted = '';
-      
+
       switch (type) {
         case 'upper':
           converted = text.toUpperCase();
@@ -121,18 +121,18 @@ export const TextConverter = () => {
         case 'inverse':
           converted = text
             .split('')
-            .map(char => 
-              char === char.toUpperCase() 
-                ? char.toLowerCase() 
+            .map(char =>
+              char === char.toUpperCase()
+                ? char.toLowerCase()
                 : char.toUpperCase()
             )
             .join('');
           break;
       }
-      
+
       setText(converted);
       setLastConversion(type);
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -167,7 +167,7 @@ export const TextConverter = () => {
       const text = await file.text();
       setText(text);
       setLastConversion(null);
-      
+
       toast({
         title: "Success",
         description: "File loaded successfully"
@@ -186,7 +186,7 @@ export const TextConverter = () => {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      
+
       toast({
         title: "Copied!",
         description: "Text copied to clipboard"

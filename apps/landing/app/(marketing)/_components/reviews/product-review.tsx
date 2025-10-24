@@ -65,7 +65,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
 
   return (
     <div className={`w-full max-w-4xl mx-auto space-y-8 ${className}`}>
-      <ReviewSchema 
+      <ReviewSchema
         productName={productName}
         productUrl={productUrl}
         reviews={reviews}
@@ -141,7 +141,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
                     key={star}
                     type="button"
                     className="hover:scale-110 transition-transform"
-                    onClick={() => setNewReview({...newReview, rating: star})}
+                    onClick={() => setNewReview({ ...newReview, rating: star })}
                   >
                     <Star
                       className={star <= newReview.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-200"}
@@ -161,7 +161,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
                 required
                 placeholder="Enter your name"
                 value={newReview.authorName}
-                onChange={(e) => setNewReview({...newReview, authorName: e.target.value})}
+                onChange={(e) => setNewReview({ ...newReview, authorName: e.target.value })}
                 className="w-full"
               />
             </div>
@@ -175,7 +175,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
                 placeholder="Share your experience with this product..."
                 rows={4}
                 value={newReview.reviewBody}
-                onChange={(e) => setNewReview({...newReview, reviewBody: e.target.value})}
+                onChange={(e) => setNewReview({ ...newReview, reviewBody: e.target.value })}
                 className="w-full"
               />
             </div>

@@ -53,15 +53,15 @@ export default function ActivationSuccessPage() {
         </div>
 
         <div className="relative overflow-hidden">
-          <div 
-            ref={containerRef} 
+          <div
+            ref={containerRef}
             className="flex transition-transform duration-500 ease-in-out"
             style={{ width: '200%' }}
           >
             <div className="w-1/2 px-3">
               <div className="bg-white rounded-lg shadow-md p-6 mb-8">
                 <ActivationGuidePage licenseKey={licenseKey} />
-                
+
                 <div className="mt-6 text-center">
                   <Button onClick={() => navigateToStep(2)} size="lg" className="group">
                     Next: Rate Your Experience
@@ -94,7 +94,7 @@ export default function ActivationSuccessPage() {
           <p className="mt-4 text-sm text-gray-500">
             We&apos;ve sent these instructions to your email as well.
           </p>
-          
+
           <div className="mt-6 flex items-center justify-center">
             <div className="flex items-center space-x-3">
               <Image

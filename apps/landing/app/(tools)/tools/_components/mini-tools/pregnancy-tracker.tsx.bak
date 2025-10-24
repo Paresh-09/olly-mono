@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Card } from '@repo/ui/components/ui/card'
 import { Button } from '@repo/ui/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs'
-import { toast } from '@repo/ui/components/ui/use-toast'
+import { toast } from '@repo/ui/hooks/use-toast'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
 import { Calendar } from '@repo/ui/components/ui/calendar'
 import { format, addDays, differenceInWeeks, differenceInDays, isToday, isBefore, isAfter } from 'date-fns'

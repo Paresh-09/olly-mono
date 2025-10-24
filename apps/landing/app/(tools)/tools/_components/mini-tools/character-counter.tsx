@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui
 import AuthPopup from "../authentication";
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert";
 import { useToast } from "@repo/ui/hooks/use-toast";
+
 const PLATFORMS = {
   twitter: { limit: 280, name: 'Twitter' },
   instagram: { limit: 2200, name: 'Instagram' },
@@ -56,7 +57,7 @@ export const CharacterCounter = () => {
   const loadDailyUsage = () => {
     const today = new Date().toDateString();
     const savedUsage = localStorage.getItem('characterCounter_dailyUsage');
-    
+
     if (savedUsage) {
       const usage: UsageTracking = JSON.parse(savedUsage);
       if (usage.date === today) {
@@ -120,7 +121,7 @@ export const CharacterCounter = () => {
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      
+
       {!isAuthenticated && (
         <Alert className="mb-4">
           <AlertDescription>
@@ -133,8 +134,8 @@ export const CharacterCounter = () => {
         {Object.entries(PLATFORMS).map(([platform, { limit, name }]) => {
           const count = text.length
           return (
-            <div 
-              key={platform} 
+            <div
+              key={platform}
               className="text-center p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
               onClick={() => handleTextCheck()}
             >

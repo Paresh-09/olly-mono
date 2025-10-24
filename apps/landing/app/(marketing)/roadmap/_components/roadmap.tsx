@@ -91,8 +91,8 @@ export default function ProductRoadmap() {
         throw new Error('Failed to upvote feature');
       }
 
-      setItems(prevItems => 
-        prevItems.map(item => 
+      setItems(prevItems =>
+        prevItems.map(item =>
           item.id === id ? { ...item, votes: item.votes + 1 } : item
         ).sort((a, b) => b.votes - a.votes)
       );
@@ -115,8 +115,8 @@ export default function ProductRoadmap() {
   const activeItems = items.filter(item => item.status !== 'COMPLETED');
 
   const toggleExpand = (id: string) => {
-    setExpandedItems(prev => 
-      prev.includes(id) 
+    setExpandedItems(prev =>
+      prev.includes(id)
         ? prev.filter(item => item !== id)
         : [...prev, id]
     );
@@ -177,10 +177,9 @@ export default function ProductRoadmap() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 flex-1">
                           <CollapsibleTrigger className="flex items-center gap-2 hover:opacity-80">
-                            <ChevronRight 
-                              className={`h-4 w-4 text-muted-foreground transition-transform ${
-                                expandedItems.includes(item.id) ? 'transform rotate-90' : ''
-                              }`}
+                            <ChevronRight
+                              className={`h-4 w-4 text-muted-foreground transition-transform ${expandedItems.includes(item.id) ? 'transform rotate-90' : ''
+                                }`}
                             />
                             <h3 className="font-cal text-base">{item.feature}</h3>
                           </CollapsibleTrigger>
@@ -194,8 +193,8 @@ export default function ProductRoadmap() {
                           <span className="text-sm text-muted-foreground">
                             {item.votes} votes
                           </span>
-                          <Button 
-                            onClick={() => handleUpvote(item.id)} 
+                          <Button
+                            onClick={() => handleUpvote(item.id)}
                             variant="ghost"
                             size="sm"
                             disabled={upvotedFeatures.includes(item.id)}
@@ -230,10 +229,9 @@ export default function ProductRoadmap() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <CollapsibleTrigger className="flex items-center gap-2 hover:opacity-80">
-                            <ChevronRight 
-                              className={`h-4 w-4 transition-transform ${
-                                expandedItems.includes(item.id) ? 'transform rotate-90' : ''
-                              }`}
+                            <ChevronRight
+                              className={`h-4 w-4 transition-transform ${expandedItems.includes(item.id) ? 'transform rotate-90' : ''
+                                }`}
                             />
                             <h3 className="text-base font-medium">{item.feature}</h3>
                           </CollapsibleTrigger>

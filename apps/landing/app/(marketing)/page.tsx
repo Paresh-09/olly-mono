@@ -26,11 +26,11 @@ const MarketingPage = () => {
       <Suspense fallback={<div className="aspect-video w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <VideoTrailer />
       </Suspense>
-      
+
       <Suspense fallback={<div className="h-96 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <ScrollingFeatures />
       </Suspense>
-      
+
       <Suspense fallback={<div className="h-80 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <MidContentSection />
       </Suspense>
@@ -38,19 +38,19 @@ const MarketingPage = () => {
       <Suspense fallback={<div className="h-96 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <Pricing />
       </Suspense>
-      
+
       <Suspense fallback={<div className="h-64 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <CompactSalesContact />
       </Suspense>
-      
+
       <Suspense fallback={<div className="h-72 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <PlatformGrowthSection />
       </Suspense>
-      
+
       <Suspense fallback={<div className="h-80 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <Testimonials />
       </Suspense>
-      
+
       <Suspense fallback={<div className="h-96 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />}>
         <FAQSection />
       </Suspense>

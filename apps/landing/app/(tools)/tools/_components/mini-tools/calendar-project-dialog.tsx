@@ -55,7 +55,7 @@ export const ProjectDialog = ({
   const [projectPriority, setProjectPriority] = useState<'high' | 'medium' | 'low'>('medium');
   const [projectEstimatedHours, setProjectEstimatedHours] = useState(10);
   const [projectColor, setProjectColor] = useState<keyof typeof TIME_BLOCK_COLORS>('green');
-  
+
   // Initialize form when editing project
   useEffect(() => {
     if (editingProject) {
@@ -73,11 +73,11 @@ export const ProjectDialog = ({
       setProjectColor('green');
     }
   }, [editingProject, open]);
-  
+
   // Save project
   const handleSave = () => {
     if (!projectName.trim()) return;
-    
+
     const project: Project = {
       id: editingProject?.id || `project-${Date.now()}`,
       name: projectName,
@@ -87,11 +87,11 @@ export const ProjectDialog = ({
       colorKey: projectColor,
       completedHours: editingProject?.completedHours || 0,
     };
-    
+
     onSave(project);
     onOpenChange(false);
   };
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -108,7 +108,7 @@ export const ProjectDialog = ({
               onChange={(e) => setProjectName(e.target.value)}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label>Deadline (optional)</Label>
             <Popover>
@@ -128,7 +128,7 @@ export const ProjectDialog = ({
               </PopoverContent>
             </Popover>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Priority</Label>
@@ -146,7 +146,7 @@ export const ProjectDialog = ({
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="estimated-hours">Estimated Hours</Label>
               <Input
@@ -159,7 +159,7 @@ export const ProjectDialog = ({
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label>Color</Label>
             <div className="flex flex-wrap gap-2">
@@ -179,7 +179,7 @@ export const ProjectDialog = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={handleSave}
             disabled={!projectName.trim() || (!isAuthenticated && remainingUses <= 0)}
           >

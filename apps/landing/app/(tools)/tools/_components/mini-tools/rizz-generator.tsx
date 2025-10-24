@@ -6,7 +6,7 @@ import { Input } from '@repo/ui/components/ui/input'
 import { Button } from '@repo/ui/components/ui/button'
 import { Badge } from '@repo/ui/components/ui/badge'
 import { Alert, AlertDescription } from "@repo/ui/components/ui/alert"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -101,7 +101,7 @@ export const RizzGenerator = () => {
     }
   }, [savedLines, savedContexts, isAuthenticated]);
 
-const generateRizzLines = async () => {
+  const generateRizzLines = async () => {
     if (!checkUsageLimit()) {
       return;
     }
@@ -147,7 +147,7 @@ const generateRizzLines = async () => {
     } finally {
       setIsGenerating(false);
     }
-};
+  };
 
   const saveLine = (line: string) => {
     if (!isAuthenticated) {
@@ -272,7 +272,7 @@ const generateRizzLines = async () => {
             value={targetName}
             onChange={(e) => setTargetName(e.target.value)}
           />
-          
+
           <Textarea
             placeholder="Describe the context or situation (e.g., matched on Tinder, both like hiking)"
             value={contextDetails}
@@ -281,8 +281,8 @@ const generateRizzLines = async () => {
           />
 
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={saveContext}
               disabled={!isAuthenticated}
             >
@@ -323,8 +323,8 @@ const generateRizzLines = async () => {
         </div>
 
         {/* Generate Button */}
-        <Button 
-          onClick={generateRizzLines} 
+        <Button
+          onClick={generateRizzLines}
           disabled={isGenerating || (!isAuthenticated && remainingUses <= 0)}
           className="w-full"
         >

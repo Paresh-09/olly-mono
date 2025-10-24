@@ -4,17 +4,17 @@ import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
 import { Label } from '@repo/ui/components/ui/label';
-import { 
-  Pause, 
-  Play, 
-  RefreshCw, 
-  Clock, 
+import {
+  Pause,
+  Play,
+  RefreshCw,
+  Clock,
   ListTodo,
   Coffee,
   Moon
 } from 'lucide-react';
 
-type TimerMode = 'work' | 'short-break' | 'long-break' ;
+type TimerMode = 'work' | 'short-break' | 'long-break';
 
 interface Task {
   id: string;
@@ -47,7 +47,7 @@ export const PomodoroTimer = () => {
   // Start the timer
   const startTimer = () => {
     if (isRunning) return;
-    
+
     setIsRunning(true);
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -76,7 +76,7 @@ export const PomodoroTimer = () => {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    
+
     // Reset to initial work duration or current mode's duration
     switch (currentMode) {
       case 'work':
@@ -110,8 +110,8 @@ export const PomodoroTimer = () => {
 
         // Update current task if exists
         if (currentTask) {
-          const updatedTasks = tasks.map(task => 
-            task.id === currentTask.id 
+          const updatedTasks = tasks.map(task =>
+            task.id === currentTask.id
               ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
               : task
           );
@@ -192,7 +192,7 @@ export const PomodoroTimer = () => {
       case 'work': return 'text-red-500';
       case 'short-break': return 'text-green-500';
       case 'long-break': return 'text-blue-500';
-      
+
     }
   };
 
@@ -223,31 +223,31 @@ export const PomodoroTimer = () => {
           <div className="grid grid-cols-3 gap-2">
             <div>
               <Label>Work Time (min)</Label>
-              <Input 
-                type="number" 
-                value={workDuration} 
+              <Input
+                type="number"
+                value={workDuration}
                 onChange={(e) => setWorkDuration(Number(e.target.value))}
-                min={1} 
+                min={1}
                 max={60}
               />
             </div>
             <div>
               <Label>Short Break (min)</Label>
-              <Input 
-                type="number" 
-                value={shortBreakDuration} 
+              <Input
+                type="number"
+                value={shortBreakDuration}
                 onChange={(e) => setShortBreakDuration(Number(e.target.value))}
-                min={1} 
+                min={1}
                 max={30}
               />
             </div>
             <div>
               <Label>Long Break (min)</Label>
-              <Input 
-                type="number" 
-                value={longBreakDuration} 
+              <Input
+                type="number"
+                value={longBreakDuration}
                 onChange={(e) => setLongBreakDuration(Number(e.target.value))}
-                min={1} 
+                min={1}
                 max={60}
               />
             </div>
@@ -261,10 +261,10 @@ export const PomodoroTimer = () => {
           {/* Control Buttons */}
           <div className="flex space-x-4 justify-center">
             {!isRunning ? (
-              <Button 
-                onClick={startTimer} 
-                size="lg" 
-                variant="default" 
+              <Button
+                onClick={startTimer}
+                size="lg"
+                variant="default"
                 disabled={!currentTask && currentMode === 'work'}
               >
                 <Play className="mr-2" /> Start
@@ -274,7 +274,7 @@ export const PomodoroTimer = () => {
                 <Pause className="mr-2" /> Pause
               </Button>
             )}
-            
+
             <Button onClick={resetTimer} size="lg" variant="outline">
               <RefreshCw className="mr-2" /> Reset
             </Button>
@@ -282,8 +282,8 @@ export const PomodoroTimer = () => {
 
           {/* Additional Break Options */}
           <div className="flex justify-center space-x-4 mt-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => {
                 setCurrentMode('short-break');
                 setTimeLeft(shortBreakDuration * 60);
@@ -292,8 +292,8 @@ export const PomodoroTimer = () => {
             >
               <Coffee className="mr-2" /> {shortBreakDuration} min Break
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => {
                 setCurrentMode('long-break');
                 setTimeLeft(longBreakDuration * 60);
@@ -307,10 +307,10 @@ export const PomodoroTimer = () => {
 
           {/* Timer Mode Description */}
           <div className="text-center text-sm text-muted-foreground">
-            {currentMode === 'work' 
-              ? 'Focus on your task and maintain concentration.' 
-              : currentMode === 'short-break' 
-                ? 'Take a short break to refresh your mind.' 
+            {currentMode === 'work'
+              ? 'Focus on your task and maintain concentration.'
+              : currentMode === 'short-break'
+                ? 'Take a short break to refresh your mind.'
                 : currentMode === 'long-break'
                   ? 'Enjoy a longer break before your next work session.'
                   : 'Take a custom break at your own pace.'}
@@ -320,14 +320,14 @@ export const PomodoroTimer = () => {
         {/* Task Management Section */}
         <div className="space-y-4">
           <div className="flex space-x-2">
-            <Input 
-              placeholder="Enter task name" 
+            <Input
+              placeholder="Enter task name"
               value={newTaskName}
               onChange={(e) => setNewTaskName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && addTask()}
             />
-            <Input 
-              type="number" 
+            <Input
+              type="number"
               value={newTaskEstimatedPomodoros}
               onChange={(e) => setNewTaskEstimatedPomodoros(Number(e.target.value))}
               min={1}
@@ -350,11 +350,10 @@ export const PomodoroTimer = () => {
             ) : (
               <ul className="space-y-2">
                 {tasks.map((task) => (
-                  <li 
-                    key={task.id} 
-                    className={`flex justify-between items-center p-2 rounded ${
-                      currentTask?.id === task.id ? 'bg-blue-100' : 'hover:bg-gray-100'
-                    }`}
+                  <li
+                    key={task.id}
+                    className={`flex justify-between items-center p-2 rounded ${currentTask?.id === task.id ? 'bg-blue-100' : 'hover:bg-gray-100'
+                      }`}
                   >
                     <div className="flex-grow mr-2">
                       <span className="font-medium">{task.name}</span>
@@ -363,15 +362,15 @@ export const PomodoroTimer = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant={currentTask?.id === task.id ? "default" : "outline"}
                         onClick={() => selectTask(task)}
                       >
                         {currentTask?.id === task.id ? 'Selected' : 'Select'}
                       </Button>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="destructive"
                         onClick={() => removeTask(task.id)}
                       >

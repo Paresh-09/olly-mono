@@ -17,7 +17,7 @@ export const TranscriptLanding = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const videoId = getVideoId(videoUrl)
     if (!videoId) {
       toast({
@@ -27,19 +27,19 @@ export const TranscriptLanding = () => {
       })
       return
     }
-  
+
     setLoading(true)
-    
+
     try {
       // Changed from POST to GET request
       const response = await fetch(`/api/tools/youtube/transcript/extractor?videoId=${videoId}`, {
         method: 'GET' // Changed from POST to GET
       })
-  
+
       if (!response.ok) {
         throw new Error('Failed to fetch transcript')
       }
-  
+
       router.push(`/tools/free-youtube-transcript-extractor/${videoId}`)
     } catch (error) {
       toast({

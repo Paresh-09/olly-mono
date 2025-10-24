@@ -17,7 +17,7 @@ export function FeatureRequestForm() {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    
+
     try {
       const response = await fetch('/api/feature-request', {
         method: 'POST',
@@ -81,8 +81,8 @@ export function FeatureRequestForm() {
               className="min-h-[100px]"
             />
           </div>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isSubmitting}
             className="w-full"
           >

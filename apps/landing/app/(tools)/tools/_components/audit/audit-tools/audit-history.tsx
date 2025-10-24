@@ -15,9 +15,9 @@ interface AuditHistoryProps {
   isAudit: boolean;
 }
 
-export const AuditHistory = ({ 
-  audits, 
-  onRefresh, 
+export const AuditHistory = ({
+  audits,
+  onRefresh,
   isLoading,
   platform,
   isAudit
@@ -36,7 +36,7 @@ export const AuditHistory = ({
     event.stopPropagation();
     const container = event.currentTarget;
     const { scrollTop, clientHeight, scrollHeight } = container;
-    
+
     const scrolledToBottom = scrollHeight - scrollTop <= clientHeight + 50;
     if (scrolledToBottom && visibleAudits < audits.length) {
       loadMore();
@@ -52,9 +52,9 @@ export const AuditHistory = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Recent Audits</h3>
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={onRefresh}
           disabled={isLoading}
         >
@@ -62,7 +62,7 @@ export const AuditHistory = ({
         </Button>
       </div>
 
-      <div 
+      <div
         ref={scrollContainerRef}
         className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scroll-smooth"
         onScroll={handleScroll}
@@ -80,22 +80,22 @@ export const AuditHistory = ({
                 </div>
               </div>
             </div>
-            ))
-          ) : audits.length === 0 ? (
+          ))
+        ) : audits.length === 0 ? (
           <div className="text-center p-6 text-muted-foreground">
             No audit history found
           </div>
         ) : (
           <>
             {audits.slice(0, visibleAudits).map((audit) => (
-                <div 
-                key={audit.id} 
+              <div
+                key={audit.id}
                 className="p-4 rounded-lg border flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => isAudit 
+                onClick={() => isAudit
                   ? router.push(`/tools/${platform}-audit/report/${audit.id}`)
                   : router.push(`/tools/fake-follower-check/${platform}/report/${audit.id}`)
                 }
-                >
+              >
                 <div>
                   <p className="font-medium">{audit.profileName || audit.profileUsername || 'Unnamed Profile'}</p>
                   <p className="text-sm text-muted-foreground truncate max-w-[300px]">
@@ -108,9 +108,9 @@ export const AuditHistory = ({
                 <div className="flex items-center gap-2">
                   <span className={`
                     text-sm px-2 py-1 rounded-full
-                    ${audit.auditStatus === 'COMPLETED' ? 'bg-green-100 text-green-700' : 
+                    ${audit.auditStatus === 'COMPLETED' ? 'bg-green-100 text-green-700' :
                       audit.auditStatus === 'ERROR' ? 'bg-red-100 text-red-700' :
-                      'bg-yellow-100 text-yellow-700'}
+                        'bg-yellow-100 text-yellow-700'}
                   `}>
                     {audit.auditStatus.toLowerCase()}
                   </span>
@@ -119,8 +119,8 @@ export const AuditHistory = ({
             ))}
             {visibleAudits < audits.length && (
               <div className="py-2 text-center">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={loadMore}
                 >

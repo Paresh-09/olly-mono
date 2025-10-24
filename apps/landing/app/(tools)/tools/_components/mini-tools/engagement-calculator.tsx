@@ -6,7 +6,8 @@ import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
 import { Label } from "@repo/ui/components/ui/label";
 import { Progress } from "@repo/ui/components/ui/progress";
-import { useToast } from "@repo/ui/hooks/use-toast";import {
+import { useToast } from "@repo/ui/hooks/use-toast";
+import {
   Loader2,
   TrendingUp,
   Users,

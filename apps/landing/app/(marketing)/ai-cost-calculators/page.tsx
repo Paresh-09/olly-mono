@@ -171,7 +171,7 @@ const AICostCalculatorsPage: React.FC = () => {
 
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500">
-          <span className="font-bold">Note:</span> Pricing information is updated regularly but may change. 
+          <span className="font-bold">Note:</span> Pricing information is updated regularly but may change.
           Always verify current pricing with the respective AI provider before making purchasing decisions.
         </p>
       </div>

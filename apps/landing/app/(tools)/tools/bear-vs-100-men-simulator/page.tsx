@@ -64,7 +64,7 @@ export default function GorillaVsMenSimulator() {
   const [round, setRound] = useState(0);
   const [fleeingCount, setFleeingCount] = useState(0);
   const [gameStatus, setGameStatus] = useState("Idle");
-  const animationRef = useRef<number>(undefined);
+  const animationRef = useRef<number | null>(null);
 
   // Clamp position to stay within arena
   function clampPosition(x: number, y: number, radius: number) {

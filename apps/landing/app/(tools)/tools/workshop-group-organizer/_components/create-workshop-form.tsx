@@ -8,16 +8,16 @@ import { Button } from '@repo/ui/components/ui/button'
 import { Input } from '@repo/ui/components/ui/input'
 import { Label } from '@repo/ui/components/ui/label'
 import { Textarea } from '@repo/ui/components/ui/textarea'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 import { Switch } from '@repo/ui/components/ui/switch'
 import { AlertCircle, InfoIcon } from 'lucide-react'
-import { 
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -27,18 +27,18 @@ import { Alert, AlertDescription } from '@repo/ui/components/ui/alert'
 import { toast } from 'sonner'
 
 const JOIN_MODE_OPTIONS = [
-  { 
-    value: 'CHOICE', 
+  {
+    value: 'CHOICE',
     label: 'Participant Choice',
     description: 'Participants can choose which group to join'
   },
-  { 
-    value: 'RANDOM', 
+  {
+    value: 'RANDOM',
     label: 'Random Assignment',
     description: 'Participants are randomly assigned to groups'
   },
-  { 
-    value: 'ASSIGNED', 
+  {
+    value: 'ASSIGNED',
     label: 'Instructor Assigned',
     description: 'Only you can assign participants to groups'
   }
@@ -48,7 +48,7 @@ export default function CreateWorkshopForm() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [totalParticipants, setTotalParticipants] = useState<number>(20)
@@ -56,32 +56,32 @@ export default function CreateWorkshopForm() {
   const [joinMode, setJoinMode] = useState<string>('RANDOM')
   const [requireAccessCode, setRequireAccessCode] = useState(false)
   const [accessCode, setAccessCode] = useState('')
-  
+
   const handleCreateWorkshop = async () => {
     if (!name.trim()) {
       toast.error('Please enter a workshop name')
       return
     }
-    
+
     if (totalParticipants < 1) {
       toast.error('Total participants must be at least 1')
       return
     }
-    
+
     if (groupSize < 1) {
       toast.error('Group size must be at least 1')
       return
     }
-    
+
     if (requireAccessCode && !accessCode.trim()) {
       toast.error('Please provide an access code or disable the requirement')
       return
     }
-    
+
     try {
       setLoading(true)
       setError(null)
-      
+
       // Create the workshop
       const response = await axios.post('/api/workshops', {
         name: name.trim(),
@@ -90,13 +90,13 @@ export default function CreateWorkshopForm() {
         joinMode,
         accessCode: requireAccessCode ? accessCode.trim() : undefined
       })
-      
+
       const workshop = response.data.workshop
-      
+
       // Create the initial groups
       const numberOfGroups = Math.ceil(totalParticipants / groupSize)
       const colorOptions = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316']
-      
+
       for (let i = 0; i < numberOfGroups; i++) {
         const colorIndex = i % colorOptions.length
         await axios.post(`/api/workshops/${workshop.id}/groups`, {
@@ -105,10 +105,10 @@ export default function CreateWorkshopForm() {
           maxSize: groupSize
         })
       }
-      
+
       toast.success('Workshop created successfully!')
       router.push(`/tools/workshop-group-organizer/${workshop.id}/manage`)
-      
+
     } catch (err: any) {
       console.error('Error creating workshop:', err)
       setError(err.response?.data?.error || 'Failed to create workshop')
@@ -116,7 +116,7 @@ export default function CreateWorkshopForm() {
       setLoading(false)
     }
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -135,7 +135,7 @@ export default function CreateWorkshopForm() {
             onChange={e => setName(e.target.value)}
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="workshop-description">Description (Optional)</Label>
           <Textarea
@@ -146,7 +146,7 @@ export default function CreateWorkshopForm() {
             rows={3}
           />
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="total-participants">Total Participants</Label>
@@ -158,7 +158,7 @@ export default function CreateWorkshopForm() {
               onChange={e => setTotalParticipants(parseInt(e.target.value) || 0)}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="group-size">Group Size</Label>
             <Input
@@ -170,7 +170,7 @@ export default function CreateWorkshopForm() {
             />
           </div>
         </div>
-        
+
         <div className="pt-1">
           <p className="text-sm text-muted-foreground">
             This will create{' '}
@@ -182,7 +182,7 @@ export default function CreateWorkshopForm() {
             per group.
           </p>
         </div>
-        
+
         <div className="space-y-2 pt-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="join-mode">Join Mode</Label>
@@ -217,7 +217,7 @@ export default function CreateWorkshopForm() {
             </SelectContent>
           </Select>
         </div>
-        
+
         <div className="space-y-3 pt-2">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -232,7 +232,7 @@ export default function CreateWorkshopForm() {
               onCheckedChange={setRequireAccessCode}
             />
           </div>
-          
+
           {requireAccessCode && (
             <div className="space-y-2 pt-2">
               <Label htmlFor="access-code">Access Code</Label>
@@ -248,7 +248,7 @@ export default function CreateWorkshopForm() {
             </div>
           )}
         </div>
-        
+
         {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -257,8 +257,8 @@ export default function CreateWorkshopForm() {
         )}
       </CardContent>
       <CardFooter>
-        <Button 
-          onClick={handleCreateWorkshop} 
+        <Button
+          onClick={handleCreateWorkshop}
           className="w-full"
           disabled={loading}
         >

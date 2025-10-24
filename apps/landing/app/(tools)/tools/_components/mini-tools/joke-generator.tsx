@@ -69,7 +69,7 @@ export const JokeGenerator = () => {
     if (!checkUsageLimit()) {
       return;
     }
-  
+
     setLoading(true)
     try {
       const formData = new FormData()
@@ -80,19 +80,19 @@ export const JokeGenerator = () => {
       formData.append('audience', audience)
       formData.append('requirements', requirements)
       formData.append('userId', 'user-id') // Replace with actual user ID
-  
+
       const response = await fetch('/api/tools/generations', {
         method: 'POST',
         body: formData,
       })
-  
+
       if (!response.ok) {
         throw new Error('Generation failed')
       }
-  
+
       const data = await response.json()
       setResult(data)
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
@@ -190,8 +190,8 @@ export const JokeGenerator = () => {
           />
         </div>
 
-        <Button 
-          onClick={generateJoke} 
+        <Button
+          onClick={generateJoke}
           className="w-full"
           disabled={loading || (!isAuthenticated && remainingUses <= 0)}
         >

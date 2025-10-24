@@ -19,12 +19,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@repo/ui/components/ui/alert-dialog'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@repo/ui/components/ui/select'
 import { AlertCircle, UserPlus, UserX } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/ui/alert'
@@ -57,7 +57,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
   const [participants, setParticipants] = useState<Participant[]>([])
   const [groups, setGroups] = useState<Group[]>([])
   const [error, setError] = useState<string | null>(null)
-  
+
   // Form states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isReassignDialogOpen, setIsReassignDialogOpen] = useState(false)
@@ -65,12 +65,12 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
   const [participantName, setParticipantName] = useState('')
   const [participantEmail, setParticipantEmail] = useState('')
   const [selectedGroupId, setSelectedGroupId] = useState<string>('')
-  
+
   useEffect(() => {
     fetchParticipants()
     fetchGroups()
   }, [workshopId])
-  
+
   const fetchParticipants = async () => {
     try {
       setLoading(true)
@@ -83,7 +83,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       setLoading(false)
     }
   }
-  
+
   const fetchGroups = async () => {
     try {
       const response = await axios.get(`/api/workshops/${workshopId}/groups`)
@@ -92,25 +92,25 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       console.error('Error fetching groups:', err)
     }
   }
-  
+
   const handleAddParticipant = async () => {
     try {
       if (!participantName.trim()) {
         toast.error('Participant name is required')
         return
       }
-      
+
       if (!selectedGroupId) {
         toast.error('Please select a group')
         return
       }
-      
+
       const response = await axios.post(`/api/workshops/${workshopId}/participants`, {
         name: participantName.trim(),
         email: participantEmail.trim() || undefined,
         groupId: selectedGroupId
       })
-      
+
       setParticipants([...participants, response.data.participant])
       setIsAddDialogOpen(false)
       resetForm()
@@ -120,35 +120,35 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       toast.error(err.response?.data?.error || 'Failed to add participant')
     }
   }
-  
+
   const handleReassignParticipant = async () => {
     try {
       if (!selectedParticipant || !selectedGroupId) {
         toast.error('Please select a group')
         return
       }
-      
+
       await axios.put(`/api/workshops/${workshopId}/participants/${selectedParticipant.id}`, {
         groupId: selectedGroupId
       })
-      
+
       // Update local state with new group
       const updatedGroup = groups.find(g => g.id === selectedGroupId)
       if (updatedGroup) {
-        setParticipants(participants.map(p => 
-          p.id === selectedParticipant.id 
+        setParticipants(participants.map(p =>
+          p.id === selectedParticipant.id
             ? {
-                ...p, 
-                group: {
-                  id: updatedGroup.id,
-                  name: updatedGroup.name,
-                  color: updatedGroup.color
-                }
-              } 
+              ...p,
+              group: {
+                id: updatedGroup.id,
+                name: updatedGroup.name,
+                color: updatedGroup.color
+              }
+            }
             : p
         ))
       }
-      
+
       setIsReassignDialogOpen(false)
       resetForm()
       toast.success('Participant reassigned successfully!')
@@ -157,7 +157,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       toast.error(err.response?.data?.error || 'Failed to reassign participant')
     }
   }
-  
+
   const handleRemoveParticipant = async (participantId: string) => {
     try {
       await axios.delete(`/api/workshops/${workshopId}/participants/${participantId}`)
@@ -168,20 +168,20 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       toast.error(err.response?.data?.error || 'Failed to remove participant')
     }
   }
-  
+
   const openReassignDialog = (participant: Participant) => {
     setSelectedParticipant(participant)
     setSelectedGroupId(participant.group.id)
     setIsReassignDialogOpen(true)
   }
-  
+
   const resetForm = () => {
     setParticipantName('')
     setParticipantEmail('')
     setSelectedGroupId('')
     setSelectedParticipant(null)
   }
-  
+
   if (loading) {
     return (
       <div className="space-y-4">
@@ -197,7 +197,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       </div>
     )
   }
-  
+
   if (error) {
     return (
       <Alert variant="destructive">
@@ -207,7 +207,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
       </Alert>
     )
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -259,18 +259,18 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
                   </SelectTrigger>
                   <SelectContent>
                     {groups.map(group => (
-                      <SelectItem 
-                        key={group.id} 
+                      <SelectItem
+                        key={group.id}
                         value={group.id}
                         disabled={group.participantCount >= group.maxSize}
                       >
                         <div className="flex items-center gap-2">
-                          <div 
-                            className="w-2 h-2 rounded-full" 
+                          <div
+                            className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: group.color }}
                           />
                           <span>
-                            {group.name} 
+                            {group.name}
                             {group.participantCount >= group.maxSize ? " (Full)" : ""}
                           </span>
                         </div>
@@ -286,7 +286,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
           </DialogContent>
         </Dialog>
       </div>
-      
+
       <Card>
         <CardContent className="p-6">
           {participants.length === 0 ? (
@@ -332,12 +332,12 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
                       <span>{participant.group.name}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => openReassignDialog(participant)}
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shuffle"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shuffle"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22" /><path d="m18 2 4 4-4 4" /><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" /><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" /><path d="m18 14 4 4-4 4" /></svg>
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
@@ -369,7 +369,7 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
           )}
         </CardContent>
       </Card>
-      
+
       {/* Reassign Dialog */}
       <Dialog open={isReassignDialogOpen} onOpenChange={setIsReassignDialogOpen}>
         <DialogContent>
@@ -388,23 +388,23 @@ export default function ManageParticipantsTab({ workshopId }: { workshopId: stri
                 </SelectTrigger>
                 <SelectContent>
                   {groups.map(group => (
-                    <SelectItem 
-                      key={group.id} 
+                    <SelectItem
+                      key={group.id}
                       value={group.id}
                       disabled={
-                        group.participantCount >= group.maxSize && 
+                        group.participantCount >= group.maxSize &&
                         group.id !== selectedParticipant?.group.id
                       }
                     >
                       <div className="flex items-center gap-2">
-                        <div 
-                          className="w-2 h-2 rounded-full" 
+                        <div
+                          className="w-2 h-2 rounded-full"
                           style={{ backgroundColor: group.color }}
                         />
                         <span>
-                          {group.name} 
-                          {group.participantCount >= group.maxSize && 
-                           group.id !== selectedParticipant?.group.id ? " (Full)" : ""}
+                          {group.name}
+                          {group.participantCount >= group.maxSize &&
+                            group.id !== selectedParticipant?.group.id ? " (Full)" : ""}
                         </span>
                       </div>
                     </SelectItem>

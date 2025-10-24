@@ -237,7 +237,7 @@ export default function SocialMediaImageResizer() {
 
   const generateQuickPreview = (sizeKey: string) => {
     if (!imageUploaded) return;
-    
+
     setPreviewSize(sizeKey);
     setShowPreview(true);
   };
@@ -342,9 +342,8 @@ export default function SocialMediaImageResizer() {
     try {
       const link = document.createElement("a");
       link.href = resizedImageUrl;
-      link.download = `${selectedPlatform.toLowerCase()}-${
-        selectedSize.split("-")[1] || "custom"
-      }.jpg`;
+      link.download = `${selectedPlatform.toLowerCase()}-${selectedSize.split("-")[1] || "custom"
+        }.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -436,7 +435,7 @@ export default function SocialMediaImageResizer() {
         <TabsContent value="resize">
           <Card className="p-6">
             <h3 className="text-xl font-bold mb-4">Choose Platform & Size</h3>
-            
+
             {/* Image preview at the top */}
             <div className="mb-6">
               <h4 className="font-medium mb-2">Original Image</h4>
@@ -455,11 +454,10 @@ export default function SocialMediaImageResizer() {
                 {platforms.map((platform) => (
                   <div
                     key={platform.name}
-                    className={`p-3 border rounded-lg flex flex-col items-center justify-center text-center cursor-pointer transition-colors hover:bg-gray-50 ${
-                      selectedPlatform === platform.name
+                    className={`p-3 border rounded-lg flex flex-col items-center justify-center text-center cursor-pointer transition-colors hover:bg-gray-50 ${selectedPlatform === platform.name
                         ? "border-blue-500 bg-blue-50"
                         : "border-gray-200"
-                    }`}
+                      }`}
                     onClick={() => handlePlatformChange(platform.name)}
                   >
                     <div className="w-10 h-10 mb-2 flex items-center justify-center">
@@ -479,22 +477,21 @@ export default function SocialMediaImageResizer() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {Object.entries(
                   platforms.find((p) => p.name === selectedPlatform)?.sizes ||
-                    {}
+                  {}
                 ).map(([key, size]) => (
                   <div
                     key={key}
-                    className={`p-3 border rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${
-                      selectedSize === key
+                    className={`p-3 border rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${selectedSize === key
                         ? "border-blue-500 bg-blue-50"
                         : "border-gray-200"
-                    }`}
+                      }`}
                     onClick={() => handleSizeChange(key)}
                   >
                     <div className="flex justify-between items-center mb-1">
                       <div className="text-sm font-medium">{size.label}</div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="h-6 w-6 p-0"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -520,15 +517,15 @@ export default function SocialMediaImageResizer() {
                     <h3 className="text-lg font-bold">
                       Preview: {allSocialMediaSizes[previewSize].label} ({allSocialMediaSizes[previewSize].width} × {allSocialMediaSizes[previewSize].height}px)
                     </h3>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => setShowPreview(false)}
                     >
                       ×
                     </Button>
                   </div>
-                  <div 
+                  <div
                     className="aspect-video relative bg-slate-100 rounded-md overflow-hidden flex items-center justify-center mb-4"
                     style={{
                       maxWidth: '100%',
@@ -545,13 +542,13 @@ export default function SocialMediaImageResizer() {
                     <div className="absolute inset-0 border-2 border-dashed border-blue-400 pointer-events-none"></div>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button 
+                    <Button
                       variant="outline"
                       onClick={() => setShowPreview(false)}
                     >
                       Close
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => {
                         handleSizeChange(previewSize);
                         setShowPreview(false);

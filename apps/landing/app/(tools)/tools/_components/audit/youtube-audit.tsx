@@ -42,7 +42,7 @@ export const YoutubeAuditComponent = () => {
 
   const fetchAuditHistory = async () => {
     if (!isAuthenticated) return;
-    
+
     setIsHistoryLoading(true);
     try {
       const response = await fetch('/api/tools/audit/history/youtube');
@@ -122,7 +122,7 @@ export const YoutubeAuditComponent = () => {
           setAuditResult(data.data);
           setIsLoading(false);
           setAuditId(null);
-          
+
           if (isAuthenticated) {
             fetchAuditHistory();
           }
@@ -157,37 +157,37 @@ export const YoutubeAuditComponent = () => {
       initiateAudit();
     }
   };
-  
+
   const handleLogin = () => {
     setShowAuthPopup(true);
   };
-  
+
   const handleAuthSuccess = () => {
     setShowAuthPopup(false);
     setIsAuthenticated(true);
     fetchAuditHistory();
   };
-  
+
   // Claim anonymous reports when logged in
   const handleClaimReport = () => {
     if (!isAuthenticated || !auditResult?.isAnonymous) return;
-    
+
     const claimReport = async () => {
       try {
         setIsClaimingReport(true);
-        
+
         const response = await fetch('/api/tools/audit/claim', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ reportIds: [auditResult.reportId] }),
         });
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
           throw new Error(data.error || 'Failed to claim report');
         }
-        
+
         // Show message with appropriate feedback
         if (data.claimedCount > 0) {
           toast({
@@ -200,15 +200,15 @@ export const YoutubeAuditComponent = () => {
             description: "You already have this report in your account.",
           });
         }
-        
+
         // Refresh the audit result to update ownership
         const refreshResponse = await fetch(`/api/tools/audit/youtube/${auditResult.reportId}`);
         const refreshData = await refreshResponse.json();
-        
+
         if (refreshData.success) {
           setAuditResult(refreshData.data);
         }
-        
+
         fetchAuditHistory();
       } catch (error: any) {
         toast({
@@ -220,10 +220,10 @@ export const YoutubeAuditComponent = () => {
         setIsClaimingReport(false);
       }
     };
-    
+
     claimReport();
   };
-  
+
   const handleClaimSuccess = () => {
     fetchAuditHistory();
     toast({
@@ -242,13 +242,13 @@ export const YoutubeAuditComponent = () => {
       <div className="space-y-6">
         {/* Show claim reports option if user is logged in */}
         {isAuthenticated && (
-          <ClaimReports 
+          <ClaimReports
             isAuthenticated={isAuthenticated}
             onLogin={handleLogin}
             onSuccess={handleClaimSuccess}
           />
         )}
-        
+
         <div className="space-y-4">
           <div className="flex gap-2">
             <Input
@@ -283,9 +283,9 @@ export const YoutubeAuditComponent = () => {
         </div>
 
         {auditResult && (
-          <AuditResults 
-            result={auditResult} 
-            platform="youtube" 
+          <AuditResults
+            result={auditResult}
+            platform="youtube"
             isAuthenticated={isAuthenticated}
             onLogin={handleLogin}
             onClaimReport={handleClaimReport}
@@ -293,9 +293,9 @@ export const YoutubeAuditComponent = () => {
         )}
 
         {isAuthenticated ? (
-          <AuditHistory 
-            audits={auditHistory} 
-            onRefresh={fetchAuditHistory} 
+          <AuditHistory
+            audits={auditHistory}
+            onRefresh={fetchAuditHistory}
             isLoading={isHistoryLoading}
             platform="youtube"
             isAudit={true}

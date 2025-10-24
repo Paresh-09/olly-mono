@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@repo/ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useToast } from "@repo/ui/hooks/use-toast";import { ExtendedUser } from "@/lib/auth";
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { ExtendedUser } from "@/lib/auth";
 
 interface Props {
   userEmail: string;
@@ -34,7 +35,7 @@ export default function LicenseConfirmationClient({ userEmail, userName, license
       });
 
       const responseData = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(responseData.error || "Failed to activate license");
       }

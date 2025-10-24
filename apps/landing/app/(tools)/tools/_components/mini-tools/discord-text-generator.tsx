@@ -35,7 +35,7 @@ const TAB_OPTIONS = {
 export const DiscordTextGenerator = () => {
   const [input, setInput] = useState('')
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_OPTIONS>('word')
-  
+
   const {
     isAuthenticated,
     showAuthPopup,
@@ -51,7 +51,7 @@ export const DiscordTextGenerator = () => {
 
   const convertToSmall = (text: string): string => {
     if (activeTab === 'word') {
-      return text.toLowerCase().split('').map(char => 
+      return text.toLowerCase().split('').map(char =>
         SUPERSCRIPT_MAP[char] || char
       ).join('')
     } else {
@@ -66,8 +66,8 @@ export const DiscordTextGenerator = () => {
 
   const getDiscordFormat = (): string => {
     if (!input) return ''
-    return activeTab === 'word' ? 
-      `^${input}^` : 
+    return activeTab === 'word' ?
+      `^${input}^` :
       '`sup ' + input + '`'
   }
 
@@ -78,11 +78,11 @@ export const DiscordTextGenerator = () => {
 
     try {
       await navigator.clipboard.writeText(text)
-      
+
       if (!isAuthenticated) {
         incrementUsage();
       }
-      
+
       toast({
         title: "Copied to clipboard",
         description: `${type === 'preview' ? 'Preview' : 'Discord format'} has been copied. You can now paste this in Discord.`
@@ -171,14 +171,14 @@ export const DiscordTextGenerator = () => {
               </div>
 
               <div className="flex gap-4">
-                <Button 
+                <Button
                   onClick={() => copyToClipboard(getPreview(), 'preview')}
                   className="flex-1 bg-[#5865F2] hover:bg-[#4752C4] text-white"
                   disabled={!input.trim() || (!isAuthenticated && remainingUses <= 0)}
                 >
                   Copy Preview
                 </Button>
-                <Button 
+                <Button
                   onClick={() => copyToClipboard(getDiscordFormat(), 'format')}
                   className="flex-1 bg-[#5865F2] hover:bg-[#4752C4] text-white"
                   disabled={!input.trim() || (!isAuthenticated && remainingUses <= 0)}

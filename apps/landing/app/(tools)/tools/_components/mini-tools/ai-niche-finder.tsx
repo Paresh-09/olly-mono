@@ -6,20 +6,20 @@ import { Input } from '@repo/ui/components/ui/input';
 import { Button } from '@repo/ui/components/ui/button';
 import { Textarea } from '@repo/ui/components/ui/textarea';
 import { Slider } from '@repo/ui/components/ui/slider';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui/select";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   RadarChart,
   Radar,
@@ -293,18 +293,18 @@ const NicheFinder = () => {
     currentRoles: [] as string[],
     yearsOfExperience: "",
     expertiseTopics: {} as Record<string, string[]>,
-    
+
     // Content Goals & Platforms
     contentGoals: [] as string[],
     targetPlatforms: [] as string[],
     preferredContentTypes: [] as string[],
-    
+
     // Creator Profile
     personalityType: "",
     superpower: "",
     contentStyle: "",
     dreamScenario: "",
-    
+
     // Preferences & Comfort
     cameraComfort: 50,
     researchPassion: 50,
@@ -313,7 +313,7 @@ const NicheFinder = () => {
     moneyFocus: "passion",
     techLevel: "basic"
   });
-  
+
   const [showResults, setShowResults] = useState(false);
   const [apiResponse, setApiResponse] = useState<NicheResponse | null>(null);
 
@@ -327,11 +327,11 @@ const NicheFinder = () => {
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to analyze niche');
       }
-      
+
       const data = await response.json();
       setApiResponse(data);
       setShowResults(true);
@@ -357,7 +357,7 @@ const NicheFinder = () => {
   };
 
   const renderStep = () => {
-    switch(currentStep) {
+    switch (currentStep) {
       case 1:
         return (
           <motion.div
@@ -397,7 +397,7 @@ const NicheFinder = () => {
                 <p className="text-center text-muted-foreground mb-4">Years of professional experience:</p>
                 <Select
                   value={formData.yearsOfExperience}
-                  onValueChange={(value) => setFormData({...formData, yearsOfExperience: value})}
+                  onValueChange={(value) => setFormData({ ...formData, yearsOfExperience: value })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select years of experience" />
@@ -414,7 +414,7 @@ const NicheFinder = () => {
             </div>
           </motion.div>
         );
-      
+
       case 2:
         return (
           <motion.div
@@ -458,7 +458,7 @@ const NicheFinder = () => {
             </ScrollArea>
           </motion.div>
         );
-      
+
       case 3:
         return (
           <motion.div
@@ -565,7 +565,7 @@ const NicheFinder = () => {
                     key={type}
                     variant={formData.personalityType === type ? "default" : "outline"}
                     className="h-auto py-4 px-6 text-lg"
-                    onClick={() => setFormData({...formData, personalityType: type})}
+                    onClick={() => setFormData({ ...formData, personalityType: type })}
                   >
                     {type}
                   </Button>
@@ -574,7 +574,7 @@ const NicheFinder = () => {
             </div>
           </motion.div>
         );
-      
+
       case 5:
         return (
           <motion.div
@@ -591,7 +591,7 @@ const NicheFinder = () => {
                     key={power}
                     variant={formData.superpower === power ? "default" : "outline"}
                     className="h-auto py-4 px-6 text-lg"
-                    onClick={() => setFormData({...formData, superpower: power})}
+                    onClick={() => setFormData({ ...formData, superpower: power })}
                   >
                     {power}
                   </Button>
@@ -600,7 +600,7 @@ const NicheFinder = () => {
             </div>
           </motion.div>
         );
-      
+
       case 6:
         return (
           <motion.div
@@ -617,7 +617,7 @@ const NicheFinder = () => {
                     key={style}
                     variant={formData.contentStyle === style ? "default" : "outline"}
                     className="h-auto py-4 px-6 text-lg"
-                    onClick={() => setFormData({...formData, contentStyle: style})}
+                    onClick={() => setFormData({ ...formData, contentStyle: style })}
                   >
                     {style}
                   </Button>
@@ -643,7 +643,7 @@ const NicheFinder = () => {
                     key={scenario}
                     variant={formData.dreamScenario === scenario ? "default" : "outline"}
                     className="h-auto py-4 px-6 text-lg"
-                    onClick={() => setFormData({...formData, dreamScenario: scenario})}
+                    onClick={() => setFormData({ ...formData, dreamScenario: scenario })}
                   >
                     {scenario}
                   </Button>
@@ -666,7 +666,7 @@ const NicheFinder = () => {
                 <p className="font-medium text-center">How much do you love being on camera? 🎥</p>
                 <Slider
                   value={[formData.cameraComfort]}
-                  onValueChange={([value]) => setFormData({...formData, cameraComfort: value})}
+                  onValueChange={([value]) => setFormData({ ...formData, cameraComfort: value })}
                   min={0}
                   max={100}
                   step={10}
@@ -674,9 +674,9 @@ const NicheFinder = () => {
                 />
                 <p className="text-center text-sm text-muted-foreground">
                   {formData.cameraComfort < 30 ? "Rather stay behind the scenes 🙈" :
-                   formData.cameraComfort < 60 ? "I can handle it when needed 😊" :
-                   formData.cameraComfort < 90 ? "Pretty comfortable! 🎭" :
-                   "Born to be on screen! 🌟"}
+                    formData.cameraComfort < 60 ? "I can handle it when needed 😊" :
+                      formData.cameraComfort < 90 ? "Pretty comfortable! 🎭" :
+                        "Born to be on screen! 🌟"}
                 </p>
               </div>
 
@@ -684,7 +684,7 @@ const NicheFinder = () => {
                 <p className="font-medium text-center">How much do you enjoy research? 📚</p>
                 <Slider
                   value={[formData.researchPassion]}
-                  onValueChange={([value]) => setFormData({...formData, researchPassion: value})}
+                  onValueChange={([value]) => setFormData({ ...formData, researchPassion: value })}
                   min={0}
                   max={100}
                   step={10}
@@ -692,9 +692,9 @@ const NicheFinder = () => {
                 />
                 <p className="text-center text-sm text-muted-foreground">
                   {formData.researchPassion < 30 ? "I prefer winging it 🦋" :
-                   formData.researchPassion < 60 ? "I do my homework 📝" :
-                   formData.researchPassion < 90 ? "Love diving deep! 🤓" :
-                   "Research is my jam! 🔬"}
+                    formData.researchPassion < 60 ? "I do my homework 📝" :
+                      formData.researchPassion < 90 ? "Love diving deep! 🤓" :
+                        "Research is my jam! 🔬"}
                 </p>
               </div>
 
@@ -702,7 +702,7 @@ const NicheFinder = () => {
                 <p className="font-medium text-center">How important is trending content to you? 📈</p>
                 <Slider
                   value={[formData.trendFocus]}
-                  onValueChange={([value]) => setFormData({...formData, trendFocus: value})}
+                  onValueChange={([value]) => setFormData({ ...formData, trendFocus: value })}
                   min={0}
                   max={100}
                   step={10}
@@ -710,9 +710,9 @@ const NicheFinder = () => {
                 />
                 <p className="text-center text-sm text-muted-foreground">
                   {formData.trendFocus < 30 ? "I make my own trends 😎" :
-                   formData.trendFocus < 60 ? "I keep an eye on trends 👀" :
-                   formData.trendFocus < 90 ? "Trends are important! 🚀" :
-                   "Always chasing the next big thing! 🔥"}
+                    formData.trendFocus < 60 ? "I keep an eye on trends 👀" :
+                      formData.trendFocus < 90 ? "Trends are important! 🚀" :
+                        "Always chasing the next big thing! 🔥"}
                 </p>
               </div>
             </div>
@@ -732,7 +732,7 @@ const NicheFinder = () => {
                 <p className="font-medium text-center">What's your ideal content creation schedule?</p>
                 <Select
                   value={formData.schedule}
-                  onValueChange={(value) => setFormData({...formData, schedule: value})}
+                  onValueChange={(value) => setFormData({ ...formData, schedule: value })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose your schedule" />
@@ -750,7 +750,7 @@ const NicheFinder = () => {
                 <p className="font-medium text-center">Your monetization priority:</p>
                 <Select
                   value={formData.moneyFocus}
-                  onValueChange={(value) => setFormData({...formData, moneyFocus: value})}
+                  onValueChange={(value) => setFormData({ ...formData, moneyFocus: value })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose your priority" />
@@ -768,7 +768,7 @@ const NicheFinder = () => {
                 <p className="font-medium text-center">Your tech comfort level:</p>
                 <Select
                   value={formData.techLevel}
-                  onValueChange={(value) => setFormData({...formData, techLevel: value})}
+                  onValueChange={(value) => setFormData({ ...formData, techLevel: value })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose your tech level" />
@@ -789,7 +789,7 @@ const NicheFinder = () => {
 
   const renderResults = () => {
     if (!apiResponse) return null;
-    
+
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -802,7 +802,7 @@ const NicheFinder = () => {
             Download Report 📥
           </Button>
         </div>
-        
+
         {/* Current Profile Summary */}
         <Card className="p-6">
           <h4 className="text-xl font-semibold mb-4">Your Creator Profile 👤</h4>
@@ -890,9 +890,9 @@ const NicheFinder = () => {
               <li key={index} className="flex items-center">
                 <span className="mr-2 text-2xl">{
                   index === 0 ? "🎯" :
-                  index === 1 ? "💪" :
-                  index === 2 ? "🌟" :
-                  "✨"
+                    index === 1 ? "💪" :
+                      index === 2 ? "🌟" :
+                        "✨"
                 }</span>
                 {step}
               </li>
@@ -967,7 +967,7 @@ const NicheFinder = () => {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              
+
               <div className="p-4 bg-secondary rounded-lg">
                 <h6 className="font-medium">Time Allocation</h6>
                 <ResponsiveContainer width="100%" height={200}>
@@ -989,7 +989,7 @@ const NicheFinder = () => {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              
+
               <div className="p-4 bg-secondary rounded-lg">
                 <h6 className="font-medium">Growth Metrics</h6>
                 <ResponsiveContainer width="100%" height={200}>
@@ -1025,7 +1025,7 @@ const NicheFinder = () => {
         {!showResults ? (
           <div className="space-y-6">
             {renderStep()}
-            
+
             <div className="flex justify-between mt-6">
               <Button
                 variant="outline"
@@ -1034,7 +1034,7 @@ const NicheFinder = () => {
               >
                 Previous
               </Button>
-              
+
               {currentStep < 9 ? (
                 <Button
                   onClick={() => setCurrentStep(prev => Math.min(9, prev + 1))}
@@ -1042,7 +1042,7 @@ const NicheFinder = () => {
                   Next
                 </Button>
               ) : (
-                <Button 
+                <Button
                   onClick={handleSubmit}
                   disabled={loading}
                 >
@@ -1057,14 +1057,13 @@ const NicheFinder = () => {
                 </Button>
               )}
             </div>
-            
+
             <div className="flex justify-center gap-2 mt-4">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(step => (
                 <div
                   key={step}
-                  className={`h-2 w-2 rounded-full ${
-                    step === currentStep ? 'bg-primary' : 'bg-secondary'
-                  }`}
+                  className={`h-2 w-2 rounded-full ${step === currentStep ? 'bg-primary' : 'bg-secondary'
+                    }`}
                 />
               ))}
             </div>
