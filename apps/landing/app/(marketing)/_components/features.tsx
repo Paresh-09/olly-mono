@@ -66,6 +66,7 @@ export function FeaturesWithImage(props: {
   ctaText?: string;
 }) {
   const isVideo = props.image.endsWith('.mp4');
+  const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
   return (
     <div className="py-12 sm:py-20">
@@ -119,7 +120,7 @@ export function FeaturesWithImage(props: {
                   <div className="pt-4">
                     <button
                       className="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors duration-200"
-                      onClick={() => window.location.href = '/dashboard'}
+                      onClick={() => window.location.href = `${dashboardUrl}/dashboard`}
                     >
                       {props.ctaText}
                       <span className="text-lg">→</span>

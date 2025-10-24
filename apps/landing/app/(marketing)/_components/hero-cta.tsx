@@ -7,6 +7,7 @@ import { usePricing } from '@/app/web/providers/pricingContext';
 export function HeroCTA() {
   const [hasExtension, setHasExtension] = useState(false);
   const { buyNowProps } = usePricing();
+  const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
   useEffect(() => {
     // Check if we're in the browser (client-side)
@@ -63,7 +64,7 @@ export function HeroCTA() {
           color="primary"
           className="shadow-lg"
           link={hasExtension 
-            ? { href: '/dashboard' } 
+            ? { href: `${dashboardUrl}/dashboard` } 
             : { href: 'https://chromewebstore.google.com/detail/olly-20-amplify-your-soci/ofjpapfmglfjdhmadpegoeifocomaeje?hl=en', target: '_blank' }
           }
         >

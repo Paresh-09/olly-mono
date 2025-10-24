@@ -71,6 +71,7 @@ const features = [
 
 export function HowItWorks() {
     const [current, setCurrent] = useState(0);
+    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -298,7 +299,7 @@ export function HowItWorks() {
                             <Button
                                 size="lg"
                                 className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3"
-                                onClick={() => window.location.href = '/dashboard'}
+                                onClick={() => window.location.href = `${dashboardUrl}/dashboard`}
                             >
                                 Get Started Free
                             </Button>

@@ -40,6 +40,8 @@ const GridBackground = () => {
 };
 
 const HeroSection = () => {
+    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
+
     return (
         <main className="w-full h-screen overflow-hidden font-cal relative">
             <section className="w-full h-screen overflow-hidden md:overflow-visible flex flex-col items-center justify-center relative">
@@ -72,7 +74,7 @@ const HeroSection = () => {
 
                         <div className="hover:scale-105 transition-transform duration-200">
                             <Link
-                                href="/signup"
+                                href={`${dashboardUrl}/signup`}
                                 className="inline-flex items-center justify-center rounded-full text-base md:text-lg lg:text-xl tracking-tight transition-colors duration-150 bg-teal-600 text-white hover:bg-teal-700 px-8 py-4 shadow-sm"
                             >
                                 Get Started for Free

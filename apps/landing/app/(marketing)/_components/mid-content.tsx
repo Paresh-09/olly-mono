@@ -113,6 +113,7 @@ type TabKey = keyof typeof creatorProfiles;
 
 export default function MidContentSection() {
     const [activeTab, setActiveTab] = useState<TabKey>('creators');
+    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
     const currentContent = contentByTab[activeTab];
 
@@ -206,7 +207,7 @@ export default function MidContentSection() {
                             style={{ backgroundColor: '#0C9488' }}
                             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a70'}
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0C9488'}
-                            onClick={() => window.location.href = '/signup'}
+                            onClick={() => window.location.href = `${dashboardUrl}/signup`}
                         >
                             Get Started Now
                         </button>

@@ -37,6 +37,8 @@ const features = [
 ];
 
 export default function PlatformGrowthSection() {
+    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
+
     const getPlatformBadgeColor = (name: string) => {
         switch (name) {
             case 'Instagram':
@@ -95,7 +97,7 @@ export default function PlatformGrowthSection() {
                                 style={{ backgroundColor: '#0C9488' }}
                                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a70'}
                                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0C9488'}
-                                onClick={() => window.location.href = '/signup'}
+                                onClick={() => window.location.href = `${dashboardUrl}/signup`}
                             >
                                 Start Growing Today
                             </button>

@@ -5,6 +5,7 @@ import { usePricing } from '@/app/web/providers/pricingContext';
 
 export function CTAButtonsAB() {
   const { buyNowProps } = usePricing();
+  const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
   const primaryButtonProps = {
     text: "Start @ $9.99/month",
@@ -29,7 +30,7 @@ export function CTAButtonsAB() {
           size="2xl"
           color="white"
           className="shadow-md shadow-[#33dfa0]/100"
-          link={{href: '/signup'}}
+          link={{href: `${dashboardUrl}/signup`}}
         >
           <ChromeIcon className="mr-2 h-4 w-4" />
           Start for Free

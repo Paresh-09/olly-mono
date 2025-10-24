@@ -70,6 +70,7 @@ const RewardItem: React.FC<{ title: string; description: string }> = ({ title, d
 
 const GiveawaySteps: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState('');
+  const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -107,7 +108,7 @@ const GiveawaySteps: React.FC = () => {
       description: "Create your account on our platform to participate in the giveaway.",
       icon: <UserPlus size={24} />,
       action: "Sign up now",
-      actionLink: "/signup"
+      actionLink: `${dashboardUrl}/signup`
     },
     {
       title: "Support Us",

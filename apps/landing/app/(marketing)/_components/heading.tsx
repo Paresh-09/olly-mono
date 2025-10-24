@@ -40,6 +40,7 @@ export const Heading = (props: {
   const [isVisible, setIsVisible] = useState(false);
   const [username, setUsername] = useState("");
   const router = useRouter();
+  const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
 
   useEffect(() => {
     setIsVisible(true);
@@ -148,7 +149,7 @@ export const Heading = (props: {
               )}>
                 <Button
                   className="inline-flex items-center justify-center rounded-full text-base md:text-lg lg:text-xl tracking-tight transition-colors duration-200 bg-teal-600 text-white hover:bg-teal-700 px-8 py-4 shadow-sm"
-                  link={{ href: '/dashboard' }}
+                  link={{ href: `${dashboardUrl}/dashboard` }}
                 >
                   <Play className="mr-2 h-4 w-4" />
                   Get Started Free

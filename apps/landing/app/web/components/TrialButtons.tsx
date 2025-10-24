@@ -87,7 +87,7 @@ export function TrialButtons({ code }: { code?: string }) {
     try {
       // Get the current URL for redirect
       const currentUrl = window.location.href;
-      
+
 
       // Send user count instead of variant ID - let server handle the mapping
       const response = await axios.post("/api/checkout/monthly-trial", {
@@ -322,11 +322,10 @@ export function TrialButtons({ code }: { code?: string }) {
                 <div
                   key={tier}
                   onClick={() => setSelectedUsers(tier)}
-                  className={`p-4 rounded-lg cursor-pointer transition-all border ${
-                    selectedUsers === tier
+                  className={`p-4 rounded-lg cursor-pointer transition-all border ${selectedUsers === tier
                       ? "bg-primary/5 border-primary"
                       : "border-input hover:border-primary/50 hover:bg-accent/50"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
@@ -338,9 +337,8 @@ export function TrialButtons({ code }: { code?: string }) {
                       </div>
                     </div>
                     <div
-                      className={`w-4 h-4 rounded-full ${
-                        selectedUsers === tier ? "bg-primary" : "bg-muted"
-                      }`}
+                      className={`w-4 h-4 rounded-full ${selectedUsers === tier ? "bg-primary" : "bg-muted"
+                        }`}
                     />
                   </div>
                 </div>
@@ -381,7 +379,7 @@ export function TrialButtons({ code }: { code?: string }) {
   );
 }
 // import { useState } from 'react';
-// import { Button } from "@/components/ui/button";
+// import { Button } from "@repo/ui/components/ui/button";
 // import {
 //   Dialog,
 //   DialogContent,
@@ -389,7 +387,7 @@ export function TrialButtons({ code }: { code?: string }) {
 //   DialogHeader,
 //   DialogTitle,
 //   DialogFooter,
-// } from "@/components/ui/dialog";
+// } from "@repo/ui/components/ui/dialog";
 // import { usePricing } from "@/app/web/providers/pricingContext";
 // import { usePostHog } from 'posthog-js/react';
 // import { Check, Sparkles } from 'lucide-react';
