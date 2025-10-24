@@ -431,7 +431,15 @@ export default function SherlockLookup({ title, description }: { title: string, 
                         <div className="text-lg text-neutral-400">Loading...</div>
                       ) : (
                         <div className="text-sm text-neutral-400">
-                          <a href="/login" className="text-neutral-900 underline underline-offset-4 hover:text-neutral-600">
+                          <a 
+                            href="#" 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
+                              window.location.href = `${dashboardUrl}/login?callback=${encodeURIComponent(window.location.href)}`;
+                            }}
+                            className="text-neutral-900 underline underline-offset-4 hover:text-neutral-600"
+                          >
                             Sign in
                           </a>
                         </div>

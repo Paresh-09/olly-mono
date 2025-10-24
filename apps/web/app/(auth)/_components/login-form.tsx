@@ -22,6 +22,7 @@ export default function LoginForm() {
   const isExtensionLogin =
     searchParams.get("client_id") ===
     process.env.NEXT_PUBLIC_EXTENSION_CLIENT_ID;
+  const callbackUrl = searchParams.get("callback");
 
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -85,8 +86,24 @@ export default function LoginForm() {
           window.location.href = `/login/extension-callback?code=${result.authCode}`;
           return { success: result.success };
         } else {
-          // Normal web login flow
-          window.location.href = "/dashboard";
+          // Normal web login flow - check for callback URL
+          if (callbackUrl) {
+            // Validate the callback URL to ensure it's safe
+            try {
+              const url = new URL(callbackUrl);
+              // Only allow HTTP/HTTPS protocols
+              if (url.protocol === 'http:' || url.protocol === 'https:') {
+                window.location.href = callbackUrl;
+              } else {
+                window.location.href = "/dashboard";
+              }
+            } catch {
+              // Invalid URL, redirect to dashboard
+              window.location.href = "/dashboard";
+            }
+          } else {
+            window.location.href = "/dashboard";
+          }
           return { success: result.success };
         }
       } else if (result.error === "User exists but has no password") {
@@ -119,7 +136,7 @@ export default function LoginForm() {
   const createSignupUrl = () => {
     const params = new URLSearchParams();
 
-    // Copy all current search parameters
+    // Copy all current search parameters (including callback)
     searchParams.forEach((value, key) => {
       params.set(key, value);
     });

@@ -14,8 +14,11 @@ import GoogleOAuthButton from "./google-oauth-button";
 import { PageBackground } from "./auth-background";
 import { PostHogUser } from "@/app/lib/posthog-utils";
 import posthog from "posthog-js";
+import { useSearchParams } from "next/navigation";
 
 export default function SignupForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callback");
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -130,7 +133,24 @@ export default function SignupForm() {
           description: "Redirecting you...",
         });
 
-        window.location.href = "/dashboard";
+        // Check for callback URL
+        if (callbackUrl) {
+          // Validate the callback URL to ensure it's safe
+          try {
+            const url = new URL(callbackUrl);
+            // Only allow HTTP/HTTPS protocols
+            if (url.protocol === 'http:' || url.protocol === 'https:') {
+              window.location.href = callbackUrl;
+            } else {
+              window.location.href = "/dashboard";
+            }
+          } catch {
+            // Invalid URL, redirect to dashboard
+            window.location.href = "/dashboard";
+          }
+        } else {
+          window.location.href = "/dashboard";
+        }
         return { success: result.success };
       } else if (
         result.error ===
@@ -465,7 +485,7 @@ export default function SignupForm() {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href={callbackUrl ? `/login?callback=${encodeURIComponent(callbackUrl)}` : "/login"}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
                 Sign in

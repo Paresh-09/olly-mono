@@ -200,12 +200,25 @@ export default function CustomGptResultsPage() {
             <div className="pt-6 mt-6 border-t">
               <h3 className="text-lg font-medium mb-4">Want to save these results?</h3>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/signup">
-                  <Button className="w-full sm:w-auto">Create an account</Button>
-                </Link>
-                <Link href="/login">
-                  <Button variant="outline" className="w-full sm:w-auto">Sign in</Button>
-                </Link>
+                <Button 
+                  className="w-full sm:w-auto"
+                  onClick={() => {
+                    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
+                    window.location.href = `${dashboardUrl}/signup?callback=${encodeURIComponent(window.location.href)}`;
+                  }}
+                >
+                  Create an account
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full sm:w-auto"
+                  onClick={() => {
+                    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || process.env.DASHBOARD_URL || "http://localhost:3000";
+                    window.location.href = `${dashboardUrl}/login?callback=${encodeURIComponent(window.location.href)}`;
+                  }}
+                >
+                  Sign in
+                </Button>
               </div>
               <p className="text-sm text-muted-foreground mt-4">
                 Create a free account to save results and search history.
